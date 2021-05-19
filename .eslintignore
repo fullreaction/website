@@ -1,0 +1,8 @@
+node_modules/*
+.idea/*
+www/*
+dist/*
+build/*
+stencil.config.ts
+packages/components/loader/*
+packages/icons/scripts/*

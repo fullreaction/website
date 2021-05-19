@@ -1,0 +1,42 @@
+{
+  "name": "website",
+  "version": "1.0.0",
+  "description": "",
+  "engines": {
+    "node": "15.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fullreaction/website.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/fullreaction/website/issues"
+  },
+  "homepage": "https://fullreaction.com/",
+  "scripts": {
+    "lint": "npm run lint-scripts && npm run lint-styles",
+    "lint-scripts": "eslint --fix",
+    "lint-styles": "stylelint --fix"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^3.10.1",
+    "@typescript-eslint/parser": "^3.10.1",
+    "angular-html-parser": "^1.8.0",
+    "eslint": "^7.21.0",
+    "eslint-config-prettier": "^7.2.0",
+    "eslint-plugin-prettier": "^3.3.1",
+    "eslint-plugin-react": "^7.22.0",
+    "prettier": "^2.2.1",
+    "prettier-eslint": "^12.0.0",
+    "stylelint": "^13.11.0",
+    "stylelint-config-prettier": "^8.0.2",
+    "stylelint-config-recess-order": "^2.3.0",
+    "stylelint-config-standard": "^20.0.0",
+    "stylelint-prettier": "^1.2.0"
+  },
+  "workspaces": [
+    "./packages/*"
+  ]
+}

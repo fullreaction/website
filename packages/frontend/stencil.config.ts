@@ -6,7 +6,7 @@ export const config: Config = {
   globalStyle: 'src/global/app.css',
   globalScript: 'src/global/app.ts',
   taskQueue: 'async',
-  namespace: 'full',
+  namespace: 'fullr',
   outputTargets: [
     {
       type: 'www',

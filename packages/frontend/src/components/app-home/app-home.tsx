@@ -31,9 +31,11 @@ export class AppHome {
             </div>
           </form>
         </div>
+        <app-features></app-features>
         <stencil-route-link url="/docs">
           <button>Documentation</button>
         </stencil-route-link>
+        
       </div>
     );
   }

@@ -20,6 +20,7 @@ export class AppRoot {
               <stencil-route url="/docs" component="app-docs" />
             </stencil-route-switch>
           </stencil-router>
+          
         </main>
       </div>
     );

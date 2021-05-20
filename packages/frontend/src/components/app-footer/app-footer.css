@@ -1,0 +1,43 @@
+.Footer-Host {
+  display: flex;
+  padding: 35px;
+  background-color: #f4faff;
+}
+.Footer-ContactForm {
+  display: flex;
+  flex-direction: column;
+  margin-left: 40px;
+}
+
+.Footer-FormEmail,
+.Footer-FormBody {
+  box-sizing: border-box;
+  width: 300px;
+  padding: 8px;
+  margin-bottom: 10px;
+  border: 1px solid #0069a5;
+  border-radius: 3px;
+}
+.Footer-FormEmail {
+  height: 34px;
+}
+.Footer-FormBody {
+  height: 74px;
+  resize: none;
+}
+.Footer-FormSubmit {
+  width: 300px;
+  padding: 8px;
+  color: white;
+  cursor: pointer;
+  background: #ff593d;
+  border: none;
+  border-radius: 3px;
+}
+.Footer-LogoWrapper {
+  margin-right: 200px;
+  margin-left: auto;
+}
+.Footer-Logo {
+  height: 48px;
+}

@@ -1,9 +1,49 @@
 .header {
   display: flex;
+  flex-direction: row;
   height: 58px;
   background-color: #f4faff;
 }
 
 .title {
-  font-size: larger;
+  display: flex;
+  padding: 10px 58px;
+  font-size: 25px;
+  font-weight: bold;
+  text-align: center;
+}
+
+.logo {
+  width: 25px;
+  height: 25px;
+  padding: 4px 0px;
+}
+
+.featuresbtn {
+  padding: 17px 20px;
+  font-size: 18px;
+  color: black;
+  text-decoration: none;
+  transition-duration: 0.2s;
+}
+
+.featuresbtn:hover {
+  background-color: #eef5fb;
+}
+
+.docsbtn {
+  padding: 17px 20px;
+  font-size: 18px;
+  color: black;
+  text-decoration: none;
+  transition-duration: 0.2s;
+}
+
+.docsbtn:hover {
+  background-color: #eef5fb;
+}
+
+.github-button {
+  margin-top: 17px;
+  margin-left: 50%;
 }

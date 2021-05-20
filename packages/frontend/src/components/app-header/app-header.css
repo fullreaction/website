@@ -1,0 +1,9 @@
+.header {
+  display: flex;
+  height: 58px;
+  background-color: #f4faff;
+}
+
+.title {
+  font-size: larger;
+}

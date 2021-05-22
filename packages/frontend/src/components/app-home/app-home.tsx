@@ -32,10 +32,7 @@ export class AppHome {
           </form>
         </div>
         <app-features></app-features>
-        <stencil-route-link url="/docs">
-          <button>Documentation</button>
-        </stencil-route-link>
-        
+        <app-support></app-support>
       </div>
     );
   }

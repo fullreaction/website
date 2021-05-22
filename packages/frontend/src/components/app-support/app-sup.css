@@ -1,0 +1,18 @@
+.Support-Box {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: 0px 20px 0px 0px;
+  margin-left: -10px;
+}
+.Support-Header {
+  margin-top: 37px;
+  text-align: center;
+}
+.Support-Text {
+  font-size: smaller;
+  text-align: center;
+}
+.Support-Buttons {
+  align-items: center;
+}

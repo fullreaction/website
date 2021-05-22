@@ -18,11 +18,11 @@
         justify-content: center;
         text-align: center;
         font-size: smaller;
-        
+        column-gap: 50px;
     }
-.Features-Textbox2
+.Features-Textbox
 {
-    margin: 0px 10% 0px 10%;
+   font-family: Roboto;
 }
     }
 @media screen and (max-width: 800px) {
@@ -33,6 +33,7 @@
     justify-content: center;
     text-align: center;
     font-size: smaller;
+    row-gap: 50px;
 }
 
 }

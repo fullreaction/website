@@ -30,7 +30,7 @@ export class AppFooter {
     return (
       <Host class="Footer-Host">
         <form class="Footer-ContactForm" onSubmit={e => this.submit(e)}>
-          <h2>Contact Us</h2>
+          <h2 class="Footer-FormHeader">Contact Us</h2>
           <input
             value={this.email}
             onInput={e => (this.email = (e.target as HTMLInputElement).value)}
@@ -50,6 +50,10 @@ export class AppFooter {
           />
           <input type="submit" class="Footer-FormSubmit" value="Submit" />
         </form>
+        <div class="Footer-LogoWrapper">
+          <img class="Footer-LogoIcon" src="../../assets/icon/logo-icon.png" />
+          <h2 class="Footer-LogoText">FullReaction</h2>
+        </div>
       </Host>
     );
   }

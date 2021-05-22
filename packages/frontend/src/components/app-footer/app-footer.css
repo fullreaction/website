@@ -1,14 +1,24 @@
+@media only screen and (max-width: 800px) {
+  .Footer-Host {
+    padding: 10px !important;
+  }
+  .Footer-LogoText {
+    display: none;
+  }
+}
+
 .Footer-Host {
   display: flex;
-  padding: 35px;
+  padding: 35px 70px 35px 70px;
   background-color: #f4faff;
 }
 .Footer-ContactForm {
   display: flex;
   flex-direction: column;
-  margin-left: 40px;
 }
-
+.Footer-FormHeader {
+  margin-top: 0px;
+}
 .Footer-FormEmail,
 .Footer-FormBody {
   box-sizing: border-box;
@@ -34,10 +44,23 @@
   border: none;
   border-radius: 3px;
 }
+
 .Footer-LogoWrapper {
-  margin-right: 200px;
+  display: flex;
+  padding: 8px;
+  padding-right: 20px;
   margin-left: auto;
+  cursor: default;
 }
-.Footer-Logo {
-  height: 48px;
+.Footer-LogoIcon {
+  width: 25px;
+  height: 25px;
+  padding: 4px 0px;
+  pointer-events: none;
+}
+.Footer-LogoText {
+  margin-top: 0px;
+  font-size: 25px;
+  pointer-events: none;
+  cursor: text;
 }

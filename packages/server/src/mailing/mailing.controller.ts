@@ -6,10 +6,15 @@ export class MailingController {
   constructor(private readonly mailService: MailingService) {}
 
   @Post('contact')
-  contact(@Body('email') email: string, @Body('text') text: string) {
-    console.log('ok');
+  async contact(@Body('email') email: string, @Body('text') text: string) {
     return text;
   }
+
+  @Post('signup')
+  async signup(@Body('email') email: string) {
+    return email;
+  }
+
   @Get('contact')
   testing() {
     return 'Yep';

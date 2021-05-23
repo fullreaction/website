@@ -10,7 +10,13 @@
   padding: 10px 58px;
   font-size: 25px;
   font-weight: bold;
+  color: black;
   text-align: center;
+  text-decoration: none;
+}
+
+.title:hover {
+  color: black;
 }
 
 .logo {

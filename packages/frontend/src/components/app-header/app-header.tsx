@@ -8,10 +8,10 @@ export class AppHeader {
   render() {
     return (
       <div class="header">
-        <div class="title">
+        <a class="title" href="">
           <img class="logo" src="assets\icon\logo-icon.png" />
           FullReaction
-        </div>
+        </a>
         <a class="featuresbtn" href="">
           Features
         </a>

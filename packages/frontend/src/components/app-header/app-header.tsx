@@ -18,9 +18,15 @@ export class AppHeader {
         <a class="docsbtn" href="">
           Documentation
         </a>
-        <a class="github-button" href="https://github.com/ntkme/github-buttons" data-icon="octicon-star" data-size="large" aria-label="Star ntkme/github-buttons on GitHub">
-          Star
-        </a>
+        <iframe
+          class="github-button"
+          src="https://ghbtns.com/github-btn.html?user=fullreaction&repo=fullreaction&type=watch&count=false&size=large"
+          frameborder="0"
+          scrolling="0"
+          width="170"
+          height="30"
+          title="GitHub"
+        ></iframe>
       </div>
     );
   }

@@ -8,14 +8,14 @@ export class AppHeader {
   render() {
     return (
       <div class="header">
-        <a class="title" href="">
+        <a class="title" href="http://localhost:3333/">
           <img class="logo" src="assets\icon\logo-icon.png" />
           FullReaction
         </a>
         <a class="featuresbtn" href="">
           Features
         </a>
-        <a class="docsbtn" href="">
+        <a class="docsbtn" href="http://localhost:3333/docs">
           Documentation
         </a>
         <iframe

@@ -40,3 +40,7 @@
   border: none;
   border-radius: 3px;
 }
+
+.Hidden {
+  display: none !important;
+}

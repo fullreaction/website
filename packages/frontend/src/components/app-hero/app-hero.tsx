@@ -22,7 +22,6 @@ export class AppFooter {
       .catch(err => {
         console.log(err);
       });
-    return false;
   }
   //Signup doesn't work.
   render() {
@@ -35,24 +34,24 @@ export class AppFooter {
           One API to publish your content to <br /> Facebook, Linkedin, Instagram, Youtube and more
         </span>
 
-        <div id="mc_embed_signup">
-          <form
-            action="https://fullreaction.us6.list-manage.com/subscribe/post?u=0b5c41c578481015f17e2897c&amp;id=860d544374"
-            method="post"
-            id="mc-embedded-subscribe-form"
-            name="mc-embedded-subscribe-form"
-            class="validate Hero-Form"
-            target="_blank"
-            novalidate
-          >
-            <div id="mc_embed_signup_scroll">
-              <input type="email" value="" placeholder="Email" name="EMAIL" class="Hero-FormEmail" id="mce-EMAIL" required />
-              <label htmlFor="mce-EMAIL" class="Hero-FormSubmit">
-                Sign up for beta
-              </label>
-            </div>
-          </form>
-        </div>
+        <form name="signup form" class="Hero-Form" onSubmit={e => this.submit(e)}>
+          <input
+            type="email"
+            value={this.email}
+            onChange={e => {
+              this.email = (e.target as HTMLInputElement).value;
+            }}
+            placeholder="Email"
+            name="signup email"
+            class="Hero-FormEmail"
+            id="mce-EMAIL"
+            required
+          ></input>
+
+          <input type="submit" class="Hero-FormSubmit">
+            Sign up for beta
+          </input>
+        </form>
       </Host>
     );
   }

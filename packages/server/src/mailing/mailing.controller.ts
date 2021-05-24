@@ -5,14 +5,14 @@ import { MailingService } from './mailing.service';
 export class MailingController {
   constructor(private readonly mailService: MailingService) {}
 
-  @Post('contact')
-  async contact(@Body('email') email: string, @Body('text') text: string) {
-    return text;
-  }
-
   @Post('signup')
   async signup(@Body('email') email: string) {
-    return email;
+    this.mailService.signup(email);
+  }
+
+  @Post('contact')
+  async contact(@Body('email') email: string, @Body('text') text: string) {
+    this.mailService.contact(email, text);
   }
 
   @Get('contact')

@@ -6,13 +6,13 @@ import { Component, h, Host, State } from '@stencil/core';
 })
 export class AppFooter {
   @State() email: string;
-  @State() message: string; //I'm not sure I should be saving in string
+  @State() text: string; //I'm not sure I should be saving in string
 
   async submit(e) {
     e.preventDefault();
     const fetchData = {
       method: 'POST',
-      body: JSON.stringify({ email: this.email, message: this.message }),
+      body: JSON.stringify({ email: this.email, text: this.text }),
       headers: { 'Content-Type': 'application/json' },
     };
 
@@ -41,8 +41,8 @@ export class AppFooter {
             required
           />
           <textarea
-            value={this.message}
-            onInput={e => (this.message = (e.target as HTMLTextAreaElement).value)}
+            value={this.text}
+            onInput={e => (this.text = (e.target as HTMLTextAreaElement).value)}
             class="Footer-FormBody"
             name="contact-body"
             placeholder="Message"

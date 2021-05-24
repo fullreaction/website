@@ -14,12 +14,16 @@ export class AppSupport {
             One API to publish your content to <br></br> Facebook, Linkedin, Instagram, Youtube and more
           </p>
         </div>
-        <div class="Support-Buttons">
+        <div class="Button-Box-Support">
           <stencil-route-link url="/docs">
-            <button>Documentation</button>
+            <button class="Support-Buttons">Documentation</button>
           </stencil-route-link>
-          <button>Github</button>
-          <button>Discord</button>
+          <button class="Support-Buttons">
+            <img src="../../assets/icon/Github.svg" class="Support-Icons"></img>Github
+          </button>
+          <button class="Support-Buttons">
+            <img src="../../assets/icon/Discord.svg" class="Support-Icons"></img>Discord
+          </button>
         </div>
       </div>
     );

@@ -1,3 +1,38 @@
-.app-docs {
-  padding: 10px;
+.sidenav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 280px;
+  height: 100%;
+  padding-top: 20px;
+  margin-top: 58px;
+  overflow-x: hidden;
+  background-color: #ffffff;
+}
+
+.sidenav a {
+  display: block;
+  padding: 5px 5px 15px;
+  font-size: 25px;
+  color: #000000;
+  text-align: center;
+  text-decoration: none;
+}
+
+.sidenav a:hover {
+  background-color: #eef5fb;
+}
+
+.sidenav a:focus {
+  background-color: #eef5fb;
+}
+
+.sidenav a:active {
+  background-color: #eef5fb;
+}
+
+.main {
+  padding: 0px 10px;
+  margin-left: 160px; /* Same as the width of the sidenav */
+  font-size: 28px; /* Increased text to enable scrolling */
 }

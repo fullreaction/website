@@ -1,11 +1,11 @@
-.header {
+.Header {
   display: flex;
   flex-direction: row;
   height: 58px;
   background-color: #f4faff;
 }
 
-.title {
+.Header-Title {
   display: flex;
   padding: 10px 58px;
   font-size: 25px;
@@ -15,17 +15,17 @@
   text-decoration: none;
 }
 
-.title:hover {
+.Header-Title:hover {
   color: black;
 }
 
-.logo {
+.Header-Logo {
   width: 25px;
   height: 25px;
   padding: 4px 0px;
 }
 
-.featuresbtn {
+.Features-Button {
   padding: 17px 20px;
   font-size: 18px;
   color: black;
@@ -33,11 +33,12 @@
   transition-duration: 0.2s;
 }
 
-.featuresbtn:hover {
+.Features-Button:hover {
   background-color: #eef5fb;
+  border-bottom: 5px solid rgba(0, 0, 0, 0.157);
 }
 
-.docsbtn {
+.Docs-Button {
   padding: 17px 20px;
   font-size: 18px;
   color: black;
@@ -45,11 +46,12 @@
   transition-duration: 0.2s;
 }
 
-.docsbtn:hover {
+.Docs-Button:hover {
   background-color: #eef5fb;
+  border-bottom: 5px solid rgba(0, 0, 0, 0.157);
 }
 
-.github-button {
+.Github-Button {
   margin-top: 15px;
   margin-left: 50%;
 }

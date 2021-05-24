@@ -1,0 +1,49 @@
+.App-Integration {
+  padding-bottom: 40px;
+}
+
+.Integration-Title {
+  padding-top: 40px;
+  padding-bottom: 20px;
+  font-size: 25px;
+  font-weight: bold;
+  text-align: center;
+}
+
+.Integration-Text {
+  font-size: 20px;
+  text-align: center;
+}
+
+.Integration-List {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  max-width: 625px;
+  height: 210px;
+  margin-right: calc(50% - 312.5px);
+  margin-left: calc(50% - 312.5px);
+  overflow-wrap: break-word;
+}
+
+.Integration-Box {
+  width: 100px;
+  height: 100px;
+  margin: 0px 5px 5px 0px;
+  text-align: center;
+  background-color: #f4faff;
+}
+
+.Integration-Endbox {
+  width: 100px;
+  height: 100px;
+  margin: 0px 0px 5px 0px;
+  text-align: center;
+  background-color: #f4faff;
+}
+
+.Integration-Image {
+  width: 60px;
+  height: 60px;
+  margin: 10px 20px 0px 20px;
+}

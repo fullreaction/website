@@ -7,19 +7,19 @@ import { Component, h } from '@stencil/core';
 export class AppHeader {
   render() {
     return (
-      <div class="header">
-        <a class="title" href="http://localhost:3333/">
-          <img class="logo" src="assets\icon\logo-icon.png" />
+      <div class="Header">
+        <a class="Header-Title" href="http://localhost:3333/">
+          <img class="Header-Logo" src="assets\icon\logo-icon.png" />
           FullReaction
         </a>
-        <a class="featuresbtn" href="">
+        <a class="Features-Button" href="">
           Features
         </a>
-        <a class="docsbtn" href="http://localhost:3333/docs">
+        <a class="Docs-Button" href="http://localhost:3333/docs">
           Documentation
         </a>
         <iframe
-          class="github-button"
+          class="Github-Button"
           src="https://ghbtns.com/github-btn.html?user=fullreaction&repo=fullreaction&type=watch&count=false&size=large"
           frameborder="0"
           scrolling="0"

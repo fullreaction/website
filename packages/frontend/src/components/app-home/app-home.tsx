@@ -10,9 +10,7 @@ export class AppHome {
     return (
       <div class="app-home">
         <app-hero></app-hero>
-        <stencil-route-link url="/docs">
-          <button>Documentation</button>
-        </stencil-route-link>
+        <app-integration></app-integration>
       </div>
     );
   }

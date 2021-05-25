@@ -1,0 +1,57 @@
+.Header {
+  display: flex;
+  flex-direction: row;
+  height: 58px;
+  background-color: #f4faff;
+}
+
+.Header-Title {
+  display: flex;
+  padding: 10px 58px;
+  font-size: 25px;
+  font-weight: bold;
+  color: black;
+  text-align: center;
+  text-decoration: none;
+}
+
+.Header-Title:hover {
+  color: black;
+}
+
+.Header-Logo {
+  width: 25px;
+  height: 25px;
+  padding: 4px 0px;
+}
+
+.Features-Button {
+  padding: 17px 20px;
+  font-size: 18px;
+  color: black;
+  text-decoration: none;
+  transition-duration: 0.2s;
+}
+
+.Features-Button:hover {
+  background-color: #eef5fb;
+  border-bottom: 5px solid rgba(0, 0, 0, 0.157);
+}
+
+.Docs-Button {
+  padding: 17px 20px;
+  font-size: 18px;
+  color: black;
+  text-decoration: none;
+  transition-duration: 0.2s;
+}
+
+.Docs-Button:hover {
+  background-color: #eef5fb;
+  border-bottom: 5px solid rgba(0, 0, 0, 0.157);
+}
+
+.Github-Button {
+  margin-top: 15px;
+  margin-left: 50%;
+}

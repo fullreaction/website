@@ -6,7 +6,7 @@ import { Component, h, Host, State } from '@stencil/core';
 })
 export class AppFooter {
   @State() email: string;
-  @State() text: string; //I'm not sure I should be saving in string
+  @State() text: string;
   @State() submitResponse: string;
 
   submit(e) {
@@ -51,12 +51,11 @@ export class AppFooter {
             placeholder="Message"
             required
           />
-          <input type="submit" class="Footer-FormSubmit" value="Submit" />
+          <input type="submit" class="Footer-FormSubmit" value="Send" />
         </form>
         <span class={{ 'Footer-Response': true, 'Hidden': this.submitResponse == undefined }}>{this.submitResponse}</span>
         <div class="Footer-LogoWrapper">
-          <img class="Footer-LogoIcon" src="../../../assets/icon/logo-icon.png" />
-          <h2 class="Footer-LogoText">FullReaction</h2>
+          <img class="Footer-Logo" src="../../../assets/icon/logo.png" />
         </div>
       </Host>
     );

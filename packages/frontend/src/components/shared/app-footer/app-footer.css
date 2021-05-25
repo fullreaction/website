@@ -1,5 +1,5 @@
 @media only screen and (max-width: 800px) {
-  .Footer-LogoText {
+  .Footer-Logo {
     display: none;
   }
 }
@@ -14,25 +14,29 @@
 }
 .Footer-FormHeader {
   margin-top: 0px;
+  font-size: 36px;
 }
 .Footer-FormEmail,
 .Footer-FormBody {
   box-sizing: border-box;
-  width: 300px;
+  width: 400px;
   padding: 8px;
   margin-bottom: 10px;
+  font-size: 18px;
   border: 1px solid #0069a5;
   border-radius: 3px;
 }
 .Footer-FormEmail {
-  height: 34px;
+  height: 48px;
 }
 .Footer-FormBody {
-  height: 74px;
+  height: 110px;
   resize: none;
 }
 .Footer-FormSubmit {
-  width: 300px;
+  width: 400px;
+  height: 48px;
+  font-size: 18px;
 }
 
 .Footer-LogoWrapper {
@@ -42,19 +46,15 @@
   margin-left: auto;
   cursor: default;
 }
-.Footer-LogoIcon {
-  width: 25px;
-  height: 25px;
+.Footer-Logo {
+  width: 221.55px;
+  height: 40px;
   padding: 4px 0px;
   pointer-events: none;
 }
-.Footer-LogoText {
-  margin-top: 0px;
-  font-size: 25px;
-  pointer-events: none;
-  cursor: text;
-}
+
 .Footer-Response {
+  font-size: 18px;
   font-weight: bold;
   color: #1f7f23;
 }

@@ -13,35 +13,39 @@
 
 .Hero-Subheader {
   margin-bottom: 20px;
+  font-size: 18px;
 }
 
 .Hero-Form {
   display: flex;
 }
 
-.Hero-FormEmail {
-  box-sizing: border-box;
-  width: 250px;
-  height: 34px;
+.Hero-FormEmail,
+.Hero-FormSubmit {
+  height: 48px;
   padding: 8px;
-  margin-bottom: 10px;
-  border: 1px solid #0069a5;
+  font-size: 18px;
   border-radius: 3px;
 }
 
+.Hero-FormEmail {
+  box-sizing: border-box;
+  width: 294.75px;
+  margin-bottom: 10px;
+  border: 1px solid #0069a5;
+}
+
 .Hero-FormSubmit {
-  width: 140px;
-  height: 34px;
-  padding: 8px;
+  width: 178px;
   margin-left: 4px;
   color: white;
   cursor: pointer;
   background: #ff593d;
   border: none;
-  border-radius: 3px;
 }
 
 .Hero-Response {
+  font-size: 18px;
   font-weight: bold;
   color: #1f7f23;
 }

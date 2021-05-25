@@ -29,12 +29,8 @@ export class AppFooter {
   render() {
     return (
       <Host class="Hero-Host">
-        <h1 class="Hero-Header">
-          Publish to any form <br /> with ease
-        </h1>
-        <span class="Hero-Subheader">
-          One API to publish your content to <br /> Facebook, Linkedin, Instagram, Youtube and more
-        </span>
+        <h1 class="Hero-Header">Publish to any form with ease</h1>
+        <span class="Hero-Subheader">One API to publish your content to Facebook, Linkedin, Instagram, Youtube and more</span>
 
         <form name="signup form" class={{ 'Hero-Form': true, 'Hidden': this.submitResponse != undefined }} onSubmit={e => this.submit(e)}>
           <input
@@ -46,13 +42,10 @@ export class AppFooter {
             placeholder="Email"
             name="signup email"
             class="Hero-FormEmail"
-            id="mce-EMAIL"
             required
           ></input>
 
-          <input type="submit" class="Hero-FormSubmit">
-            Sign up for beta
-          </input>
+          <input type="submit" class="Hero-FormSubmit" value="Sign up for beta"></input>
         </form>
         <span class={{ 'Hero-Response': true, 'Hidden': this.submitResponse == undefined }}>{this.submitResponse}</span>
       </Host>

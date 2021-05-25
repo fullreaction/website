@@ -7,8 +7,9 @@ import { Component, h, Host, State } from '@stencil/core';
 export class AppFooter {
   @State() email: string;
   @State() text: string; //I'm not sure I should be saving in string
+  @State() submitResponse: string;
 
-  async submit(e) {
+  submit(e) {
     e.preventDefault();
     const fetchData = {
       method: 'POST',
@@ -19,9 +20,11 @@ export class AppFooter {
     fetch('http://localhost:3000/mailing/contact', fetchData)
       .then(res => {
         console.log(res);
+        this.submitResponse = 'Thank you for contacting us.';
       })
       .catch(err => {
         console.log(err);
+        this.submitResponse = 'An error has occured.';
       });
     return false;
   }
@@ -29,7 +32,7 @@ export class AppFooter {
   render() {
     return (
       <Host class="Footer-Host">
-        <form class="Footer-ContactForm" onSubmit={e => this.submit(e)}>
+        <form class={{ 'Footer-ContactForm': true, 'Hidden': this.submitResponse != undefined }} onSubmit={e => this.submit(e)}>
           <h2 class="Footer-FormHeader">Contact Us</h2>
           <input
             value={this.email}
@@ -50,6 +53,7 @@ export class AppFooter {
           />
           <input type="submit" class="Footer-FormSubmit" value="Submit" />
         </form>
+        <span class={{ 'Footer-Response': true, 'Hidden': this.submitResponse == undefined }}>{this.submitResponse}</span>
         <div class="Footer-LogoWrapper">
           <img class="Footer-LogoIcon" src="../../assets/icon/logo-icon.png" />
           <h2 class="Footer-LogoText">FullReaction</h2>

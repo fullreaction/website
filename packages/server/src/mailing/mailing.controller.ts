@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Post } from '@nestjs/common';
 import { MailingService } from './mailing.service';
 
 @Controller('mailing')
@@ -13,10 +13,5 @@ export class MailingController {
   @Post('contact')
   async contact(@Body('email') email: string, @Body('text') text: string) {
     this.mailService.contact(email, text);
-  }
-
-  @Get('contact')
-  testing() {
-    return 'Yep';
   }
 }

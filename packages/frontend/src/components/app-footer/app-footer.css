@@ -9,6 +9,7 @@
 
 .Footer-Host {
   display: flex;
+
   padding: 35px 70px 35px 70px;
   background-color: #f4faff;
 }
@@ -63,4 +64,12 @@
   font-size: 25px;
   pointer-events: none;
   cursor: text;
+}
+.Footer-Response {
+  font-weight: bold;
+  color: #1f7f23;
+}
+
+.Hidden {
+  display: none !important;
 }

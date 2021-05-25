@@ -17,7 +17,7 @@ export class MailingService {
       });
 
       const res = await this.http.post(
-        MailChimp.MarketApi + '/lists/' + MailChimp.MarketApi.audienceId,
+        MailChimp.MarketApi.rootUrl + 'lists/' + MailChimp.MarketApi.audienceId,
         mcDataPost,
         {
           headers: {

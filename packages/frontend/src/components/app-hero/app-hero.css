@@ -41,6 +41,11 @@
   border-radius: 3px;
 }
 
+.Hero-Response {
+  font-weight: bold;
+  color: #1f7f23;
+}
+
 .Hidden {
   display: none !important;
 }

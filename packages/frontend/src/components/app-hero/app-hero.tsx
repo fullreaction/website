@@ -6,8 +6,8 @@ import { Component, h, Host, State } from '@stencil/core';
 })
 export class AppFooter {
   @State() email: string;
-
-  async submit(e) {
+  @State() submitResponse: string;
+  submit(e) {
     e.preventDefault();
     const fetchData = {
       method: 'POST',
@@ -18,9 +18,11 @@ export class AppFooter {
     fetch('http://localhost:3000/mailing/signup', fetchData)
       .then(res => {
         console.log(res);
+        this.submitResponse = 'A confirmation email has been sent.';
       })
       .catch(err => {
         console.log(err);
+        this.submitResponse = 'An error has occured.';
       });
   }
   //Signup doesn't work.
@@ -34,7 +36,7 @@ export class AppFooter {
           One API to publish your content to <br /> Facebook, Linkedin, Instagram, Youtube and more
         </span>
 
-        <form name="signup form" class="Hero-Form" onSubmit={e => this.submit(e)}>
+        <form name="signup form" class={{ 'Hero-Form': true, 'Hidden': this.submitResponse != undefined }} onSubmit={e => this.submit(e)}>
           <input
             type="email"
             value={this.email}
@@ -52,6 +54,7 @@ export class AppFooter {
             Sign up for beta
           </input>
         </form>
+        <span class={{ 'Hero-Response': true, 'Hidden': this.submitResponse == undefined }}>{this.submitResponse}</span>
       </Host>
     );
   }

@@ -41,7 +41,7 @@ export class AppIntegration {
             <img class="Integration-Image" src="assets\integration icons\Youtube.png" />
             Youtube
           </div>
-          <div class="Integration-Endbox">
+          <div class="Integration-Box">
             {' '}
             <img class="Integration-Image" src="assets\integration icons\Github.png" />
             Github
@@ -71,6 +71,17 @@ export class AppIntegration {
             <img class="Integration-Image" src="assets\integration icons\Dribble.png" />
             Dribble
           </div>
+          <br />
+        </div>
+        <div>
+          <a
+            class="github-button"
+            href="https://github.com/fullreaction/fullreaction/issues"
+            data-icon="octicon-issue-opened"
+            aria-label="Issue fullreaction/fullreaction on GitHub"
+          >
+            Issue
+          </a>
         </div>
       </div>
     );

@@ -9,8 +9,7 @@ export class AppHeader {
     return (
       <div class="Header">
         <a class="Header-Title" href="http://localhost:3333/">
-          <img class="Header-Logo" src="assets\icon\logo-icon.png" />
-          FullReaction
+          <img class="Header-Logo" src="assets\icon\logo.svg" />
         </a>
         <a class="Features-Button" href="">
           Features
@@ -20,7 +19,7 @@ export class AppHeader {
         </a>
         <iframe
           class="Github-Button"
-          src="https://ghbtns.com/github-btn.html?user=fullreaction&repo=fullreaction&type=watch&count=false&size=large"
+          src="https://ghbtns.com/github-btn.html?user=fullreaction&repo=fullreaction&type=watch&count=false"
           frameborder="0"
           scrolling="0"
           width="170"

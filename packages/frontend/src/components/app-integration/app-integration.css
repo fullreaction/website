@@ -4,14 +4,14 @@
 
 .Integration-Title {
   padding-top: 40px;
-  padding-bottom: 20px;
-  font-size: 25px;
+  padding-bottom: 40px;
+  font-size: 36px;
   font-weight: bold;
   text-align: center;
 }
 
 .Integration-Text {
-  font-size: 20px;
+  font-size: 18px;
   text-align: center;
 }
 
@@ -19,32 +19,72 @@
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  max-width: 625px;
-  height: 210px;
-  padding-top: 20px;
-  margin-right: calc(50% - 312.5px);
-  margin-left: calc(50% - 312.5px);
+  width: 1020px;
+  height: 330px;
+  margin-top: 40px;
+  margin-right: calc(50% - 505px);
+  margin-left: calc(50% - 505px);
   overflow-wrap: break-word;
 }
 
 .Integration-Box {
-  width: 100px;
-  height: 100px;
-  margin: 0px 5px 5px 0px;
+  width: 160px;
+  height: 160px;
+  margin: 0px 10px 10px 0px;
   text-align: center;
   background-color: #f4faff;
 }
 
 .Integration-Endbox {
-  width: 100px;
-  height: 100px;
-  margin: 0px 0px 5px 0px;
+  width: 160px;
+  height: 160px;
+  margin: 0px 0px 10px 0px;
   text-align: center;
   background-color: #f4faff;
 }
 
 .Integration-Image {
-  width: 60px;
-  height: 60px;
-  margin: 10px 20px 0px 20px;
+  width: 80px;
+  height: 80px;
+  margin: 30px 20px 0px 20px;
+}
+
+.github-button {
+  display: block;
+  margin-top: 40px;
+  text-align: center;
+}
+
+@media only screen and (max-width: 900px) {
+  .Integration-List {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    width: 560px;
+    height: 220px;
+    margin-top: 40px;
+    margin-right: calc(50% - 280px);
+    margin-left: calc(50% - 280px);
+    overflow-wrap: break-word;
+  }
+
+  .Integration-Box {
+    width: 130px;
+    height: 130px;
+    margin: 0px 10px 10px 0px;
+    text-align: center;
+    background-color: #f4faff;
+  }
+
+  .Integration-Image {
+    width: 70px;
+    height: 70px;
+    margin: 20px 20px 0px 20px;
+  }
+
+  .github-button {
+    display: block;
+    margin-top: 220px;
+    text-align: center;
+  }
 }

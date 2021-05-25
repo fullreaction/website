@@ -1,0 +1,35 @@
+.Support-Box {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: 0px 20px 0px 0px;
+  margin-left: -10px;
+}
+.Support-Header {
+  margin-top: 37px;
+  text-align: center;
+}
+.Support-Text {
+  font-size: smaller;
+  text-align: center;
+}
+.Button-Box-Support {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  width: 100%;
+  margin: left -10px;
+  margin-top: 30px;
+}
+
+.Support-Buttons {
+  width: 130px;
+  height: 25px;
+  padding: 0px;
+  margin-right: -1px;
+  font-size: 12px;
+  background-color: #ff593d;
+  border-radius: 3px;
+}
+.Support-Icons {
+}

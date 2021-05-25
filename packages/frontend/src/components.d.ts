@@ -8,17 +8,13 @@ import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 export namespace Components {
     interface AppDocs {
     }
-    interface AppFooter {
-    }
-    interface AppHeader {
-    }
-    interface AppHero {
+    interface AppFeatures {
     }
     interface AppHome {
     }
-    interface AppIntegration {
-    }
     interface AppRoot {
+    }
+    interface AppSupport {
     }
 }
 declare global {
@@ -28,23 +24,11 @@ declare global {
         prototype: HTMLAppDocsElement;
         new (): HTMLAppDocsElement;
     };
-    interface HTMLAppFooterElement extends Components.AppFooter, HTMLStencilElement {
+    interface HTMLAppFeaturesElement extends Components.AppFeatures, HTMLStencilElement {
     }
-    var HTMLAppFooterElement: {
-        prototype: HTMLAppFooterElement;
-        new (): HTMLAppFooterElement;
-    };
-    interface HTMLAppHeaderElement extends Components.AppHeader, HTMLStencilElement {
-    }
-    var HTMLAppHeaderElement: {
-        prototype: HTMLAppHeaderElement;
-        new (): HTMLAppHeaderElement;
-    };
-    interface HTMLAppHeroElement extends Components.AppHero, HTMLStencilElement {
-    }
-    var HTMLAppHeroElement: {
-        prototype: HTMLAppHeroElement;
-        new (): HTMLAppHeroElement;
+    var HTMLAppFeaturesElement: {
+        prototype: HTMLAppFeaturesElement;
+        new (): HTMLAppFeaturesElement;
     };
     interface HTMLAppHomeElement extends Components.AppHome, HTMLStencilElement {
     }
@@ -52,51 +36,43 @@ declare global {
         prototype: HTMLAppHomeElement;
         new (): HTMLAppHomeElement;
     };
-    interface HTMLAppIntegrationElement extends Components.AppIntegration, HTMLStencilElement {
-    }
-    var HTMLAppIntegrationElement: {
-        prototype: HTMLAppIntegrationElement;
-        new (): HTMLAppIntegrationElement;
-    };
     interface HTMLAppRootElement extends Components.AppRoot, HTMLStencilElement {
     }
     var HTMLAppRootElement: {
         prototype: HTMLAppRootElement;
         new (): HTMLAppRootElement;
     };
+    interface HTMLAppSupportElement extends Components.AppSupport, HTMLStencilElement {
+    }
+    var HTMLAppSupportElement: {
+        prototype: HTMLAppSupportElement;
+        new (): HTMLAppSupportElement;
+    };
     interface HTMLElementTagNameMap {
         "app-docs": HTMLAppDocsElement;
-        "app-footer": HTMLAppFooterElement;
-        "app-header": HTMLAppHeaderElement;
-        "app-hero": HTMLAppHeroElement;
+        "app-features": HTMLAppFeaturesElement;
         "app-home": HTMLAppHomeElement;
-        "app-integration": HTMLAppIntegrationElement;
         "app-root": HTMLAppRootElement;
+        "app-support": HTMLAppSupportElement;
     }
 }
 declare namespace LocalJSX {
     interface AppDocs {
     }
-    interface AppFooter {
-    }
-    interface AppHeader {
-    }
-    interface AppHero {
+    interface AppFeatures {
     }
     interface AppHome {
     }
-    interface AppIntegration {
-    }
     interface AppRoot {
+    }
+    interface AppSupport {
     }
     interface IntrinsicElements {
         "app-docs": AppDocs;
-        "app-footer": AppFooter;
-        "app-header": AppHeader;
-        "app-hero": AppHero;
+        "app-features": AppFeatures;
         "app-home": AppHome;
-        "app-integration": AppIntegration;
         "app-root": AppRoot;
+        "app-support": AppSupport;
     }
 }
 export { LocalJSX as JSX };
@@ -104,12 +80,10 @@ declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
             "app-docs": LocalJSX.AppDocs & JSXBase.HTMLAttributes<HTMLAppDocsElement>;
-            "app-footer": LocalJSX.AppFooter & JSXBase.HTMLAttributes<HTMLAppFooterElement>;
-            "app-header": LocalJSX.AppHeader & JSXBase.HTMLAttributes<HTMLAppHeaderElement>;
-            "app-hero": LocalJSX.AppHero & JSXBase.HTMLAttributes<HTMLAppHeroElement>;
+            "app-features": LocalJSX.AppFeatures & JSXBase.HTMLAttributes<HTMLAppFeaturesElement>;
             "app-home": LocalJSX.AppHome & JSXBase.HTMLAttributes<HTMLAppHomeElement>;
-            "app-integration": LocalJSX.AppIntegration & JSXBase.HTMLAttributes<HTMLAppIntegrationElement>;
             "app-root": LocalJSX.AppRoot & JSXBase.HTMLAttributes<HTMLAppRootElement>;
+            "app-support": LocalJSX.AppSupport & JSXBase.HTMLAttributes<HTMLAppSupportElement>;
         }
     }
 }

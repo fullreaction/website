@@ -11,6 +11,8 @@ export class AppHome {
       <div class="app-home">
         <app-hero></app-hero>
         <app-integration></app-integration>
+        <app-features></app-features>
+        <app-support></app-support>
       </div>
     );
   }

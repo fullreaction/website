@@ -10,7 +10,15 @@ export namespace Components {
     }
     interface AppFeatures {
     }
+    interface AppFooter {
+    }
+    interface AppHeader {
+    }
+    interface AppHero {
+    }
     interface AppHome {
+    }
+    interface AppIntegration {
     }
     interface AppRoot {
     }
@@ -30,11 +38,35 @@ declare global {
         prototype: HTMLAppFeaturesElement;
         new (): HTMLAppFeaturesElement;
     };
+    interface HTMLAppFooterElement extends Components.AppFooter, HTMLStencilElement {
+    }
+    var HTMLAppFooterElement: {
+        prototype: HTMLAppFooterElement;
+        new (): HTMLAppFooterElement;
+    };
+    interface HTMLAppHeaderElement extends Components.AppHeader, HTMLStencilElement {
+    }
+    var HTMLAppHeaderElement: {
+        prototype: HTMLAppHeaderElement;
+        new (): HTMLAppHeaderElement;
+    };
+    interface HTMLAppHeroElement extends Components.AppHero, HTMLStencilElement {
+    }
+    var HTMLAppHeroElement: {
+        prototype: HTMLAppHeroElement;
+        new (): HTMLAppHeroElement;
+    };
     interface HTMLAppHomeElement extends Components.AppHome, HTMLStencilElement {
     }
     var HTMLAppHomeElement: {
         prototype: HTMLAppHomeElement;
         new (): HTMLAppHomeElement;
+    };
+    interface HTMLAppIntegrationElement extends Components.AppIntegration, HTMLStencilElement {
+    }
+    var HTMLAppIntegrationElement: {
+        prototype: HTMLAppIntegrationElement;
+        new (): HTMLAppIntegrationElement;
     };
     interface HTMLAppRootElement extends Components.AppRoot, HTMLStencilElement {
     }
@@ -51,7 +83,11 @@ declare global {
     interface HTMLElementTagNameMap {
         "app-docs": HTMLAppDocsElement;
         "app-features": HTMLAppFeaturesElement;
+        "app-footer": HTMLAppFooterElement;
+        "app-header": HTMLAppHeaderElement;
+        "app-hero": HTMLAppHeroElement;
         "app-home": HTMLAppHomeElement;
+        "app-integration": HTMLAppIntegrationElement;
         "app-root": HTMLAppRootElement;
         "app-support": HTMLAppSupportElement;
     }
@@ -61,7 +97,15 @@ declare namespace LocalJSX {
     }
     interface AppFeatures {
     }
+    interface AppFooter {
+    }
+    interface AppHeader {
+    }
+    interface AppHero {
+    }
     interface AppHome {
+    }
+    interface AppIntegration {
     }
     interface AppRoot {
     }
@@ -70,7 +114,11 @@ declare namespace LocalJSX {
     interface IntrinsicElements {
         "app-docs": AppDocs;
         "app-features": AppFeatures;
+        "app-footer": AppFooter;
+        "app-header": AppHeader;
+        "app-hero": AppHero;
         "app-home": AppHome;
+        "app-integration": AppIntegration;
         "app-root": AppRoot;
         "app-support": AppSupport;
     }
@@ -81,7 +129,11 @@ declare module "@stencil/core" {
         interface IntrinsicElements {
             "app-docs": LocalJSX.AppDocs & JSXBase.HTMLAttributes<HTMLAppDocsElement>;
             "app-features": LocalJSX.AppFeatures & JSXBase.HTMLAttributes<HTMLAppFeaturesElement>;
+            "app-footer": LocalJSX.AppFooter & JSXBase.HTMLAttributes<HTMLAppFooterElement>;
+            "app-header": LocalJSX.AppHeader & JSXBase.HTMLAttributes<HTMLAppHeaderElement>;
+            "app-hero": LocalJSX.AppHero & JSXBase.HTMLAttributes<HTMLAppHeroElement>;
             "app-home": LocalJSX.AppHome & JSXBase.HTMLAttributes<HTMLAppHomeElement>;
+            "app-integration": LocalJSX.AppIntegration & JSXBase.HTMLAttributes<HTMLAppIntegrationElement>;
             "app-root": LocalJSX.AppRoot & JSXBase.HTMLAttributes<HTMLAppRootElement>;
             "app-support": LocalJSX.AppSupport & JSXBase.HTMLAttributes<HTMLAppSupportElement>;
         }

@@ -22,8 +22,6 @@ export class AppHeader {
           src="https://ghbtns.com/github-btn.html?user=fullreaction&repo=fullreaction&type=watch&count=false"
           frameborder="0"
           scrolling="0"
-          width="170"
-          height="30"
           title="GitHub"
         ></iframe>
       </div>

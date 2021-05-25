@@ -8,19 +8,10 @@
 .Header-Title {
   display: flex;
   margin-left: 25px;
-  font-size: 25px;
-  font-weight: bold;
-  color: black;
-  text-align: center;
-  text-decoration: none;
-}
-
-.Header-Title:hover {
-  color: black;
 }
 
 .Header-Logo {
-  padding: 4px 0px;
+  padding: 5px 0px;
 }
 
 .Features-Button {
@@ -53,4 +44,54 @@
 .Github-Button {
   margin-top: 45px;
   margin-left: 50%;
+}
+
+@media only screen and (max-width: 900px) {
+  .Header {
+    display: flex;
+    flex-direction: Column;
+    max-width: 900px;
+    height: 180px;
+    background-color: #f4faff;
+  }
+
+  .Header-Title {
+    display: flex;
+    margin-left: 25px;
+    font-size: 25px;
+    font-weight: bold;
+    color: black;
+    text-align: center;
+    text-decoration: none;
+  }
+  .Features-Button {
+    padding: 12px 10px;
+    margin-left: 25px;
+    font-size: 18px;
+    color: black;
+    text-decoration: none;
+    transition-duration: 0.2s;
+  }
+  .Features-Button:hover {
+    background-color: #eef5fb;
+    border: none;
+  }
+  .Docs-Button {
+    padding: 12px 10px;
+    margin-left: 25px;
+    font-size: 18px;
+    color: black;
+    text-decoration: none;
+    transition-duration: 0.2s;
+  }
+
+  .Docs-Button:hover {
+    background-color: #eef5fb;
+    border: none;
+  }
+
+  .Github-Button {
+    margin-top: 5px;
+    margin-left: 35px;
+  }
 }

@@ -1,8 +1,8 @@
 .Header {
   display: flex;
   flex-direction: row;
+  width: 100%;
   height: 58px;
-  background-color: #f4faff;
 }
 
 .Header-Title {
@@ -53,5 +53,8 @@
 
 .Github-Button {
   margin-top: 15px;
-  margin-left: 50%;
+}
+
+.Header-Separator {
+  flex-grow: 1;
 }

@@ -55,7 +55,7 @@ export class AppFooter {
         </form>
         <span class={{ 'Footer-Response': true, 'Hidden': this.submitResponse == undefined }}>{this.submitResponse}</span>
         <div class="Footer-LogoWrapper">
-          <img class="Footer-LogoIcon" src="../../assets/icon/logo-icon.png" />
+          <img class="Footer-LogoIcon" src="../../../assets/icon/logo-icon.png" />
           <h2 class="Footer-LogoText">FullReaction</h2>
         </div>
       </Host>

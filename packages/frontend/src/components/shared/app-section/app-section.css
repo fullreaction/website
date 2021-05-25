@@ -1,0 +1,17 @@
+.Section {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.Section[background] {
+  background-color: var(--background-color);
+}
+
+.Section-Wrap {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  max-width: 1200px;
+  padding: 12px;
+}

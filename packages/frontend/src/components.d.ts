@@ -22,6 +22,9 @@ export namespace Components {
     }
     interface AppRoot {
     }
+    interface AppSection {
+        "background": boolean;
+    }
     interface AppSupport {
     }
 }
@@ -74,6 +77,12 @@ declare global {
         prototype: HTMLAppRootElement;
         new (): HTMLAppRootElement;
     };
+    interface HTMLAppSectionElement extends Components.AppSection, HTMLStencilElement {
+    }
+    var HTMLAppSectionElement: {
+        prototype: HTMLAppSectionElement;
+        new (): HTMLAppSectionElement;
+    };
     interface HTMLAppSupportElement extends Components.AppSupport, HTMLStencilElement {
     }
     var HTMLAppSupportElement: {
@@ -89,6 +98,7 @@ declare global {
         "app-home": HTMLAppHomeElement;
         "app-integration": HTMLAppIntegrationElement;
         "app-root": HTMLAppRootElement;
+        "app-section": HTMLAppSectionElement;
         "app-support": HTMLAppSupportElement;
     }
 }
@@ -109,6 +119,9 @@ declare namespace LocalJSX {
     }
     interface AppRoot {
     }
+    interface AppSection {
+        "background"?: boolean;
+    }
     interface AppSupport {
     }
     interface IntrinsicElements {
@@ -120,6 +133,7 @@ declare namespace LocalJSX {
         "app-home": AppHome;
         "app-integration": AppIntegration;
         "app-root": AppRoot;
+        "app-section": AppSection;
         "app-support": AppSupport;
     }
 }
@@ -135,6 +149,7 @@ declare module "@stencil/core" {
             "app-home": LocalJSX.AppHome & JSXBase.HTMLAttributes<HTMLAppHomeElement>;
             "app-integration": LocalJSX.AppIntegration & JSXBase.HTMLAttributes<HTMLAppIntegrationElement>;
             "app-root": LocalJSX.AppRoot & JSXBase.HTMLAttributes<HTMLAppRootElement>;
+            "app-section": LocalJSX.AppSection & JSXBase.HTMLAttributes<HTMLAppSectionElement>;
             "app-support": LocalJSX.AppSupport & JSXBase.HTMLAttributes<HTMLAppSupportElement>;
         }
     }

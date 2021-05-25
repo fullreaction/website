@@ -3,15 +3,14 @@ import { Component, h } from '@stencil/core';
 @Component({
   tag: 'app-root',
   styleUrl: 'app-root.css',
-  shadow: true,
 })
 export class AppRoot {
   render() {
     return (
       <div>
-        <header>
-          <app-header></app-header>
-        </header>
+        <app-section background={true}>
+          <app-header />
+        </app-section>
         <main>
           <stencil-router>
             <stencil-route-switch scrollTopOffset={0}>
@@ -20,9 +19,9 @@ export class AppRoot {
             </stencil-route-switch>
           </stencil-router>
         </main>
-        <footer>
-          <app-footer></app-footer>
-        </footer>
+        <app-section background={true}>
+          <app-footer />
+        </app-section>
       </div>
     );
   }

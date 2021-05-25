@@ -1,4 +1,4 @@
-import { Component, h } from '@stencil/core';
+import { Component, h, Host } from '@stencil/core';
 
 @Component({
   tag: 'app-header',
@@ -7,7 +7,7 @@ import { Component, h } from '@stencil/core';
 export class AppHeader {
   render() {
     return (
-      <div class="Header">
+      <Host class="Header">
         <a class="Header-Title" href="http://localhost:3333/">
           <img class="Header-Logo" src="assets\icon\logo-icon.png" />
           FullReaction
@@ -18,6 +18,7 @@ export class AppHeader {
         <a class="Docs-Button" href="http://localhost:3333/docs">
           Documentation
         </a>
+        <div class="Header-Separator" />
         <iframe
           class="Github-Button"
           src="https://ghbtns.com/github-btn.html?user=fullreaction&repo=fullreaction&type=watch&count=false&size=large"
@@ -27,7 +28,7 @@ export class AppHeader {
           height="30"
           title="GitHub"
         ></iframe>
-      </div>
+      </Host>
     );
   }
 }

@@ -2,7 +2,7 @@ import { Component, h } from '@stencil/core';
 
 @Component({
   tag: 'app-support',
-  styleUrl: 'app-sup.css',
+  styleUrl: 'app-support.css',
 })
 export class AppSupport {
   render() {
@@ -19,10 +19,10 @@ export class AppSupport {
             <button class="Support-Buttons">Documentation</button>
           </stencil-route-link>
           <button class="Support-Buttons">
-            <img src="../../assets/icon/Github.svg" class="Support-Icons"></img>Github
+            <img src="../../../../assets/icon/Github.svg" class="Support-Icons"></img>Github
           </button>
           <button class="Support-Buttons">
-            <img src="../../assets/icon/Discord.svg" class="Support-Icons"></img>Discord
+            <img src="../../../../assets/icon/Discord.svg" class="Support-Icons"></img>Discord
           </button>
         </div>
       </div>

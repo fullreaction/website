@@ -3,7 +3,6 @@ import { Component, h } from '@stencil/core';
 @Component({
   tag: 'app-features',
   styleUrl: 'app-features.css',
-  shadow: true,
 })
 export class AppFeatures {
   render() {

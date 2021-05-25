@@ -51,12 +51,13 @@
     display: flex;
     flex-direction: Column;
     max-width: 900px;
-    height: 180px;
+    height: 200px;
     background-color: #f4faff;
   }
 
   .Header-Title {
     display: flex;
+    margin-top: 15px;
     margin-left: 25px;
     font-size: 25px;
     font-weight: bold;
@@ -91,7 +92,7 @@
   }
 
   .Github-Button {
-    margin-top: 5px;
+    margin-top: 10px;
     margin-left: 35px;
   }
 }

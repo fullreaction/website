@@ -31,14 +31,14 @@ export class AppFooter {
 
   render() {
     return (
-      <Host class="Footer-Host">
-        <form class={{ 'Footer-ContactForm': true, 'Hidden': this.submitResponse != undefined }} onSubmit={e => this.submit(e)}>
-          <h2 class="Footer-FormHeader">Contact Us</h2>
+      <Host class="Footer">
+        <form class="Footer-ContactForm" hidden={this.submitResponse != undefined} onSubmit={e => this.submit(e)}>
+          <h2 class="Footer-FormHeader Heading-2">Contact Us</h2>
           <input
             value={this.email}
             onInput={e => (this.email = (e.target as HTMLInputElement).value)}
             type="email"
-            class="Footer-FormEmail"
+            class="Footer-FormEmail InputText"
             name="contact-email"
             placeholder="Email"
             required
@@ -46,17 +46,18 @@ export class AppFooter {
           <textarea
             value={this.text}
             onInput={e => (this.text = (e.target as HTMLTextAreaElement).value)}
-            class="Footer-FormBody"
+            class="Footer-FormBody InputArea"
             name="contact-body"
             placeholder="Message"
             required
           />
-          <input type="submit" class="Footer-FormSubmit" value="Send" />
+          <input type="submit" class="Footer-FormSubmit Button" value="Send" />
         </form>
-        <span class={{ 'Footer-Response': true, 'Hidden': this.submitResponse == undefined }}>{this.submitResponse}</span>
-        <div class="Footer-LogoWrapper">
-          <img class="Footer-Logo" src="../../../assets/icon/logo.png" />
-        </div>
+        <span class="Footer-Response Text-1" hidden={this.submitResponse == undefined}>
+          {this.submitResponse}
+        </span>
+
+        <img class="Footer-Logo" src="/assets/icon/logo.svg" alt="Logo" />
       </Host>
     );
   }

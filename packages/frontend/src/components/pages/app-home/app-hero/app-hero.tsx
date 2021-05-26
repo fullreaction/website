@@ -28,9 +28,11 @@ export class AppFooter {
   //Signup doesn't work.
   render() {
     return (
-      <Host class="Hero-Host">
-        <h1 class="Hero-Header">Publish to any form with ease</h1>
-        <span class="Hero-Subheader">One API to publish your content to Facebook, Linkedin, Instagram, Youtube and more</span>
+      <Host class="Hero">
+        <h1 class="Hero-Header Heading-1">
+          Publish to any <i>Platform</i> with ease
+        </h1>
+        <p class="Hero-Subheader Text-1">One API to publish your content to Facebook, Linkedin, Instagram, Youtube and more</p>
 
         <form name="signup form" class={{ 'Hero-Form': true, 'Hidden': this.submitResponse != undefined }} onSubmit={e => this.submit(e)}>
           <input
@@ -41,11 +43,10 @@ export class AppFooter {
             }}
             placeholder="Email"
             name="signup email"
-            class="Hero-FormEmail"
+            class="Hero-FormEmail InputText"
             required
-          ></input>
-
-          <input type="submit" class="Hero-FormSubmit" value="Sign up for beta"></input>
+          />
+          <input type="submit" class="Hero-FormSubmit Button" value="Sign up for beta" />
         </form>
         <span class={{ 'Hero-Response': true, 'Hidden': this.submitResponse == undefined }}>{this.submitResponse}</span>
       </Host>

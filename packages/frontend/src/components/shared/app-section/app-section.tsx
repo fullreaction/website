@@ -6,12 +6,13 @@ import { Component, h, Host, Prop } from '@stencil/core';
 })
 export class AppSection {
   @Prop({ reflect: true }) background = false;
+  @Prop({ reflect: true, attribute: 'no-margin' }) noMargin = false;
   render() {
     return (
       <Host class="Section">
-        <div class="Section-Wrap">
+        <section class="Section-Wrap">
           <slot />
-        </div>
+        </section>
       </Host>
     );
   }

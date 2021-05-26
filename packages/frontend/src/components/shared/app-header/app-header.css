@@ -1,98 +1,43 @@
 .Header {
   display: flex;
-  flex-direction: row;
-  height: 100px;
+  align-items: center;
+  width: 100%;
   background-color: #f4faff;
 }
 
 .Header-Title {
   display: flex;
-  margin-left: 25px;
+  margin-right: 48px;
+  margin-bottom: 10px;
 }
 
-.Header-Logo {
-  padding: 5px 0px;
+.Header-Separator {
+  flex-grow: 1;
 }
 
-.Features-Button {
-  padding: 42px 20px;
-  margin-left: 40px;
-  font-size: 18px;
+.Header-Button {
+  padding: 24px 10px;
   color: black;
   text-decoration: none;
+  border-bottom: 5px solid transparent;
   transition-duration: 0.2s;
 }
 
-.Features-Button:hover {
+.Header-Button:hover {
   background-color: #eef5fb;
-  border-bottom: 5px solid rgba(0, 0, 0, 0.157);
+  border-color: rgba(0, 0, 0, 0.157);
 }
 
-.Docs-Button {
-  padding: 42px 20px;
-  font-size: 18px;
-  color: black;
-  text-decoration: none;
-  transition-duration: 0.2s;
-}
-
-.Docs-Button:hover {
-  background-color: #eef5fb;
-  border-bottom: 5px solid rgba(0, 0, 0, 0.157);
-}
-
-.Github-Button {
-  margin-top: 45px;
-  margin-left: 50%;
-}
-
-@media only screen and (max-width: 900px) {
+@media only screen and (max-width: 800px) {
   .Header {
     display: flex;
     flex-direction: Column;
-    max-width: 900px;
-    height: 200px;
-    background-color: #f4faff;
+    align-items: flex-start;
   }
-
-  .Header-Title {
-    display: flex;
-    margin-top: 15px;
-    margin-left: 25px;
-    font-size: 25px;
-    font-weight: bold;
-    color: black;
-    text-align: center;
-    text-decoration: none;
+  .Header-Button {
+    padding: 12px 0;
   }
-  .Features-Button {
-    padding: 12px 10px;
-    margin-left: 25px;
-    font-size: 18px;
-    color: black;
-    text-decoration: none;
-    transition-duration: 0.2s;
-  }
-  .Features-Button:hover {
-    background-color: #eef5fb;
+  .Header-Button:hover {
     border: none;
-  }
-  .Docs-Button {
-    padding: 12px 10px;
-    margin-left: 25px;
-    font-size: 18px;
-    color: black;
-    text-decoration: none;
-    transition-duration: 0.2s;
-  }
-
-  .Docs-Button:hover {
-    background-color: #eef5fb;
-    border: none;
-  }
-
-  .Github-Button {
-    margin-top: 10px;
-    margin-left: 35px;
   }
 }

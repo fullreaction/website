@@ -1,36 +1,27 @@
-.Features-Box {
+.Features {
   display: flex;
   flex-direction: column;
-  width: 100%;
-  padding: 0px 20px 45px 0px;
-  margin-left: -10px;
-
 }
+
 .Features-Header {
-  margin-top: 27px;
   text-align: center;
 }
-@media screen and (min-width: 801px) {
-  .Features-Textboxes {
-    display: flex;
-    flex-direction: row;
-    column-gap: 50px;
-    justify-content: center;
-    margin-left: 10px;
-    font-size: smaller;
-    text-align: center;
-  }
-  .Features-Textbox {
-    font-family: Roboto;
-  }
+.Features-List {
+  display: flex;
+  gap: 50px;
+  padding: 0;
+  margin: 0;
+  text-align: center;
 }
+
+.Features-Textbox {
+  display: block;
+  max-width: 320px;
+  margin: 0;
+}
+
 @media screen and (max-width: 800px) {
-  .Features-Textboxes {
-    display: flex;
+  .Features-List {
     flex-direction: column;
-    row-gap: 50px;
-    justify-content: center;
-    font-size: smaller;
-    text-align: center;
   }
 }

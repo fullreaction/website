@@ -1,26 +1,23 @@
-import { Component, h } from '@stencil/core';
+import { Component, h, Host } from '@stencil/core';
 
 @Component({
   tag: 'app-home',
-  styleUrl: 'app-home.css',
 })
 export class AppHome {
-  render() {
-    return (
-      <div class="app-home">
-        <app-section background={true}>
-          <app-hero />
-        </app-section>
-        <app-section>
-          <app-integration />
-        </app-section>
-        <app-section background={true}>
-          <app-features />
-        </app-section>
-        <app-section>
-          <app-support />
-        </app-section>
-      </div>
-    );
-  }
+  render = () => (
+    <Host>
+      <app-section background>
+        <app-hero />
+      </app-section>
+      <app-section>
+        <app-integration />
+      </app-section>
+      <app-section background>
+        <app-features />
+      </app-section>
+      <app-section>
+        <app-support />
+      </app-section>
+    </Host>
+  );
 }

@@ -24,6 +24,7 @@ export namespace Components {
     }
     interface AppSection {
         "background": boolean;
+        "noMargin": boolean;
     }
     interface AppSupport {
     }
@@ -121,6 +122,7 @@ declare namespace LocalJSX {
     }
     interface AppSection {
         "background"?: boolean;
+        "noMargin"?: boolean;
     }
     interface AppSupport {
     }

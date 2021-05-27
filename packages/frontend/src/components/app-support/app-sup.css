@@ -2,7 +2,6 @@
   display: flex;
   flex-direction: column;
   width: 100%;
-  padding: 0px 20px 0px 0px;
   margin-left: -10px;
 }
 .Support-Header {
@@ -10,7 +9,9 @@
   text-align: center;
 }
 .Support-Text {
-  font-size: smaller;
+  align-self: center;
+  width: 220px;
+  font-size: 14px;
   text-align: center;
 }
 .Button-Box-Support {
@@ -23,13 +24,21 @@
 }
 
 .Support-Buttons {
+  display: flex;
+  flex-direction: row;
+  column-gap: 5px;
+  justify-content: center;
   width: 130px;
   height: 25px;
   padding: 0px;
   margin-right: -1px;
   font-size: 12px;
+  line-height: 25px;
   background-color: #ff593d;
-  border-radius: 3px;
 }
 .Support-Icons {
+  margin-top: 4px;
+}
+.Support-Links {
+  text-decoration: none;
 }

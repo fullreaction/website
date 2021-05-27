@@ -17,10 +17,12 @@
     column-gap: 50px;
     justify-content: center;
     margin-left: 10px;
-    font-size: smaller;
+    font-size: 14px;
+    color: var(text-1);
     text-align: center;
   }
   .Features-Textbox {
+    width: 220px;
     font-family: Roboto;
   }
 }
@@ -30,7 +32,12 @@
     flex-direction: column;
     row-gap: 50px;
     justify-content: center;
-    font-size: smaller;
+    font-size: 14px;
     text-align: center;
+  }
+  .Features-Textbox {
+    align-self: center;
+    width: 220px;
+    font-family: Roboto;
   }
 }

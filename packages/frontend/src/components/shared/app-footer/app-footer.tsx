@@ -55,7 +55,7 @@ export class AppFooter {
         </form>
         <span class={{ 'Footer-Response': true, 'Hidden': this.submitResponse == undefined }}>{this.submitResponse}</span>
         <div class="Footer-LogoWrapper">
-          <img class="Footer-Logo" src="../../../assets/icon/logo.png" />
+          <img class="Footer-Logo" src="../../../assets/icon/logo.svg" />
         </div>
       </Host>
     );

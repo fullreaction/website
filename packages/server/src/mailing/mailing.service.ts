@@ -1,9 +1,30 @@
 import { HttpException, HttpService, Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { ContactDAO } from 'src/db';
-import { MailChimp } from '../mailing/httpUtils/mailchimp';
+/*
+
+  * Make prod and dev .env files
+  * Think about how DB environment variables
+    will work with knexjs migrations.
+
+
+
+Issues:
+  * npm run start:dev not working correctly,
+    --watch doesn't function.
+
+*/
 @Injectable()
 export class MailingService {
-  constructor(private http: HttpService, private contactDAO: ContactDAO) {}
+  private MailchimpURL = 'https://us6.api.mailchimp.com/3.0/';
+  private MandrillURL = 'https://mandrillapp.com/api/1.0/';
+  constructor(
+    private http: HttpService,
+    private contactDAO: ContactDAO,
+    private cfgService: ConfigService,
+  ) {
+    console.log(cfgService.get('MAILCHIMP_APIKEY'));
+  }
 
   async signup(email: string) {
     if (email) {
@@ -17,11 +38,13 @@ export class MailingService {
       });
 
       const res = await this.http.post(
-        MailChimp.MarketApi.rootUrl + 'lists/' + MailChimp.MarketApi.audienceId,
+        this.MailchimpURL +
+          'lists/' +
+          this.cfgService.get('MAILCHIMP_AUDIENCEID'),
         mcDataPost,
         {
           headers: {
-            Authorization: 'auth ' + MailChimp.MarketApi.apiKey,
+            Authorization: 'auth ' + this.cfgService.get('MAILCHIMP_APIKEY'),
           },
         },
       );
@@ -45,18 +68,18 @@ export class MailingService {
   }
 
   async contact(email: string, text: string) {
-    //
+    const recEmail = this.cfgService.get('MANDRILL_EMAIL');
     const mcDataPost = JSON.stringify({
-      key: MailChimp.TransactionApi.apiKey,
+      key: this.cfgService.get('MANDRILL_APIKEY'),
       message: {
         text: text,
         subject: 'Contact from ' + email,
-        from_email: 'george.chankseliani@fullreaction.com',
-        to: [{ email: 'george.chankseliani@fullreaction.com' }],
+        from_email: recEmail,
+        to: [{ email: recEmail }],
       },
     });
     const res = await this.http.post(
-      MailChimp.TransactionApi.rootUrl + 'messages/send',
+      this.MandrillURL + 'messages/send',
       mcDataPost,
     );
     res.subscribe({

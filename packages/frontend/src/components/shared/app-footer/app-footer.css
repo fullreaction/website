@@ -15,7 +15,7 @@
   height: 40px;
 }
 .Footer-Response {
-  color: #1f7f23;
+  color: var(--response-color);
 }
 @media only screen and (max-width: 800px) {
   .Footer {

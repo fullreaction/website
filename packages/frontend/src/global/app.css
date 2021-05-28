@@ -12,6 +12,7 @@
   --primary-color: #ff593d;
   --primary-dark-color: #e5533a;
   --background-color: #f4faff;
+  --response-color: #1f7f23;
 }
 
 body {
@@ -95,7 +96,7 @@ body {
 .Github-Button {
   position: relative;
   display: inline-flex;
-  gap: 4px;
+  gap: 6px;
   align-items: center;
   height: 20px;
   padding: 3px 10px;

@@ -20,7 +20,7 @@
   margin: 0;
 }
 
-@media screen and (max-width: 800px) {
+@media only screen and (max-width: 800px) {
   .Features-List {
     flex-direction: column;
   }

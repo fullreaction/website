@@ -1,0 +1,24 @@
+.Footer {
+  display: flex;
+  gap: 48px;
+  align-items: flex-start;
+  justify-content: space-between;
+  width: 100%;
+}
+.Footer-ContactForm {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 400px;
+}
+.Footer-Logo {
+  height: 40px;
+}
+.Footer-Response {
+  color: #1f7f23;
+}
+@media only screen and (max-width: 800px) {
+  .Footer {
+    flex-direction: column-reverse;
+  }
+}

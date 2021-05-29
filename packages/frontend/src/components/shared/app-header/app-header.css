@@ -1,0 +1,43 @@
+.Header {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  background-color: #f4faff;
+}
+
+.Header-Title {
+  display: flex;
+  margin-right: 48px;
+  margin-bottom: 10px;
+}
+
+.Header-Separator {
+  flex-grow: 1;
+}
+
+.Header-Button {
+  padding: 24px 10px;
+  color: black;
+  text-decoration: none;
+  border-bottom: 5px solid transparent;
+  transition-duration: 0.2s;
+}
+
+.Header-Button:hover {
+  background-color: #eef5fb;
+  border-color: rgba(0, 0, 0, 0.157);
+}
+
+@media only screen and (max-width: 800px) {
+  .Header {
+    display: flex;
+    flex-direction: Column;
+    align-items: flex-start;
+  }
+  .Header-Button {
+    padding: 12px 0;
+  }
+  .Header-Button:hover {
+    border: none;
+  }
+}

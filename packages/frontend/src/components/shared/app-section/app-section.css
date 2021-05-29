@@ -1,0 +1,26 @@
+.Section {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.Section[background] {
+  background-color: var(--background-color);
+}
+
+.Section-Wrap {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  max-width: 1100px;
+  padding: 0 24px;
+}
+.Section:not([no-margin]) > .Section-Wrap {
+  padding: 36px 24px;
+}
+
+@media only screen and (max-width: 800px) {
+  .Section-Wrap {
+    padding: 24px 12px;
+  }
+}

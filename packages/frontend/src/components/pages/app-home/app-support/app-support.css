@@ -1,0 +1,15 @@
+.Support-Header {
+  text-align: center;
+}
+.Support-Text {
+  max-width: 400px;
+  text-align: center;
+}
+.Support-Wrap {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+}
+.Support-Link a {
+  text-decoration: none;
+}

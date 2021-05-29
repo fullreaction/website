@@ -1,0 +1,27 @@
+.Features {
+  display: flex;
+  flex-direction: column;
+}
+
+.Features-Header {
+  text-align: center;
+}
+.Features-List {
+  display: flex;
+  gap: 50px;
+  padding: 0;
+  margin: 0;
+  text-align: center;
+}
+
+.Features-Textbox {
+  display: block;
+  max-width: 320px;
+  margin: 0;
+}
+
+@media screen and (max-width: 800px) {
+  .Features-List {
+    flex-direction: column;
+  }
+}

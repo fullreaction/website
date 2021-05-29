@@ -2,29 +2,32 @@ import { HttpException, HttpService, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { ContactDAO } from 'src/db';
 /*
-
-  * Make prod and dev .env files
-  * Think about how DB environment variables
-    will work with knexjs migrations.
-
+  tasks:
+    * Think about how DB environment variables
+      will work with knexjs migrations.
 
 
-Issues:
-  * npm run start:dev not working correctly,
-    --watch doesn't function.
+
+  Issues:
+    * process.env.DB_... variables come up undefined in knexfile
+    * nestjs config needs to be injected into something to work
 
 */
 @Injectable()
 export class MailingService {
-  private MailchimpURL = 'https://us6.api.mailchimp.com/3.0/';
-  private MandrillURL = 'https://mandrillapp.com/api/1.0/';
+  private Mailchimp: { apikey: string; url: string; audienceId: string } = {
+    ...this.cfgService.get('mailchimp'),
+    url: 'https://us6.api.mailchimp.com/3.0/',
+  };
+  private Mandrill: { apikey: string; url: string; email: string } = {
+    ...this.cfgService.get('mandrill'),
+    url: 'https://mandrillapp.com/api/1.0/',
+  };
   constructor(
     private http: HttpService,
     private contactDAO: ContactDAO,
     private cfgService: ConfigService,
-  ) {
-    console.log(cfgService.get('MAILCHIMP_APIKEY'));
-  }
+  ) {}
 
   async signup(email: string) {
     if (email) {
@@ -38,13 +41,11 @@ export class MailingService {
       });
 
       const res = await this.http.post(
-        this.MailchimpURL +
-          'lists/' +
-          this.cfgService.get('MAILCHIMP_AUDIENCEID'),
+        this.Mailchimp.url + 'lists/' + this.Mailchimp.audienceId,
         mcDataPost,
         {
           headers: {
-            Authorization: 'auth ' + this.cfgService.get('MAILCHIMP_APIKEY'),
+            Authorization: 'auth ' + this.Mailchimp.apikey,
           },
         },
       );
@@ -68,9 +69,9 @@ export class MailingService {
   }
 
   async contact(email: string, text: string) {
-    const recEmail = this.cfgService.get('MANDRILL_EMAIL');
+    const recEmail = this.Mandrill.email;
     const mcDataPost = JSON.stringify({
-      key: this.cfgService.get('MANDRILL_APIKEY'),
+      key: this.Mandrill.apikey,
       message: {
         text: text,
         subject: 'Contact from ' + email,
@@ -79,7 +80,7 @@ export class MailingService {
       },
     });
     const res = await this.http.post(
-      this.MandrillURL + 'messages/send',
+      this.Mandrill.url + 'messages/send',
       mcDataPost,
     );
     res.subscribe({

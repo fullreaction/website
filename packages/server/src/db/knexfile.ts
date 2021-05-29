@@ -1,6 +1,4 @@
-// Update with your config settings.
-
-export const development = {
+export const knexfile = {
   client: 'mysql',
   connection: {
     host: 'localhost',

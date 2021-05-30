@@ -1,15 +1,15 @@
 {
   "name": "fullreaction",
   "private": true,
-  "version": "0.0.1",
-  "description": "Stencil App Starter",
+  "version": "1.0.0",
+  "description": "Full Reaction website",
   "main": "./dist/index.cjs.js",
   "module": "./dist/index.js",
   "collection": "./dist/collection/collection-manifest.json",
   "types": "./dist/types/components.d.ts",
   "scripts": {
     "build": "stencil build",
-    "start": "stencil build --dev --watch --serve",
+    "start": "stencil build --dev --watch --serve --no-open",
     "prerender": "stencil build --prerender",
     "test": "stencil test --spec --e2e",
     "test.watch": "stencil test --spec --e2e --watchAll",

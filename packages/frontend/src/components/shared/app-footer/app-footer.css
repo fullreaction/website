@@ -1,64 +1,24 @@
-@media only screen and (max-width: 800px) {
-  .Footer-Logo {
-    display: none;
-  }
-}
-
-.Footer-Host {
+.Footer {
   display: flex;
+  gap: 48px;
+  align-items: flex-start;
+  justify-content: space-between;
   width: 100%;
 }
 .Footer-ContactForm {
   display: flex;
   flex-direction: column;
-}
-.Footer-FormHeader {
-  margin-top: 0px;
-  font-size: 36px;
-}
-.Footer-FormEmail,
-.Footer-FormBody {
-  box-sizing: border-box;
+  gap: 8px;
   width: 400px;
-  padding: 8px;
-  margin-bottom: 10px;
-  font-size: 18px;
-  border: 1px solid #0069a5;
-  border-radius: 3px;
-}
-.Footer-FormEmail {
-  height: 48px;
-}
-.Footer-FormBody {
-  height: 110px;
-  resize: none;
-}
-.Footer-FormSubmit {
-  width: 400px;
-  height: 48px;
-  font-size: 18px;
-}
-
-.Footer-LogoWrapper {
-  display: flex;
-  padding: 8px;
-  padding-right: 20px;
-  margin-left: auto;
-  cursor: default;
 }
 .Footer-Logo {
-  width: 221.55px;
   height: 40px;
-  padding: 4px 0px;
-  pointer-events: none;
 }
-
 .Footer-Response {
-  font-size: 18px;
-  font-weight: bold;
-  color: #1f7f23;
+  color: var(--response-color);
 }
-
-.Hidden {
-  display: none !important;
+@media only screen and (max-width: 800px) {
+  .Footer {
+    flex-direction: column-reverse;
+  }
 }

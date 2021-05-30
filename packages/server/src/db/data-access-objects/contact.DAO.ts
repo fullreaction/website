@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
-import knex from 'knex';
+import { DatabaseService } from '../dbService';
 
 // Contact Data Access Object
 
@@ -8,11 +7,9 @@ import knex from 'knex';
 
 @Injectable()
 export class ContactDAO {
-  private db = knex(this.cfgService.get('database'));
-
-  constructor(private cfgService: ConfigService) {}
+  constructor(private db: DatabaseService) {}
   async pushNew(email: string, text: string) {
-    await this.db('contacts').insert({
+    await this.db.database('contacts').insert({
       contact_email: email,
       contact_message: text,
     });

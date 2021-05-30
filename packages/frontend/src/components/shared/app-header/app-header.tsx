@@ -8,26 +8,20 @@ export class AppHeader {
   render() {
     return (
       <Host class="Header">
-        <a class="Header-Title" href="http://localhost:3333/">
-          <img class="Header-Logo" src="assets\icon\logo-icon.png" />
-          FullReaction
+        <a class="Header-Title" href="/">
+          <img class="Header-Logo" src="/assets/icon/logo.svg" alt="Logo" />
         </a>
-        <a class="Features-Button" href="">
+        <a class="Header-Button Text-1" href="/#features">
           Features
         </a>
-        <a class="Docs-Button" href="http://localhost:3333/docs">
+        <a class="Header-Button Text-1" href="/docs">
           Documentation
         </a>
         <div class="Header-Separator" />
-        <iframe
-          class="Github-Button"
-          src="https://ghbtns.com/github-btn.html?user=fullreaction&repo=fullreaction&type=watch&count=false&size=large"
-          frameborder="0"
-          scrolling="0"
-          width="170"
-          height="30"
-          title="GitHub"
-        ></iframe>
+        <a class="Github-Button" href="https://github.com/fullreaction/fullreaction" title="Star fullreaction/fullreaction on GitHub" target="_blank" rel="noreferrer">
+          <img width="16" height="16" src="/assets/social-icons/Github.svg" />
+          Star
+        </a>
       </Host>
     );
   }

@@ -27,7 +27,6 @@
     "@nestjs/platform-express": "^7.6.15",
     "knex": "^0.95.6",
     "mysql": "^2.18.1",
-    "nest-knexjs": "^0.0.3",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
     "rxjs": "^6.6.6"

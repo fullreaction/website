@@ -1,47 +1,15 @@
-.Support-Box {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  height: 250px;
-  margin-left: -10px;
-}
 .Support-Header {
-  margin-top: 10px;
   text-align: center;
 }
 .Support-Text {
-  align-self: center;
-  width: 313px;
-  font-size: 14px;
+  max-width: 400px;
   text-align: center;
 }
-.Button-Box-Support {
+.Support-Wrap {
   display: flex;
-  flex-direction: row;
-  column-gap: 10px;
+  gap: 8px;
   justify-content: center;
-  width: 100%;
-  margin: left -10px;
-  margin-top: 30px;
 }
-
-.Support-Buttons {
-  display: flex;
-  flex-direction: row;
-  column-gap: 5px;
-  justify-content: center;
-  width: 130px;
-  height: 25px;
-  font-size: 14px;
-  line-height: 25px;
-  color: #ffffff;
-  background-color: #ff593d;
-  border: none;
-  border-radius: 3px;
-}
-.Support-Icons {
-  margin-top: 4px;
-}
-.Support-Links {
+.Support-Link a {
   text-decoration: none;
 }

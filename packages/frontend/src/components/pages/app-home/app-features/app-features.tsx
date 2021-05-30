@@ -1,33 +1,26 @@
-import { Component, h } from '@stencil/core';
+import { Component, h, Host } from '@stencil/core';
 
 @Component({
   tag: 'app-features',
   styleUrl: 'app-features.css',
-  shadow: true,
 })
 export class AppFeatures {
   render() {
     return (
-      <div class="Features-Box">
-        <h2 class="Features-Header">Features</h2>
-        <div class="Features-Textboxes">
-          <div class="Features-Textbox">
-            <p>
-              One API to publish your content to Facebook, Linkedin, Instagram, Youtube and more One API to publish your content to Facebook, Linkedin Instagram, Youtube and more
-            </p>
-          </div>
-          <div class="Features-Textbox">
-            <p>
-              One API to publish your content to Facebook, Linkedin, Instagram, Youtube and more One API to publish your content to Facebook, Linkedin Instagram, Youtube and more
-            </p>
-          </div>
-          <div class="Features-Textbox">
-            <p>
-              One API to publish your content to Facebook, Linkedin, Instagram, Youtube and more One API to publish your content to Facebook, Linkedin Instagram, Youtube and more
-            </p>
-          </div>
-        </div>
-      </div>
+      <Host class="Features" id="features">
+        <h2 class="Features-Header Heading-2">Features</h2>
+        <ul class="Features-List">
+          <li class="Features-Textbox Text-1">
+            One API to publish your content to Facebook, Linkedin, Instagram, Youtube and more One API to publish your content to Facebook, Linkedin Instagram, Youtube and more
+          </li>
+          <li class="Features-Textbox Text-1">
+            One API to publish your content to Facebook, Linkedin, Instagram, Youtube and more One API to publish your content to Facebook, Linkedin Instagram, Youtube and more
+          </li>
+          <li class="Features-Textbox Text-1">
+            One API to publish your content to Facebook, Linkedin, Instagram, Youtube and more One API to publish your content to Facebook, Linkedin Instagram, Youtube and more
+          </li>
+        </ul>
+      </Host>
     );
   }
 }

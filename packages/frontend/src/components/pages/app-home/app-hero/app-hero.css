@@ -36,6 +36,14 @@
   width: 300px;
 }
 
+.Hero-Error,
+.Hero-Response {
+  font-weight: bold;
+}
 .Hero-Response {
   color: var(--response-color);
+}
+
+.Hero-Error {
+  color: var(--error-color);
 }

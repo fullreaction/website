@@ -8,6 +8,7 @@ export class AppFooter {
   @State() email: string;
   @State() text: string;
   @State() submitResponse: string;
+  @State() isErrorResponse: boolean;
 
   submit(e) {
     e.preventDefault();
@@ -21,12 +22,13 @@ export class AppFooter {
       .then(res => {
         console.log(res);
         this.submitResponse = 'Thank you for contacting us.';
+        this.isErrorResponse = false;
       })
       .catch(err => {
         console.log(err);
         this.submitResponse = 'An error has occured.';
+        this.isErrorResponse = true;
       });
-    return false;
   }
 
   render() {
@@ -53,9 +55,7 @@ export class AppFooter {
           />
           <input type="submit" class="Footer-FormSubmit Button" value="Send" />
         </form>
-        <span class="Footer-Response Text-1" hidden={this.submitResponse == undefined}>
-          {this.submitResponse}
-        </span>
+        <span class={this.isErrorResponse ? 'Footer-Error Text-1' : 'Footer-Response Text-1'}>{this.submitResponse}</span>
 
         <img class="Footer-Logo" src="/assets/icon/logo.svg" alt="Logo" />
       </Host>

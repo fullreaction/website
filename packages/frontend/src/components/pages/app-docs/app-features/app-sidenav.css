@@ -1,0 +1,42 @@
+.Sidenav {
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  width: 225px;
+  padding: 0 12px;
+  overflow: hidden;
+  border-right: 1px solid rgba(0, 0, 0, 0.157);
+}
+
+.Sidenav a {
+  transition-duration: 0.1s;
+}
+
+.Sidenav a:hover {
+  background-color: #f4faff;
+  border-right: 5px solid rgba(0, 0, 0, 0.157);
+}
+
+.Sidenav a:focus {
+  background-color: #eef5fb;
+  border-right: 5px solid rgba(0, 0, 0, 0.157);
+}
+
+.Sidenav-Title {
+  padding-left: 4px;
+  font-size: 21px;
+  font-weight: 500;
+}
+
+.Sidenav-Link {
+  display: block;
+  padding: 4px;
+  font-size: 16px;
+  color: black;
+  text-decoration: none;
+}
+
+.Sidenav-LinkBlock {
+  padding-left: 16px;
+  margin-bottom: 24px;
+}

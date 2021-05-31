@@ -26,6 +26,8 @@ export namespace Components {
         "background": boolean;
         "noMargin": boolean;
     }
+    interface AppSidenav {
+    }
     interface AppSupport {
     }
 }
@@ -84,6 +86,12 @@ declare global {
         prototype: HTMLAppSectionElement;
         new (): HTMLAppSectionElement;
     };
+    interface HTMLAppSidenavElement extends Components.AppSidenav, HTMLStencilElement {
+    }
+    var HTMLAppSidenavElement: {
+        prototype: HTMLAppSidenavElement;
+        new (): HTMLAppSidenavElement;
+    };
     interface HTMLAppSupportElement extends Components.AppSupport, HTMLStencilElement {
     }
     var HTMLAppSupportElement: {
@@ -100,6 +108,7 @@ declare global {
         "app-integration": HTMLAppIntegrationElement;
         "app-root": HTMLAppRootElement;
         "app-section": HTMLAppSectionElement;
+        "app-sidenav": HTMLAppSidenavElement;
         "app-support": HTMLAppSupportElement;
     }
 }
@@ -124,6 +133,8 @@ declare namespace LocalJSX {
         "background"?: boolean;
         "noMargin"?: boolean;
     }
+    interface AppSidenav {
+    }
     interface AppSupport {
     }
     interface IntrinsicElements {
@@ -136,6 +147,7 @@ declare namespace LocalJSX {
         "app-integration": AppIntegration;
         "app-root": AppRoot;
         "app-section": AppSection;
+        "app-sidenav": AppSidenav;
         "app-support": AppSupport;
     }
 }
@@ -152,6 +164,7 @@ declare module "@stencil/core" {
             "app-integration": LocalJSX.AppIntegration & JSXBase.HTMLAttributes<HTMLAppIntegrationElement>;
             "app-root": LocalJSX.AppRoot & JSXBase.HTMLAttributes<HTMLAppRootElement>;
             "app-section": LocalJSX.AppSection & JSXBase.HTMLAttributes<HTMLAppSectionElement>;
+            "app-sidenav": LocalJSX.AppSidenav & JSXBase.HTMLAttributes<HTMLAppSidenavElement>;
             "app-support": LocalJSX.AppSupport & JSXBase.HTMLAttributes<HTMLAppSupportElement>;
         }
     }

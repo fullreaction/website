@@ -1,55 +1,41 @@
-.sidenav {
-  position: fixed;
-  top: 0;
-  left: 0;
-  display: flex;
-  flex-direction: column;
-  width: 285px;
-  height: 100%;
-  padding-top: 28px;
-  margin-top: 100px;
-  overflow-x: hidden;
-  background-color: #ffffff;
-  border-right: 1px solid rgba(0, 0, 0, 0.157);
+.Docs-Body {
+  flex-grow: 1;
+  padding: 0 24px;
+  font-size: 16px;
 }
 
-.sidenav a {
-  transition-duration: 0.1s;
-}
-
-.sidenav a:hover {
-  background-color: #f4faff;
-  border-right: 5px solid rgba(0, 0, 0, 0.157);
-}
-
-.sidenav a:focus {
-  background-color: #eef5fb;
-  border-right: 5px solid rgba(0, 0, 0, 0.157);
-}
-
-.sidenav-titles {
-  padding-top: 10px;
-  padding-bottom: 10px;
-  padding-left: 20px;
-  font-size: 22px;
+.Docs-Body H1 {
+  margin-top: 0;
+  font-size: 21px;
   font-weight: 500;
-  color: rgb(0, 0, 0);
 }
-
-.first-lvl {
-  padding-top: 10px;
-  padding-bottom: 10px;
-  padding-left: 60px;
-  font-size: 18px;
-  color: black;
-  text-decoration: none;
+.Docs-Body H2 {
+  margin-top: 0;
+  font-size: 16px;
+  font-weight: 500;
 }
-
-.second-lvl {
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 80px;
-  font-size: 17px;
-  color: black;
-  text-decoration: none;
+.Docs-Body P {
+  margin: 0 0 18px 0;
+}
+.Docs-Body I {
+  background-color: beige;
+}
+.Docs-Body B {
+  font-weight: 600;
+}
+.Docs-Body blockquote {
+  display: block;
+  padding: 12px;
+  margin: 0 0 18px 0;
+  background-color: #eef5fb;
+  border-radius: 3px;
+}
+.Docs-Body code {
+  display: block;
+  padding: 12px;
+  margin-bottom: 18px;
+  font-size: 14px;
+  white-space: pre;
+  background-color: #f3f3f3;
+  border-radius: 3px;
 }

@@ -7,34 +7,45 @@ import { Component, h } from '@stencil/core';
 export class AppDocs {
   render() {
     return (
-      <div class="app-docs">
-        <div class="sidenav">
-          <div class="sidenav-titles">Getting Started</div>
-          <a class="first-lvl" href="#getting-started">
-            Getting Started
-          </a>
-          <a class="second-lvl" href="#information">
-            Information
-          </a>
-          <a class="second-lvl" href="#services">
-            Services
-          </a>
-          <div class="sidenav-titles">Information</div>
-          <a class="first-lvl" href="#product-info">
-            Product Info
-          </a>
-          <a class="second-lvl" href="#company-info">
-            Company Info
-          </a>
-          <div class="sidenav-titles">About</div>
-          <a class="first-lvl" href="#about">
-            About
-          </a>
-          <a class="second-lvl" href="#clients">
-            Clients
-          </a>
+      <app-section>
+        <app-sidenav />
+        <div class="Docs-Body">
+          <h1 id="getting-started">Enclosing quotation marks</h1>
+          <p>
+            Let’s say you’re <i>trying to use quotation marks inside</i> a string. <b>You’ll need to use</b> opposite <u>and outside</u>. That means strings containing single
+            quotes need to use double quotes and strings containing double quotes need to use single quotes.
+          </p>
+          <h2 id="getting-started">Sub heading</h2>
+          <p>
+            Let’s say you’re <i>trying to use quotation marks inside</i> a string. <b>You’ll need to use</b> opposite <u>and outside</u>. That means strings containing single
+            quotes need to use double quotes and strings containing double quotes need to use single quotes.
+          </p>
+          <blockquote>
+            Let’s say you’re trying to use quotation marks inside a string. You’ll need to use opposite quotation marks inside and outside.
+            <ul>
+              <li>That means strings containing</li>
+              <li>single</li>
+              <li>quotes need to use double quotes and</li>
+            </ul>
+            strings containing double quotes need to use single quotes. asdf asdf{' '}
+          </blockquote>
+          <code>
+            {`import { Injectable } from '@nestjs/common';
+
+@Injectable()
+export class AppService {
+  getHello(): string {
+    return 'Hello World!';
+  }
+}`}
+          </code>
+          <h2 id="getting-started">Properties and methods</h2>
+          <p>
+            Let’s say you’re <i>trying to use quotation marks inside</i> a string. <b>You’ll need to use</b> opposite <u>and outside</u>. That means strings containing single
+            quotes need to use double quotes and strings containing double quotes need to use single quotes.
+          </p>
         </div>
-      </div>
+      </app-section>
     );
   }
 }

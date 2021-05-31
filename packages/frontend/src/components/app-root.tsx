@@ -1,5 +1,27 @@
 import { Component, h, Host } from '@stencil/core';
 
+/*
+  Things to think about:
+
+  * Front end......
+
+  * Services {
+    * Setting up @Injectable() yourself
+    * Observables?
+    * fetch() instead of httpClient {
+      * learn how to read readableStream
+    }
+  }
+
+  * gvmHttpErrorResponse{
+      * extends angular HttpErrorResponse
+      * uses angular HttpHeaders
+  }
+
+
+
+*/
+
 @Component({
   tag: 'app-root',
 })

@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { UserDAO } from '../utils/data-access-objects/user.DAO';
+import { UserDAO } from '../../db/data-access-objects/user.DAO';
 import { UserController } from './user.controller';
 import { UserService } from './user.service';
 

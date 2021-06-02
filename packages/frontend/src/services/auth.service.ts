@@ -1,12 +1,10 @@
-import { Observable } from 'rxjs';
 import { ROOT_URL } from '../utils/httpUtils';
 
 import { User } from '../models/user.model';
 
-// @Injectable({ providedIn: 'root' })
-export class AuthService {
+class AuthServiceController {
   public error = { hasError: false, text: '' };
-  private user: User = { loggedIn: false };
+  private user: User & { loggedIn: boolean };
 
   login(email: string, password: string) {
     return new Promise((resolve, reject) => {
@@ -16,10 +14,11 @@ export class AuthService {
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
       };
-      fetch(ROOT_URL + '/auth/login', fetchData)
-        .then(e => {
-          this.user.email = e.email;
-          this.user.id = e.id;
+      fetch(ROOT_URL + 'auth/login', fetchData)
+        .then(e => e.json())
+        .then(data => {
+          this.user.user_email = data.email;
+          this.user.user_id = data.id;
           this.user.loggedIn = true;
           resolve('200');
         })
@@ -32,41 +31,42 @@ export class AuthService {
 
   register(email: string, password: string) {
     return new Promise((resolve, reject) => {
-      const res = this.http.post<number>(ROOT_URL + '/auth/register', {
-        email,
-        password,
-      });
-
-      res.subscribe({
-        next: (e: number) => {
-          this.user.email = email;
+      const fetchData: RequestInit = {
+        method: 'POST',
+        body: JSON.stringify({ email, password }),
+        headers: { 'Content-Type': 'application/json' },
+      };
+      fetch(ROOT_URL + 'auth/register', fetchData)
+        .then(e => e.json())
+        .then(data => {
+          this.user.user_email = email;
+          this.user.user_id = data;
           this.user.loggedIn = true;
-          this.user.id = e;
           resolve('200');
-        },
-        error: (e: gvmHttpErrorResponse) => {
+        })
+        .catch(e => {
           this.error = { hasError: true, text: e.error.message };
           reject(this.error.text);
-        },
-      });
+        });
     });
   }
 
   reset(email: string, password: string) {
     return new Promise((resolve, reject) => {
-      const res = this.http.patch(ROOT_URL + '/auth/reset', {
-        email: email,
-        password: password,
-      });
-      res.subscribe({
-        complete: () => {
+      const fetchData: RequestInit = {
+        method: 'PATCH',
+        body: JSON.stringify({ email, password }),
+        headers: { 'Content-Type': 'application/json' },
+      };
+      fetch(ROOT_URL + 'auth/register', fetchData)
+        .then(res => {
+          console.log(res);
           resolve('200');
-        },
-        error: (e: gvmHttpErrorResponse) => {
+        })
+        .catch(e => {
           this.error = { hasError: true, text: e.error.message };
           reject(this.error.text);
-        },
-      });
+        });
     });
   }
   getUser() {
@@ -76,24 +76,25 @@ export class AuthService {
   checkStatus() {
     return new Promise((resolve, reject) => {
       if (!this.user.loggedIn) {
-        const res: Observable<User> = this.http.get<User>(ROOT_URL + '/auth/status', {
-          withCredentials: true,
-        });
-        res.subscribe({
-          next: e => {
-            this.user.email = e.email;
-            this.user.id = e.id;
+        const fetchData: RequestInit = {
+          method: 'GET',
+
+          credentials: 'include',
+        };
+        fetch(ROOT_URL + 'auth/status', fetchData)
+          .then(e => e.json())
+          .then(data => {
+            this.user.user_email = data.email;
+            this.user.user_id = data.id;
             this.user.loggedIn = true;
-            console.log(this.user.loggedIn);
             resolve('200');
-          },
-          error: (e: gvmHttpErrorResponse) => {
+          })
+          .catch(e => {
             this.error = { hasError: true, text: e.error.message };
             this.user.loggedIn = false;
             reject(this.error.text);
-          },
-        });
-      }
+          });
+      } else resolve('200');
     });
   }
 
@@ -101,3 +102,5 @@ export class AuthService {
     this.error = { hasError: false, text: '' };
   }
 }
+
+export const AuthService = new AuthServiceController();

@@ -1,5 +1,8 @@
 export interface User {
-  id?: number;
-  email?: string;
-  loggedIn: boolean;
+  user_id?: number;
+  user_email?: string;
+  user_pass?: string;
+  updated_at: Date;
+  errors: Map<string, string>;
+  [key: string]: any;
 }

@@ -7,6 +7,7 @@ import { Component, h, Host, State } from '@stencil/core';
 export class AppFooter {
   @State() email: string;
   @State() submitResponse: string;
+  @State() isErrorResponse: boolean;
   submit(e) {
     e.preventDefault();
     const fetchData = {
@@ -19,13 +20,15 @@ export class AppFooter {
       .then(res => {
         console.log(res);
         this.submitResponse = 'A confirmation email has been sent.';
+        this.isErrorResponse = false;
       })
       .catch(err => {
         console.log(err);
         this.submitResponse = 'An error has occured.';
+        this.isErrorResponse = true;
       });
   }
-  //Signup doesn't work.
+
   render() {
     return (
       <Host class="Hero">
@@ -48,7 +51,7 @@ export class AppFooter {
           />
           <input type="submit" class="Hero-FormSubmit Button" value="Sign up for beta" />
         </form>
-        <span class={{ 'Hero-Response': true, 'Hidden': this.submitResponse == undefined }}>{this.submitResponse}</span>
+        <span class={this.isErrorResponse ? 'Hero-Error Text-1' : 'Hero-Response Text-1'}>{this.submitResponse}</span>
       </Host>
     );
   }

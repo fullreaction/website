@@ -14,9 +14,18 @@
 .Footer-Logo {
   height: 40px;
 }
+.Footer-Error,
+.Footer-Response {
+  font-weight: bold;
+}
 .Footer-Response {
   color: var(--response-color);
 }
+
+.Footer-Error {
+  color: var(--error-color);
+}
+
 @media only screen and (max-width: 800px) {
   .Footer {
     flex-direction: column-reverse;

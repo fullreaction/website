@@ -6,6 +6,8 @@
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 export namespace Components {
+    interface AppAuth {
+    }
     interface AppDocs {
     }
     interface AppFeatures {
@@ -20,6 +22,14 @@ export namespace Components {
     }
     interface AppIntegration {
     }
+    interface AppLogin {
+    }
+    interface AppRegister {
+    }
+    interface AppReset {
+    }
+    interface AppResetComplete {
+    }
     interface AppRoot {
     }
     interface AppSection {
@@ -32,6 +42,12 @@ export namespace Components {
     }
 }
 declare global {
+    interface HTMLAppAuthElement extends Components.AppAuth, HTMLStencilElement {
+    }
+    var HTMLAppAuthElement: {
+        prototype: HTMLAppAuthElement;
+        new (): HTMLAppAuthElement;
+    };
     interface HTMLAppDocsElement extends Components.AppDocs, HTMLStencilElement {
     }
     var HTMLAppDocsElement: {
@@ -74,6 +90,30 @@ declare global {
         prototype: HTMLAppIntegrationElement;
         new (): HTMLAppIntegrationElement;
     };
+    interface HTMLAppLoginElement extends Components.AppLogin, HTMLStencilElement {
+    }
+    var HTMLAppLoginElement: {
+        prototype: HTMLAppLoginElement;
+        new (): HTMLAppLoginElement;
+    };
+    interface HTMLAppRegisterElement extends Components.AppRegister, HTMLStencilElement {
+    }
+    var HTMLAppRegisterElement: {
+        prototype: HTMLAppRegisterElement;
+        new (): HTMLAppRegisterElement;
+    };
+    interface HTMLAppResetElement extends Components.AppReset, HTMLStencilElement {
+    }
+    var HTMLAppResetElement: {
+        prototype: HTMLAppResetElement;
+        new (): HTMLAppResetElement;
+    };
+    interface HTMLAppResetCompleteElement extends Components.AppResetComplete, HTMLStencilElement {
+    }
+    var HTMLAppResetCompleteElement: {
+        prototype: HTMLAppResetCompleteElement;
+        new (): HTMLAppResetCompleteElement;
+    };
     interface HTMLAppRootElement extends Components.AppRoot, HTMLStencilElement {
     }
     var HTMLAppRootElement: {
@@ -99,6 +139,7 @@ declare global {
         new (): HTMLAppSupportElement;
     };
     interface HTMLElementTagNameMap {
+        "app-auth": HTMLAppAuthElement;
         "app-docs": HTMLAppDocsElement;
         "app-features": HTMLAppFeaturesElement;
         "app-footer": HTMLAppFooterElement;
@@ -106,6 +147,10 @@ declare global {
         "app-hero": HTMLAppHeroElement;
         "app-home": HTMLAppHomeElement;
         "app-integration": HTMLAppIntegrationElement;
+        "app-login": HTMLAppLoginElement;
+        "app-register": HTMLAppRegisterElement;
+        "app-reset": HTMLAppResetElement;
+        "app-reset-complete": HTMLAppResetCompleteElement;
         "app-root": HTMLAppRootElement;
         "app-section": HTMLAppSectionElement;
         "app-sidenav": HTMLAppSidenavElement;
@@ -113,6 +158,8 @@ declare global {
     }
 }
 declare namespace LocalJSX {
+    interface AppAuth {
+    }
     interface AppDocs {
     }
     interface AppFeatures {
@@ -127,6 +174,14 @@ declare namespace LocalJSX {
     }
     interface AppIntegration {
     }
+    interface AppLogin {
+    }
+    interface AppRegister {
+    }
+    interface AppReset {
+    }
+    interface AppResetComplete {
+    }
     interface AppRoot {
     }
     interface AppSection {
@@ -138,6 +193,7 @@ declare namespace LocalJSX {
     interface AppSupport {
     }
     interface IntrinsicElements {
+        "app-auth": AppAuth;
         "app-docs": AppDocs;
         "app-features": AppFeatures;
         "app-footer": AppFooter;
@@ -145,6 +201,10 @@ declare namespace LocalJSX {
         "app-hero": AppHero;
         "app-home": AppHome;
         "app-integration": AppIntegration;
+        "app-login": AppLogin;
+        "app-register": AppRegister;
+        "app-reset": AppReset;
+        "app-reset-complete": AppResetComplete;
         "app-root": AppRoot;
         "app-section": AppSection;
         "app-sidenav": AppSidenav;
@@ -155,6 +215,7 @@ export { LocalJSX as JSX };
 declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
+            "app-auth": LocalJSX.AppAuth & JSXBase.HTMLAttributes<HTMLAppAuthElement>;
             "app-docs": LocalJSX.AppDocs & JSXBase.HTMLAttributes<HTMLAppDocsElement>;
             "app-features": LocalJSX.AppFeatures & JSXBase.HTMLAttributes<HTMLAppFeaturesElement>;
             "app-footer": LocalJSX.AppFooter & JSXBase.HTMLAttributes<HTMLAppFooterElement>;
@@ -162,6 +223,10 @@ declare module "@stencil/core" {
             "app-hero": LocalJSX.AppHero & JSXBase.HTMLAttributes<HTMLAppHeroElement>;
             "app-home": LocalJSX.AppHome & JSXBase.HTMLAttributes<HTMLAppHomeElement>;
             "app-integration": LocalJSX.AppIntegration & JSXBase.HTMLAttributes<HTMLAppIntegrationElement>;
+            "app-login": LocalJSX.AppLogin & JSXBase.HTMLAttributes<HTMLAppLoginElement>;
+            "app-register": LocalJSX.AppRegister & JSXBase.HTMLAttributes<HTMLAppRegisterElement>;
+            "app-reset": LocalJSX.AppReset & JSXBase.HTMLAttributes<HTMLAppResetElement>;
+            "app-reset-complete": LocalJSX.AppResetComplete & JSXBase.HTMLAttributes<HTMLAppResetCompleteElement>;
             "app-root": LocalJSX.AppRoot & JSXBase.HTMLAttributes<HTMLAppRootElement>;
             "app-section": LocalJSX.AppSection & JSXBase.HTMLAttributes<HTMLAppSectionElement>;
             "app-sidenav": LocalJSX.AppSidenav & JSXBase.HTMLAttributes<HTMLAppSidenavElement>;

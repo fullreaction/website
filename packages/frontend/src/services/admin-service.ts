@@ -22,9 +22,8 @@ export class AdminService {
         });
         if (typeof done != 'undefined') done([...this.users]);
       })
-      .catch(e => {
-        console.log(e);
-        throw e;
+      .catch(() => {
+        //
       });
   }
 
@@ -58,8 +57,7 @@ export class AdminService {
             this.users[this.users.findIndex(u => u.user_id == item.user_id)].errors.set('user_email', item.error);
           });
         })
-        .catch(e => {
-          console.log(e);
+        .catch(() => {
           this.fetchList();
         });
     }

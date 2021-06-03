@@ -8,7 +8,8 @@ export const up = (knex: Knex) => {
         .notNullable()
         .unique()
         .primary()
-        .defaultTo('pending');
+        .defaultTo(knex.raw("(unhex(replace(uuid(),'-','')))"));
+
       table.string('user_email', 30).notNullable().unique();
       table.string('user_pass', 50);
       table.timestamps(true, true); //CreatedAt, UpdatedAt

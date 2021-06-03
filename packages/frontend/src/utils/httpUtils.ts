@@ -1,5 +1,10 @@
 export const ROOT_URL = 'http://localhost:3000/';
 
+export const handleFetch = async response => {
+  if (!response.ok) throw Error(response.statusText);
+  return await response.json();
+};
+
 /*
 type gvmInnerError = {
   code: string;

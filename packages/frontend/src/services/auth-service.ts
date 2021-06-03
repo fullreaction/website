@@ -1,6 +1,8 @@
-import { ROOT_URL } from '../utils/httpUtils';
+import { handleFetch, ROOT_URL } from '../utils/httpUtils';
 
 import { User } from '../models/user.model';
+
+// caught errors are empty
 
 class AuthServiceController {
   public error = { hasError: false, text: '' };
@@ -15,16 +17,17 @@ class AuthServiceController {
         credentials: 'include',
       };
       fetch(ROOT_URL + 'auth/login', fetchData)
-        .then(e => e.json())
+        .then(handleFetch)
         .then(data => {
           this.user.user_email = data.email;
           this.user.user_id = data.id;
           this.user.loggedIn = true;
+          console.log(this.user);
           resolve('200');
         })
         .catch(e => {
-          this.error = { hasError: true, text: e.error.message };
-          reject(this.error.text);
+          console.log(e);
+          reject(e);
         });
     });
   }
@@ -37,7 +40,7 @@ class AuthServiceController {
         headers: { 'Content-Type': 'application/json' },
       };
       fetch(ROOT_URL + 'auth/register', fetchData)
-        .then(e => e.json())
+        .then(handleFetch)
         .then(data => {
           this.user.user_email = email;
           this.user.user_id = data;
@@ -45,8 +48,8 @@ class AuthServiceController {
           resolve('200');
         })
         .catch(e => {
-          this.error = { hasError: true, text: e.error.message };
-          reject(this.error.text);
+          console.log(e);
+          reject();
         });
     });
   }
@@ -58,15 +61,13 @@ class AuthServiceController {
         body: JSON.stringify({ email, password }),
         headers: { 'Content-Type': 'application/json' },
       };
-      fetch(ROOT_URL + 'auth/register', fetchData)
-        .then(res => {
-          console.log(res);
-          resolve('200');
-        })
+      fetch(ROOT_URL + 'auth/reset', fetchData)
+        .then(handleFetch)
         .catch(e => {
-          this.error = { hasError: true, text: e.error.message };
-          reject(this.error.text);
+          console.log(e);
+          reject();
         });
+      resolve('200');
     });
   }
   getUser() {
@@ -82,7 +83,7 @@ class AuthServiceController {
           credentials: 'include',
         };
         fetch(ROOT_URL + 'auth/status', fetchData)
-          .then(e => e.json())
+          .then(handleFetch)
           .then(data => {
             this.user.user_email = data.email;
             this.user.user_id = data.id;
@@ -90,9 +91,9 @@ class AuthServiceController {
             resolve('200');
           })
           .catch(e => {
-            this.error = { hasError: true, text: e.error.message };
             this.user.loggedIn = false;
-            reject(this.error.text);
+            console.log(e);
+            reject();
           });
       } else resolve('200');
     });

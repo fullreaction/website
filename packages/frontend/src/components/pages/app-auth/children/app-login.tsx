@@ -1,5 +1,7 @@
 import { Component, h, State } from '@stencil/core';
 import { AuthService } from '../../../../services/auth-service';
+import { gvmHttpErrorResponse } from '../../../../utils/httpUtils';
+import authStore from '../authStore';
 
 @Component({
   tag: 'app-login',
@@ -15,7 +17,10 @@ export class AppLogin {
       .then(() => {
         //
       })
-      .catch(e => console.log(e));
+      .catch((e: gvmHttpErrorResponse) => {
+        authStore.isError = true;
+        authStore.errorText = e.message;
+      });
   }
   render = () => (
     <form class="Auth-Form" onSubmit={e => this.login(e)}>

@@ -1,27 +1,22 @@
 import { Component, h, Host, State } from '@stencil/core';
-import { AuthService } from '../../../services/auth-service';
+import authStore from './authStore';
 
 /*
   Things to think about:
 
-  * Front end{
-    * set up error logic
+  * Front end {
+    * set up error logic - done
     * reset-complete url query
+    * way to get to and from auth components
 
   }
 
-  * Services {
-    * Setting up @Injectable() yourself
-    * Observables?
-    * fetch() instead of httpClient {
-      * learn how to read readableStream
-    }
+  * Sending reset email {
+    * Through mailchimp?
   }
 
-  * gvmHttpErrorResponse{
-      * extends angular HttpErrorResponse
-      * uses angular HttpHeaders
-  }
+
+
 
 
 
@@ -54,7 +49,7 @@ export class AppAuth {
       </stencil-route-switch>
 
       <div class="Auth-Extra">
-        <div class="Auth-Errors Text-1"> {AuthService.error.text} </div>
+        <span class="Auth-Errors Text-1"> {authStore.errorText} </span>
       </div>
     </Host>
   );

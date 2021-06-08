@@ -1,11 +1,10 @@
-import { handleFetch, ROOT_URL } from '../utils/httpUtils';
+import { gvmHttpErrorResponse, handleFetch, ROOT_URL } from '../utils/httpUtils';
 
 import { User } from '../models/user.model';
 
 // caught errors are empty
 
 class AuthServiceController {
-  public error = { hasError: false, text: '' };
   private user: User & { loggedIn: boolean };
 
   login(email: string, password: string) {
@@ -25,8 +24,7 @@ class AuthServiceController {
           console.log(this.user);
           resolve('200');
         })
-        .catch(e => {
-          console.log(e);
+        .catch((e: gvmHttpErrorResponse) => {
           reject(e);
         });
     });
@@ -47,9 +45,8 @@ class AuthServiceController {
           this.user.loggedIn = true;
           resolve('200');
         })
-        .catch(e => {
-          console.log(e);
-          reject();
+        .catch((e: gvmHttpErrorResponse) => {
+          reject(e);
         });
     });
   }
@@ -63,9 +60,8 @@ class AuthServiceController {
       };
       fetch(ROOT_URL + 'auth/reset', fetchData)
         .then(handleFetch)
-        .catch(e => {
-          console.log(e);
-          reject();
+        .catch((e: gvmHttpErrorResponse) => {
+          reject(e);
         });
       resolve('200');
     });
@@ -90,17 +86,11 @@ class AuthServiceController {
             this.user.loggedIn = true;
             resolve('200');
           })
-          .catch(e => {
-            this.user.loggedIn = false;
-            console.log(e);
-            reject();
+          .catch((e: gvmHttpErrorResponse) => {
+            reject(e);
           });
       } else resolve('200');
     });
-  }
-
-  clearError() {
-    this.error = { hasError: false, text: '' };
   }
 }
 

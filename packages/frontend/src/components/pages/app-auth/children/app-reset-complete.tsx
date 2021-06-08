@@ -1,5 +1,7 @@
 import { Component, h, Host, State } from '@stencil/core';
 import { AuthService } from '../../../../services/auth-service';
+import { gvmHttpErrorResponse } from '../../../../utils/httpUtils';
+import authStore from '../authStore';
 
 @Component({
   tag: 'app-reset-complete',
@@ -14,7 +16,15 @@ export class AppResetComplete {
     //Validation required
     const urlParams = new URLSearchParams(window.location.search);
     this.email = urlParams.get('email');
-    if (this.password == this.confPassword) AuthService.reset(this.email, this.password);
+    if (this.password == this.confPassword)
+      AuthService.reset(this.email, this.password)
+        .then(() => {
+          //
+        })
+        .catch((e: gvmHttpErrorResponse) => {
+          authStore.isError = true;
+          authStore.errorText = e.message;
+        });
   }
   render = () => (
     <Host class="Auth-Child">

@@ -1,5 +1,7 @@
 import { Component, h, State } from '@stencil/core';
 import { AuthService } from '../../../../services/auth-service';
+import { gvmHttpErrorResponse } from '../../../../utils/httpUtils';
+import authStore from '../authStore';
 
 @Component({
   tag: 'app-register',
@@ -12,7 +14,15 @@ export class AppRegister {
   register(e) {
     e.preventDefault();
     //Validation required
-    if (this.password == this.confPassword) AuthService.register(this.email, this.password);
+    if (this.password == this.confPassword)
+      AuthService.register(this.email, this.password)
+        .then(() => {
+          // navigate to main page?
+        })
+        .catch((e: gvmHttpErrorResponse) => {
+          authStore.isError = true;
+          authStore.errorText = e.message;
+        });
   }
   render = () => (
     <div>

@@ -1,0 +1,10 @@
+@import "~highlight.js/styles/github.css";
+app-highlight {
+  white-space: pre;
+  display: block;
+  padding: 12px;
+  margin-bottom: 18px;
+  font-size: 14px;
+  background-color: #f3f3f3;
+  border-radius: 3px;
+}

@@ -18,6 +18,10 @@ export namespace Components {
     }
     interface AppHero {
     }
+    interface AppHighlight {
+        "code": string;
+        "language": 'javascript' | 'css' | 'html';
+    }
     interface AppHome {
     }
     interface AppIntegration {
@@ -77,6 +81,12 @@ declare global {
     var HTMLAppHeroElement: {
         prototype: HTMLAppHeroElement;
         new (): HTMLAppHeroElement;
+    };
+    interface HTMLAppHighlightElement extends Components.AppHighlight, HTMLStencilElement {
+    }
+    var HTMLAppHighlightElement: {
+        prototype: HTMLAppHighlightElement;
+        new (): HTMLAppHighlightElement;
     };
     interface HTMLAppHomeElement extends Components.AppHome, HTMLStencilElement {
     }
@@ -145,6 +155,7 @@ declare global {
         "app-footer": HTMLAppFooterElement;
         "app-header": HTMLAppHeaderElement;
         "app-hero": HTMLAppHeroElement;
+        "app-highlight": HTMLAppHighlightElement;
         "app-home": HTMLAppHomeElement;
         "app-integration": HTMLAppIntegrationElement;
         "app-login": HTMLAppLoginElement;
@@ -169,6 +180,10 @@ declare namespace LocalJSX {
     interface AppHeader {
     }
     interface AppHero {
+    }
+    interface AppHighlight {
+        "code"?: string;
+        "language"?: 'javascript' | 'css' | 'html';
     }
     interface AppHome {
     }
@@ -199,6 +214,7 @@ declare namespace LocalJSX {
         "app-footer": AppFooter;
         "app-header": AppHeader;
         "app-hero": AppHero;
+        "app-highlight": AppHighlight;
         "app-home": AppHome;
         "app-integration": AppIntegration;
         "app-login": AppLogin;
@@ -221,6 +237,7 @@ declare module "@stencil/core" {
             "app-footer": LocalJSX.AppFooter & JSXBase.HTMLAttributes<HTMLAppFooterElement>;
             "app-header": LocalJSX.AppHeader & JSXBase.HTMLAttributes<HTMLAppHeaderElement>;
             "app-hero": LocalJSX.AppHero & JSXBase.HTMLAttributes<HTMLAppHeroElement>;
+            "app-highlight": LocalJSX.AppHighlight & JSXBase.HTMLAttributes<HTMLAppHighlightElement>;
             "app-home": LocalJSX.AppHome & JSXBase.HTMLAttributes<HTMLAppHomeElement>;
             "app-integration": LocalJSX.AppIntegration & JSXBase.HTMLAttributes<HTMLAppIntegrationElement>;
             "app-login": LocalJSX.AppLogin & JSXBase.HTMLAttributes<HTMLAppLoginElement>;

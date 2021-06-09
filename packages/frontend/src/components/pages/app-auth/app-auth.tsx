@@ -15,10 +15,11 @@ import authStore from './authStore';
     * Through mailchimp?
   }
 
+  Issues:
 
-
-
-
+  * Errors need to be cleared
+  * Figure out how to use variables
+      in mailchimp template
 
 */
 
@@ -35,7 +36,8 @@ export class AppAuth {
   private headers: Map<string, string> = new Map([
     ['/auth/login', 'Log in to your account'],
     ['/auth/register', 'Create Account'],
-    ['/auth/reset', 'Reset password'], //reset-complete???
+    ['/auth/reset', 'Reset password'],
+    ['/auth/reset-complete', 'Reset password'],
   ]);
   render = () => (
     <Host class="Auth-Host">

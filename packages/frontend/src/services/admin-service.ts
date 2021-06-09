@@ -1,4 +1,4 @@
-import { ROOT_URL } from '../utils/httpUtils';
+import { gvmHttpErrorResponse, handleFetch, ROOT_URL } from '../utils/httpUtils';
 import { User } from '../models/user.model';
 
 export class AdminService {
@@ -9,7 +9,7 @@ export class AdminService {
   async fetchList(done?: (users: User[]) => void): Promise<void> {
     this.users = [];
     fetch(ROOT_URL + 'api/user/list', { method: 'GET' })
-      .then(e => e.json())
+      .then(handleFetch)
       .then(data => {
         data.map(val => {
           this.users.push({
@@ -22,8 +22,8 @@ export class AdminService {
         });
         if (typeof done != 'undefined') done([...this.users]);
       })
-      .catch(() => {
-        //
+      .catch((e: gvmHttpErrorResponse) => {
+        console.log(e);
       });
   }
 
@@ -57,8 +57,9 @@ export class AdminService {
             this.users[this.users.findIndex(u => u.user_id == item.user_id)].errors.set('user_email', item.error);
           });
         })
-        .catch(() => {
+        .catch((e: gvmHttpErrorResponse) => {
           this.fetchList();
+          console.log(e);
         });
     }
   }

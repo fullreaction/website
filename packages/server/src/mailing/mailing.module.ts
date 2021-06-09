@@ -7,5 +7,6 @@ import { MailingService } from './mailing.service';
   controllers: [MailingController],
   providers: [MailingService, ContactDAO, DatabaseService],
   imports: [HttpModule],
+  exports: [MailingService],
 })
 export class MailingModule {}

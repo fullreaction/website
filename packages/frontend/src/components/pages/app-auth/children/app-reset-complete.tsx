@@ -46,7 +46,7 @@ export class AppResetComplete {
           required
         ></input>
 
-        <input type="submit" class="Auth-Input Button" value="Reset"></input>
+        <input type="submit" class="Auth-Input Button" value="Reset Password"></input>
       </form>
     </Host>
   );

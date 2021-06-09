@@ -53,4 +53,8 @@ export class AuthController {
   ) {
     await this.authService.changePassword(email, password);
   }
+  @Post('reset')
+  async sendResetEmail(@Body('email') email: string) {
+    this.authService.sendResetEmail(email);
+  }
 }

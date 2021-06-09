@@ -1,9 +1,13 @@
 import { HttpException, Injectable } from '@nestjs/common';
+import { MailingService } from 'src/mailing/mailing.service';
 import { UserService } from './users/user.service';
 
 @Injectable()
 export class AuthService {
-  constructor(private userService: UserService) {}
+  constructor(
+    private userService: UserService,
+    private mailingService: MailingService,
+  ) {}
 
   async validateUser(email: string, pass: string): Promise<any> {
     const user = await this.userService.findOne(email);
@@ -43,5 +47,9 @@ export class AuthService {
 
   async findOne(email: string) {
     return this.userService.findOne(email);
+  }
+
+  async sendResetEmail(email: string) {
+    return this.mailingService.sendResetEmail(await this.findOne(email));
   }
 }

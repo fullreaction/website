@@ -1,5 +1,6 @@
 import { HttpException, HttpService, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { User } from 'src/auth/users/user.model';
 import { ContactDAO } from 'src/db';
 /*
   tasks:
@@ -69,14 +70,13 @@ export class MailingService {
   }
 
   async contact(email: string, text: string) {
-    const recEmail = this.Mandrill.email;
     const mcDataPost = JSON.stringify({
       key: this.Mandrill.apikey,
       message: {
         text: text,
         subject: 'Contact from ' + email,
-        from_email: recEmail,
-        to: [{ email: recEmail }],
+        from_email: this.Mandrill.email,
+        to: [{ email: this.Mandrill.email }],
       },
     });
     const res = await this.http.post(
@@ -87,6 +87,35 @@ export class MailingService {
       next: (e) => {
         console.log(e);
         this.contactDAO.pushNew(email, text);
+      },
+      error: (e) => {
+        console.log(e);
+      },
+    });
+  }
+
+  async sendResetEmail(user: User) {
+    const mcDataPost = JSON.stringify({
+      key: this.Mandrill.apikey,
+      template_name: 'password-reset',
+      template_content: [
+        { name: 'USER_NAME', content: user.user_email },
+        { name: 'AUTH_CODE', content: user.user_email },
+      ],
+      message: {
+        subject: 'FullReaction password reset',
+        from_email: this.Mandrill.email,
+        from_name: 'Giorgi',
+        to: [{ email: this.Mandrill.email }],
+      },
+    });
+    const res = await this.http.post(
+      this.Mandrill.url + 'messages/send-template',
+      mcDataPost,
+    );
+    res.subscribe({
+      next: (e) => {
+        console.log(e);
       },
       error: (e) => {
         console.log(e);

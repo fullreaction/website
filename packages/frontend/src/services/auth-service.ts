@@ -66,6 +66,22 @@ class AuthServiceController {
       resolve('200');
     });
   }
+
+  requestReset(email: string) {
+    return new Promise((resolve, reject) => {
+      const fetchData: RequestInit = {
+        method: 'POST',
+        body: JSON.stringify({ email }),
+        headers: { 'Content-Type': 'application/json' },
+      };
+      fetch(ROOT_URL + 'auth/reset', fetchData)
+        .then(handleFetch)
+        .catch((e: gvmHttpErrorResponse) => {
+          reject(e);
+        });
+      resolve('200');
+    });
+  }
   getUser() {
     return this.user;
   }

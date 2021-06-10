@@ -18,6 +18,7 @@ export class AppLogin {
         //
       })
       .catch((e: gvmHttpErrorResponse) => {
+        console.log(e);
         authStore.isError = true;
         authStore.errorText = e.message;
       });

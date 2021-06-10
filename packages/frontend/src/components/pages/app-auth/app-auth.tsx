@@ -5,7 +5,6 @@ import authStore from './authStore';
   Things to think about:
 
   * Front end {
-    * set up error logic - done
     * reset-complete url query
     * way to get to and from auth components
 
@@ -17,9 +16,9 @@ import authStore from './authStore';
 
   Issues:
 
-  * Errors need to be cleared
-  * Figure out how to use variables
-      in mailchimp template
+  *** token system needs to be tested ***
+
+
 
 */
 

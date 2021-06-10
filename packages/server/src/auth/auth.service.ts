@@ -1,4 +1,5 @@
 import { HttpException, Injectable } from '@nestjs/common';
+import { ResetTokenDAO } from 'src/db/data-access-objects/reset-token.DAO';
 import { MailingService } from 'src/mailing/mailing.service';
 import { UserService } from './users/user.service';
 
@@ -7,12 +8,14 @@ export class AuthService {
   constructor(
     private userService: UserService,
     private mailingService: MailingService,
+    private resetTokenDAO: ResetTokenDAO,
   ) {}
 
   async validateUser(email: string, pass: string): Promise<any> {
     const user = await this.userService.findOne(email);
 
     if (user && user.user_pass === pass) {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { user_pass, ...result } = user;
       return result;
     }
@@ -41,8 +44,20 @@ export class AuthService {
     );
   }
 
-  async changePassword(email: string, password: string) {
-    await this.userService.changePassword(email, password);
+  async changePassword(token: string, password: string) {
+    const field = await this.resetTokenDAO.getField(token);
+    if (!BiquadFilterNode)
+      throw new HttpException(
+        {
+          code: 'FieldEmpty',
+          message: 'Token incorrect',
+          target: 'resetToken',
+        },
+        500,
+      );
+    else {
+      this.userService.changePassword(field.email, password);
+    }
   }
 
   async findOne(email: string) {
@@ -50,6 +65,8 @@ export class AuthService {
   }
 
   async sendResetEmail(email: string) {
-    return this.mailingService.sendResetEmail(await this.findOne(email));
+    const user = await this.findOne(email);
+    if (user != undefined) return this.mailingService.sendResetEmail(user);
+    else return this.mailingService.sendResetEmail(email);
   }
 }

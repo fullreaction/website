@@ -2,6 +2,7 @@ import { HttpException, HttpService, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { User } from 'src/auth/users/user.model';
 import { ContactDAO } from 'src/db';
+import { ResetTokenDAO } from 'src/db/data-access-objects/reset-token.DAO';
 /*
   tasks:
     * Think about how DB environment variables
@@ -27,6 +28,7 @@ export class MailingService {
   constructor(
     private http: HttpService,
     private contactDAO: ContactDAO,
+    private tokenDAO: ResetTokenDAO,
     private cfgService: ConfigService,
   ) {}
 
@@ -94,23 +96,32 @@ export class MailingService {
     });
   }
 
-  async sendResetEmail(user: User) {
-    const mcDataPost = JSON.stringify({
+  // One sentence + link is easier as string I think
+  // I'd like to write up a fully decorated one later
+  async sendResetEmail(user: User | string) {
+    const mcData = {
       key: this.Mandrill.apikey,
-      template_name: 'password-reset',
-      template_content: [
-        { name: 'USER_NAME', content: user.user_email },
-        { name: 'AUTH_CODE', content: user.user_email },
-      ],
+
       message: {
         subject: 'FullReaction password reset',
         from_email: this.Mandrill.email,
         from_name: 'Giorgi',
         to: [{ email: this.Mandrill.email }],
+        text: '',
       },
-    });
+    };
+    if (typeof user === 'string') {
+      mcData.message.text =
+        "Hello, we've received a request to reset a password for a FullReaction account with this email, though no such account exists. etc etc";
+    } else {
+      const token = this.tokenDAO.createNew(user.user_email);
+      mcData.message.text =
+        'Hello, here is a link to reset your FullReaction password \n http://localhost:3333/auth/reset-complete?token=' +
+        token;
+    }
+    const mcDataPost = JSON.stringify(mcData);
     const res = await this.http.post(
-      this.Mandrill.url + 'messages/send-template',
+      this.Mandrill.url + 'messages/send',
       mcDataPost,
     );
     res.subscribe({

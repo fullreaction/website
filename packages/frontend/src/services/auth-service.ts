@@ -1,14 +1,14 @@
 import { gvmHttpErrorResponse, handleFetch, ROOT_URL } from '../utils/httpUtils';
 
 import { User } from '../models/user.model';
-
-// caught errors are empty
+import authStore from '../components/pages/app-auth/authStore';
 
 class AuthServiceController {
-  private user: User & { loggedIn: boolean };
+  private user: User & { loggedIn: boolean } = { loggedIn: false, errors: new Map() };
 
   login(email: string, password: string) {
     return new Promise((resolve, reject) => {
+      this.clearErrors();
       const fetchData: RequestInit = {
         method: 'POST',
         body: JSON.stringify({ email, password }),
@@ -18,8 +18,9 @@ class AuthServiceController {
       fetch(ROOT_URL + 'auth/login', fetchData)
         .then(handleFetch)
         .then(data => {
-          this.user.user_email = data.email;
-          this.user.user_id = data.id;
+          console.log(data);
+          this.user.user_email = data.user_email;
+          this.user.user_id = data.user_id;
           this.user.loggedIn = true;
           console.log(this.user);
           resolve('200');
@@ -32,6 +33,7 @@ class AuthServiceController {
 
   register(email: string, password: string) {
     return new Promise((resolve, reject) => {
+      this.clearErrors();
       const fetchData: RequestInit = {
         method: 'POST',
         body: JSON.stringify({ email, password }),
@@ -53,6 +55,7 @@ class AuthServiceController {
 
   reset(email: string, password: string) {
     return new Promise((resolve, reject) => {
+      this.clearErrors();
       const fetchData: RequestInit = {
         method: 'PATCH',
         body: JSON.stringify({ email, password }),
@@ -69,6 +72,7 @@ class AuthServiceController {
 
   requestReset(email: string) {
     return new Promise((resolve, reject) => {
+      this.clearErrors();
       const fetchData: RequestInit = {
         method: 'POST',
         body: JSON.stringify({ email }),
@@ -88,6 +92,7 @@ class AuthServiceController {
 
   checkStatus() {
     return new Promise((resolve, reject) => {
+      this.clearErrors();
       if (!this.user.loggedIn) {
         const fetchData: RequestInit = {
           method: 'GET',
@@ -107,6 +112,10 @@ class AuthServiceController {
           });
       } else resolve('200');
     });
+  }
+  clearErrors() {
+    authStore.isError = false;
+    authStore.errorText = '';
   }
 }
 

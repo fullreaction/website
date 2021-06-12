@@ -8,22 +8,23 @@ import authStore from '../authStore';
   styleUrl: '../app-auth.css',
 })
 export class AppResetComplete {
-  private email: string;
+  private token: string;
   @State() password: string;
   @State() confPassword: string;
   reset(e) {
     e.preventDefault();
     //Validation required
     const urlParams = new URLSearchParams(window.location.search);
-    this.email = urlParams.get('email');
+    this.token = urlParams.get('token');
     if (this.password == this.confPassword)
-      AuthService.reset(this.email, this.password)
+      AuthService.reset(this.token, this.password)
         .then(() => {
           //
         })
         .catch((e: gvmHttpErrorResponse) => {
           authStore.isError = true;
           authStore.errorText = e.message;
+          console.log(authStore.errorText);
         });
   }
   render = () => (

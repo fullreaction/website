@@ -53,20 +53,22 @@ class AuthServiceController {
     });
   }
 
-  reset(email: string, password: string) {
+  reset(token: string, password: string) {
     return new Promise((resolve, reject) => {
       this.clearErrors();
       const fetchData: RequestInit = {
         method: 'PATCH',
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ token: token, password: password }),
         headers: { 'Content-Type': 'application/json' },
       };
       fetch(ROOT_URL + 'auth/reset', fetchData)
         .then(handleFetch)
+        .then(() => {
+          resolve('200');
+        })
         .catch((e: gvmHttpErrorResponse) => {
           reject(e);
         });
-      resolve('200');
     });
   }
 
@@ -80,6 +82,9 @@ class AuthServiceController {
       };
       fetch(ROOT_URL + 'auth/reset', fetchData)
         .then(handleFetch)
+        .then(() => {
+          resolve('200');
+        })
         .catch((e: gvmHttpErrorResponse) => {
           reject(e);
         });

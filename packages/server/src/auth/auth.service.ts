@@ -9,7 +9,9 @@ export class AuthService {
     private userService: UserService,
     private mailingService: MailingService,
     private resetTokenDAO: ResetTokenDAO,
-  ) {}
+  ) {
+    resetTokenDAO.continualSweep();
+  }
 
   async validateUser(email: string, pass: string): Promise<any> {
     const user = await this.userService.findOne(email);
@@ -46,7 +48,7 @@ export class AuthService {
 
   async changePassword(token: string, password: string) {
     const field = await this.resetTokenDAO.getField(token);
-    if (!BiquadFilterNode)
+    if (!field) {
       throw new HttpException(
         {
           code: 'FieldEmpty',
@@ -55,7 +57,8 @@ export class AuthService {
         },
         500,
       );
-    else {
+    } else {
+      await this.resetTokenDAO.deleteToken(token);
       this.userService.changePassword(field.email, password);
     }
   }

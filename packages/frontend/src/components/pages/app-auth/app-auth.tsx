@@ -5,18 +5,11 @@ import authStore from './authStore';
   Things to think about:
 
   * Front end {
-    * reset-complete url query
     * way to get to and from auth components
 
   }
 
-  * Sending reset email {
-    * Through mailchimp?
-  }
-
   Issues:
-
-  *** token system needs to be tested ***
 
 
 

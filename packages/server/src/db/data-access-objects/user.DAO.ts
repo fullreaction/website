@@ -40,6 +40,7 @@ export class UserDAO {
     users.forEach((it: User) => {
       it.user_id = fromBinaryUUID(it.user_id as Buffer);
     });
+    console.log(users);
     return users;
   }
 

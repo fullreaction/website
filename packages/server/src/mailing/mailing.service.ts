@@ -114,12 +114,13 @@ export class MailingService {
       mcData.message.text =
         "Hello, we've received a request to reset a password for a FullReaction account with this email, though no such account exists. etc etc";
     } else {
-      const token = this.tokenDAO.createNew(user.user_email);
+      const token = await this.tokenDAO.createNew(user.user_email);
       mcData.message.text =
         'Hello, here is a link to reset your FullReaction password \n http://localhost:3333/auth/reset-complete?token=' +
         token;
     }
     const mcDataPost = JSON.stringify(mcData);
+
     const res = await this.http.post(
       this.Mandrill.url + 'messages/send',
       mcDataPost,

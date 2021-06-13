@@ -40,3 +40,22 @@
 .Auth-Link {
   text-decoration: none;
 }
+
+.fr-pristine {
+  background-color: yellow;
+}
+.fr-dirty{
+  background-color: #eee;
+}
+
+.fr-valid{
+  border-color: #1f7f23 !important;
+}
+.fr-invalid{
+  border-color: #e5533a !important;
+}
+
+.fr-touched{
+}
+.fr-untouched{
+}

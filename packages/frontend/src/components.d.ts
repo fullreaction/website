@@ -5,10 +5,15 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
+import { ValidationErrors } from "./utils/form";
 export namespace Components {
     interface AppAuth {
     }
     interface AppDocs {
+    }
+    interface AppErrors {
+        "errors": ValidationErrors | null;
+        "templates": { [key: string]: string };
     }
     interface AppFeatures {
     }
@@ -57,6 +62,12 @@ declare global {
     var HTMLAppDocsElement: {
         prototype: HTMLAppDocsElement;
         new (): HTMLAppDocsElement;
+    };
+    interface HTMLAppErrorsElement extends Components.AppErrors, HTMLStencilElement {
+    }
+    var HTMLAppErrorsElement: {
+        prototype: HTMLAppErrorsElement;
+        new (): HTMLAppErrorsElement;
     };
     interface HTMLAppFeaturesElement extends Components.AppFeatures, HTMLStencilElement {
     }
@@ -151,6 +162,7 @@ declare global {
     interface HTMLElementTagNameMap {
         "app-auth": HTMLAppAuthElement;
         "app-docs": HTMLAppDocsElement;
+        "app-errors": HTMLAppErrorsElement;
         "app-features": HTMLAppFeaturesElement;
         "app-footer": HTMLAppFooterElement;
         "app-header": HTMLAppHeaderElement;
@@ -172,6 +184,10 @@ declare namespace LocalJSX {
     interface AppAuth {
     }
     interface AppDocs {
+    }
+    interface AppErrors {
+        "errors"?: ValidationErrors | null;
+        "templates"?: { [key: string]: string };
     }
     interface AppFeatures {
     }
@@ -210,6 +226,7 @@ declare namespace LocalJSX {
     interface IntrinsicElements {
         "app-auth": AppAuth;
         "app-docs": AppDocs;
+        "app-errors": AppErrors;
         "app-features": AppFeatures;
         "app-footer": AppFooter;
         "app-header": AppHeader;
@@ -233,6 +250,7 @@ declare module "@stencil/core" {
         interface IntrinsicElements {
             "app-auth": LocalJSX.AppAuth & JSXBase.HTMLAttributes<HTMLAppAuthElement>;
             "app-docs": LocalJSX.AppDocs & JSXBase.HTMLAttributes<HTMLAppDocsElement>;
+            "app-errors": LocalJSX.AppErrors & JSXBase.HTMLAttributes<HTMLAppErrorsElement>;
             "app-features": LocalJSX.AppFeatures & JSXBase.HTMLAttributes<HTMLAppFeaturesElement>;
             "app-footer": LocalJSX.AppFooter & JSXBase.HTMLAttributes<HTMLAppFooterElement>;
             "app-header": LocalJSX.AppHeader & JSXBase.HTMLAttributes<HTMLAppHeaderElement>;

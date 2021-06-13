@@ -18,7 +18,8 @@
   "devDependencies": {
     "@stencil/core": "^2.5.2",
     "@stencil/router": "^1.0.1",
-    "highlight.js":  "^11.0.1"
+    "highlight.js":  "^11.0.1",
+    "rxjs": "^7.1.0"
   },
   "license": "MIT"
 }

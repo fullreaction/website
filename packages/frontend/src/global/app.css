@@ -53,6 +53,7 @@ body {
 
 .InputText,
 .InputArea {
+  display: block;
   box-sizing: border-box;
   height: 42px;
   padding: 8px;

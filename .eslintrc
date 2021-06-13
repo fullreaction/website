@@ -39,7 +39,8 @@
     "react/prop-types": "off",
     "prettier/prettier": ["error", {
       "singleQuote": true,
-      "trailingComma": "all"
+      "trailingComma": "all",
+      "printWidth": 120
     }],
     "@typescript-eslint/explicit-function-return-type": 0,
     "@typescript-eslint/explicit-member-accessibility": 0,

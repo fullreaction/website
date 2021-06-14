@@ -1,7 +1,7 @@
 import { gvmHttpErrorResponse, handleFetch, ROOT_URL } from '../utils/httpUtils';
 import { User } from '../models/user.model';
 
-export class AdminService {
+class AdminServiceController {
   private users: User[] = [];
 
   async fetchList(): Promise<void>;
@@ -64,3 +64,5 @@ export class AdminService {
     }
   }
 }
+
+export const AdminService = new AdminServiceController();

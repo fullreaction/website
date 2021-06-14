@@ -6,6 +6,8 @@
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 export namespace Components {
+    interface AdminTable {
+    }
     interface AppAuth {
     }
     interface AppDocs {
@@ -42,6 +44,12 @@ export namespace Components {
     }
 }
 declare global {
+    interface HTMLAdminTableElement extends Components.AdminTable, HTMLStencilElement {
+    }
+    var HTMLAdminTableElement: {
+        prototype: HTMLAdminTableElement;
+        new (): HTMLAdminTableElement;
+    };
     interface HTMLAppAuthElement extends Components.AppAuth, HTMLStencilElement {
     }
     var HTMLAppAuthElement: {
@@ -139,6 +147,7 @@ declare global {
         new (): HTMLAppSupportElement;
     };
     interface HTMLElementTagNameMap {
+        "admin-table": HTMLAdminTableElement;
         "app-auth": HTMLAppAuthElement;
         "app-docs": HTMLAppDocsElement;
         "app-features": HTMLAppFeaturesElement;
@@ -158,6 +167,8 @@ declare global {
     }
 }
 declare namespace LocalJSX {
+    interface AdminTable {
+    }
     interface AppAuth {
     }
     interface AppDocs {
@@ -193,6 +204,7 @@ declare namespace LocalJSX {
     interface AppSupport {
     }
     interface IntrinsicElements {
+        "admin-table": AdminTable;
         "app-auth": AppAuth;
         "app-docs": AppDocs;
         "app-features": AppFeatures;
@@ -215,6 +227,7 @@ export { LocalJSX as JSX };
 declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
+            "admin-table": LocalJSX.AdminTable & JSXBase.HTMLAttributes<HTMLAdminTableElement>;
             "app-auth": LocalJSX.AppAuth & JSXBase.HTMLAttributes<HTMLAppAuthElement>;
             "app-docs": LocalJSX.AppDocs & JSXBase.HTMLAttributes<HTMLAppDocsElement>;
             "app-features": LocalJSX.AppFeatures & JSXBase.HTMLAttributes<HTMLAppFeaturesElement>;

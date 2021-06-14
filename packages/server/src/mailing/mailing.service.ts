@@ -106,14 +106,16 @@ export class MailingService {
         subject: 'FullReaction password reset',
         from_email: this.Mandrill.email,
         from_name: 'Giorgi',
-        to: [{ email: this.Mandrill.email }],
+        to: '',
         text: '',
       },
     };
     if (typeof user === 'string') {
+      mcData.message.to = user;
       mcData.message.text =
         "Hello, we've received a request to reset a password for a FullReaction account with this email, though no such account exists. etc etc";
     } else {
+      mcData.message.to = user.user_email;
       const token = await this.tokenDAO.createNew(user.user_email);
       mcData.message.text =
         'Hello, here is a link to reset your FullReaction password \n http://localhost:3333/auth/reset-complete?token=' +

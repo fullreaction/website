@@ -1,0 +1,10 @@
+const CLIENT_ID = '775zmi8hryeill';
+const CLIENT_SECRET = 'uNwdy4qvEf5z0OQh';
+const REDIRECT_URL = 'https://oauth.pstmn.io/v1/callback';
+const USER_CODE =
+  'AQSW8Xy8cgJGtBXlqwjFpJYqi0Bjnw_DAEle3YNTtqntm-2A1fLTKvYLPOlZ8PjQv25AEZB7kIh-KDmz8RHxtpEipyzWKFl9reEGjBCdNDDl7bRIGtswn2cdg4Nl9YR_rLFJX14lopCg23xPNHJSxPcvUDO_aVAu3353ViuoNTcJkHuL0nqO0jBRKR7MneBrVRxKNHRFDHhxREiPJDI';
+const USER_ACCESS_TOKEN =
+  'AQWnSsXLPcFMCoKUS_3_lO6KatT6KFluYoyTIgvTLLFVwCl8mdmzhePf5zFlhD7s19m5SqJf9mczSu_qui3x88qvraMn63YzZhO_ohl1oIrqxBXTTN_-q938XgMaofTh2WhT6h2D0L37evciIbCV8xWY7wRJ0R2ErrT2DqqVK_SyqTOypkUyrZ8XJGAtLR0DNLrtjGWjJXGm_eYc6L5cWd25hX4l28X1XJwxKYoixLKaSVWOe5aTE7ji8I3VLlJvryS5_15JxI2_chepAdFATXOc8gJIHcl0gSdGvqCBN6ypgz0M2046miBQ_UdjW7OPq_N8js9Lmu2QjDeKiZYfE9zo4fH6sA';
+
+//https://oauth.pstmn.io/v1/callback?code=AQQhxuB8COCnjoaeqOAvKs-4AKiFFc2SIEEUONjfufjWp3ql8sm7huJRDo_fOw6IsMy84ba-Ba89AxEI-py540qahGIXtlWb6Jp05diVme50z7-MHTfdBhtK7-R7NlG1x8iNmn_IYaGoO1cdawJw4wVEXtM29eGdFLbsTHMtKnlrnk-CdNdg8-WdKGiGPPPGo6sCRjR3Eg2_c5T9Duw&state=secret-4321
+const BASE_URL = 'https://www.linkedin.com/oauth/v2/';

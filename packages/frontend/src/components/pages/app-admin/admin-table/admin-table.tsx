@@ -10,13 +10,21 @@ import { UserValidator } from '../../../../utils/userValidation';
 export class AdminTable {
   @State() editMode = false;
 
-  @State() data: (User & { selector?: HTMLInputElement })[] = [];
+  @State() data: User[] = [];
 
+  private masterSelector: HTMLInputElement;
   private selection: HTMLInputElement[] = [];
 
   constructor() {
     AdminService.fetchList(e => (this.data = e));
   }
+
+  // Add middleground if I learn how to stylize checkboxes
+  selectorStatus() {
+    if (this.isAllSelected()) this.masterSelector.checked = true;
+    else this.masterSelector.checked = false;
+  }
+
   clearSelection() {
     this.selection.forEach(check => {
       check.checked = false;
@@ -24,21 +32,22 @@ export class AdminTable {
   }
 
   isAllSelected() {
-    return this.data.every(val => {
-      return val.selector.checked;
+    return this.selection.every(val => {
+      return val.checked;
     });
   }
   masterToggle() {
     console.log('testing');
-    this.isAllSelected() ? this.clearSelection() : this.data.forEach(val => (val.checked = true));
+    this.isAllSelected() ? this.clearSelection() : this.selection.forEach(val => (val.checked = true));
   }
 
   delete() {
     this.data = [...this.data.filter((user, index) => !this.selection[index].checked)];
     this.clearSelection();
   }
+
   edit(user: User, property: string, ev) {
-    const newField = ev.target.textContent.trim();
+    const newField: string = ev.target.textContent.trim().split(' ')[0];
 
     if (user[property] !== newField) {
       const index = this.data.indexOf(user);
@@ -50,16 +59,21 @@ export class AdminTable {
       UserValidator.validateUser(this.data[index]);
       this.data = [...this.data];
     }
+    console.log(newField);
   }
 
   revert() {
     AdminService.fetchList(e => (this.data = e));
   }
   apply() {
-    console.log('Apply button');
     AdminService.commitList(this.data);
     AdminService.getList();
   }
+
+  formatDate(date: Date) {
+    return date.getUTCHours() + ':' + date.getUTCMinutes() + ' - ' + date.getUTCDate() + '/' + (date.getUTCMonth() + 1) + '/' + date.getFullYear() + ' UTC';
+  }
+
   render = () => (
     <Host class="Table-Wrapper">
       <div class="Table-Actions">
@@ -70,26 +84,61 @@ export class AdminTable {
         <button class="Table-Action Button" onClick={() => (this.editMode = !this.editMode)}>
           {this.editMode ? 'Finish' : 'Edit'}
         </button>
-        <button class="Table-Action Button">Apply</button>
-        <button class="Table-Action Button">Revert</button>
+        <button class="Table-Action Button" onClick={() => this.apply()}>
+          Apply
+        </button>
+        <button class="Table-Action Button" onClick={() => this.revert()}>
+          Revert
+        </button>
       </div>
-      <table>
-        <tr>
+      <table class="Table">
+        <tr class="Table-Row">
           <th class="Table-Header">
-            <input type="checkbox" onChange={() => this.masterToggle()}></input>
+            <input type="checkbox" ref={e => (this.masterSelector = e)} onChange={() => this.masterToggle()}></input>
           </th>
-          <th class="Table-Header">Email</th>
-          <th class="Table-Header">Password</th>
-          <th class="Table-Header">Updated At</th>
+          <th class="Table-Header">
+            <div class="Table-CellWrapper">Email</div>
+          </th>
+          <th class="Table-Header">
+            <div class="Table-CellWrapper">Password</div>
+          </th>
+          <th class="Table-Header">
+            <div class="Table-CellWrapper">Updated At</div>
+          </th>
         </tr>
         {this.data.map(user => (
-          <tr>
-            <td>
-              <input type="checkbox" ref={e => this.selection.push(e)}></input>
+          <tr class="Table-Row">
+            <td class="Table-Cell">
+              <input type="checkbox" ref={e => this.selection.push(e)} onChange={() => this.selectorStatus()}></input>
             </td>
-            <td contentEditable={this.editMode}>{user.user_email}</td>
-            <td contentEditable={this.editMode}>{user.user_pass}</td>
-            <td>{user.updated_at}</td>
+            <td class="Table-Cell" contentEditable={this.editMode} onBlur={e => this.edit(user, 'user_email', e)}>
+              <div class="Table-CellWrapper">
+                {user.user_email}{' '}
+                {user.errors.has('user_email') ? (
+                  <span class="Table-TooltipIcon" contentEditable={false}>
+                    {' '}
+                    !<span class="Table-Tooltip">{user.errors.get('user_email')}</span>
+                  </span>
+                ) : (
+                  ''
+                )}
+              </div>
+            </td>
+            <td class="Table-Cell" contentEditable={this.editMode} onBlur={e => this.edit(user, 'user_pass', e)}>
+              <div class="Table-CellWrapper">
+                {user.user_pass}{' '}
+                {user.errors.has('user_pass') ? (
+                  <span class="Table-TooltipIcon" contentEditable={false}>
+                    !<span class="Table-Tooltip">{user.errors.get('user_pass')}</span>
+                  </span>
+                ) : (
+                  ' '
+                )}
+              </div>
+            </td>
+            <td class="Table-Cell">
+              <div class="Table-CellWrapper">{this.formatDate(user.updated_at)}</div>
+            </td>
           </tr>
         ))}
       </table>

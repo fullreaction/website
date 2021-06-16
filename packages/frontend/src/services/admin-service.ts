@@ -32,7 +32,7 @@ class AdminServiceController {
   }
 
   commitList(newList: User[]) {
-    console.log('commitList');
+    console.log(newList);
     const editedItems: { user: User; deleted: boolean }[] = [];
     this.users.forEach(item => {
       const i = newList.findIndex(u => u.user_id == item.user_id);
@@ -46,7 +46,7 @@ class AdminServiceController {
     if (editedItems != []) {
       const fetchData: RequestInit = {
         method: 'PATCH',
-        body: JSON.stringify(editedItems),
+        body: JSON.stringify({ editedItems: editedItems }),
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
       };

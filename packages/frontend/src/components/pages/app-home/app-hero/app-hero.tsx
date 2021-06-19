@@ -49,7 +49,7 @@ export class AppFooter {
             class="Hero-FormEmail InputText"
             required
           />
-          <input type="submit" class="Hero-FormSubmit Button" value="Sign up for beta" hidden />
+          <input type="submit" class="Hero-FormSubmit Button" value="Sign up for beta" />
         </form>
         <span class={this.isErrorResponse ? 'Hero-Error Text-1' : 'Hero-Response Text-1'}>{this.submitResponse}</span>
       </Host>

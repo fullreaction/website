@@ -15,7 +15,7 @@ export class AppRoot {
           <stencil-route url="/" component="app-home" exact={true} />
           <stencil-route url="/docs" component="app-docs" />
           <stencil-route url="/auth" component="app-auth" />
-          <stencil-route url="/test" component="admin-table" />
+          <stencil-route url="/admin/panel" component="admin-table" />
         </stencil-route-switch>
       </stencil-router>
       <app-section style={{ marginTop: 'auto' }} background>

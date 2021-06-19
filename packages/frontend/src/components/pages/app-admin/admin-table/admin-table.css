@@ -23,13 +23,13 @@
 }
 .Table-Cell,
 .Table-Header {
+  padding: 8px;
   overflow: hidden;
   text-align: left;
   border: 1px solid #dddddd;
 }
 .Table-Header {
   align-self: left;
-  padding: 8px;
 }
 
 .Table-Actions {

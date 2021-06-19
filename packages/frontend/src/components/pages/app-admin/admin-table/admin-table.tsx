@@ -1,6 +1,7 @@
 import { Component, h, Host, State } from '@stencil/core';
 import { User } from '../../../../models/user.model';
 import { AdminService } from '../../../../services/admin-service';
+import { AuthService } from '../../../../services/auth-service';
 import { UserValidator } from '../../../../utils/userValidation';
 
 @Component({
@@ -16,7 +17,13 @@ export class AdminTable {
   private selection: HTMLInputElement[] = [];
 
   constructor() {
-    AdminService.fetchList(e => (this.data = e));
+    AuthService.checkStatus()
+      .then(() => {
+        AdminService.fetchList(e => (this.data = e));
+      })
+      .catch(() => {
+        window.location.href = '/auth/login';
+      });
   }
 
   // Add middleground if I learn how to stylize checkboxes
@@ -37,7 +44,6 @@ export class AdminTable {
     });
   }
   masterToggle() {
-    console.log('testing');
     this.isAllSelected() ? this.clearSelection() : this.selection.forEach(val => (val.checked = true));
   }
 

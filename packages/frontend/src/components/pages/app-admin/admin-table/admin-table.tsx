@@ -13,6 +13,8 @@ export class AdminTable {
 
   @State() data: User[] = [];
 
+  @State() addTemplate = false;
+
   private masterSelector: HTMLInputElement;
   private selection: HTMLInputElement[] = [];
 
@@ -48,8 +50,16 @@ export class AdminTable {
   }
 
   delete() {
-    this.data = [...this.data.filter((user, index) => !this.selection[index].checked)];
-    this.clearSelection();
+    this.data = [
+      ...this.data.filter((user, index) => {
+        if (this.selection[index].checked) {
+          this.selection[index].checked = false;
+          return false;
+        }
+        return true;
+      }),
+    ];
+    this.masterSelector.checked = false;
   }
 
   edit(user: User, property: string, ev) {
@@ -83,7 +93,10 @@ export class AdminTable {
   render = () => (
     <Host class="Table-Wrapper">
       <div class="Table-Actions">
-        <button class="Table-Action Button">Add</button>
+        <button class="Table-Action Button" onClick={() => (this.addTemplate = !this.addTemplate)}>
+          Add
+        </button>
+
         <button class="Table-Action Button" onClick={() => this.delete()}>
           Remove
         </button>
@@ -96,6 +109,9 @@ export class AdminTable {
         <button class="Table-Action Button" onClick={() => this.revert()}>
           Revert
         </button>
+      </div>
+      <div class={{ 'Table-Register': true, 'Folded': !this.addTemplate }}>
+        <app-register class=""></app-register>
       </div>
       <table class="Table">
         <tr class="Table-Row">

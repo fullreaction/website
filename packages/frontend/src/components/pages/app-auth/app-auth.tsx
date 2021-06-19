@@ -35,7 +35,7 @@ export class AppAuth {
     <Host class="Auth-Host">
       <h2 class="Auth-Header Heading-2">{this.headers.get(this.url)}</h2>
 
-      <stencil-route-switch scrollTopOffset={0}>
+      <stencil-route-switch scrollTopOffset={0} class="Auth-Slot">
         <stencil-route url="/auth/login" component="app-login" />
         <stencil-route url="/auth/register" component="app-register" />
         <stencil-route url="/auth/reset" component="app-reset" />

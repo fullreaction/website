@@ -1,4 +1,4 @@
-import { Component, h, State } from '@stencil/core';
+import { Component, h, Host, State } from '@stencil/core';
 import { AuthService } from '../../../../services/auth-service';
 import { gvmHttpErrorResponse } from '../../../../utils/httpUtils';
 import authStore from '../authStore';
@@ -24,8 +24,9 @@ export class AppRegister {
           authStore.errorText = e.message;
         });
   }
+
   render = () => (
-    <div>
+    <Host>
       <form class="Auth-Form" onSubmit={e => this.register(e)}>
         <input
           type="email"
@@ -52,10 +53,10 @@ export class AppRegister {
           required
         ></input>
         <input type="submit" class="Auth-Input Button" value="Register"></input>
+        <a class={{ 'Auth-Input': true, 'Button': true, 'Auth-Inverted': true, 'Hidden': document.referrer == document.URL }} href={document.referrer}>
+          Go back
+        </a>
       </form>
-      <a class="Auth-Input  Button Auth-Inverted" href="login">
-        Go back
-      </a>
-    </div>
+    </Host>
   );
 }

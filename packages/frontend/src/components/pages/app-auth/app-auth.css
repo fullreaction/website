@@ -3,6 +3,9 @@
 .Auth-Slot {
   width: 400px;
 }
+.Auth-Horizontal {
+  flex-direction: row !important;
+}
 
 .Auth-Host,
 .Auth-Extra,
@@ -12,7 +15,7 @@
   flex-direction: column;
   align-items: center;
 }
-.Auth-Form {
+.Auth-Form .Auth-Form {
   width: 100%;
 }
 .Auth-Host {
@@ -23,7 +26,7 @@
 }
 .Auth-Input {
   width: 80%;
-  margin: 10px 0 10px 0;
+  margin: 10px 4px 10px 4px;
 }
 
 .Auth-Inverted.Auth-Inverted {

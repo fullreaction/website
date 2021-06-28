@@ -111,7 +111,13 @@ export class AdminTable {
         </button>
       </div>
       <div class={{ 'Table-Register': true, 'Folded': !this.addTemplate }}>
-        <app-register class=""></app-register>
+        <app-register
+          horizontal
+          onRegister={() => {
+            console.log('worked');
+            AdminService.fetchList(data => (this.data = [...data]));
+          }}
+        ></app-register>
       </div>
       <table class="Table">
         <tr class="Table-Row">

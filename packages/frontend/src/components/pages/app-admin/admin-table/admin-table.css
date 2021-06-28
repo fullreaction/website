@@ -76,11 +76,12 @@
 }
 
 .Table-Register {
-  width: 250px;
-  height: 250px;
+  display: flex;
+  align-items: center;
+  height: 100px;
   overflow: hidden;
   border-left: 1px solid #dddddd;
-  transition: 0.5s;
+  transition: 0.3s;
 }
 
 .Folded {

@@ -1,7 +1,9 @@
-import { Component, h, Host, State } from '@stencil/core';
+import { Component, h, Host, Prop, State, Event, EventEmitter } from '@stencil/core';
 import { AuthService } from '../../../../services/auth-service';
 import { gvmHttpErrorResponse } from '../../../../utils/httpUtils';
 import authStore from '../authStore';
+import { User } from '../../../../models/user.model';
+import { UserValidator } from '../../../../utils/userValidation';
 
 @Component({
   tag: 'app-register',
@@ -11,23 +13,35 @@ export class AppRegister {
   @State() email: string;
   @State() password: string;
   @State() confPassword: string;
-  register(e) {
+
+  @Prop() horizontal = false;
+
+  @Event() register: EventEmitter;
+
+  registerHandler(e) {
     e.preventDefault();
-    //Validation required
-    if (this.password == this.confPassword)
-      AuthService.register(this.email, this.password)
-        .then(() => {
-          // navigate to main page?
-        })
-        .catch((e: gvmHttpErrorResponse) => {
-          authStore.isError = true;
-          authStore.errorText = e.message;
-        });
+    if (this.password == this.confPassword) {
+      const user: User = { user_email: this.email, user_pass: this.password, errors: new Map() };
+      UserValidator.validateUser(user);
+      if (user.errors.size == 0)
+        AuthService.register(this.email, this.password)
+          .then(() => {
+            // navigate to main page?
+          })
+          .catch((e: gvmHttpErrorResponse) => {
+            authStore.isError = true;
+            authStore.errorText = e.message;
+          });
+      this.email = '';
+      this.password = '';
+      this.confPassword = '';
+      this.register.emit();
+    }
   }
 
   render = () => (
     <Host>
-      <form class="Auth-Form" onSubmit={e => this.register(e)}>
+      <form class={{ 'Auth-Form': true, 'Auth-Horizontal': this.horizontal }} onSubmit={e => this.registerHandler(e)}>
         <input
           type="email"
           class="Auth-Input InputText"
@@ -53,7 +67,7 @@ export class AppRegister {
           required
         ></input>
         <input type="submit" class="Auth-Input Button" value="Register"></input>
-        <a class={{ 'Auth-Input': true, 'Button': true, 'Auth-Inverted': true, 'Hidden': document.referrer == document.URL }} href={document.referrer}>
+        <a class={{ 'Auth-Input': true, 'Button': true, 'Auth-Inverted': true, 'Hidden': document.referrer == document.URL || document.referrer == '' }} href={document.referrer}>
           Go back
         </a>
       </form>

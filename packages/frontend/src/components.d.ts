@@ -27,6 +27,7 @@ export namespace Components {
     interface AppLogin {
     }
     interface AppRegister {
+        "horizontal": boolean;
     }
     interface AppReset {
     }
@@ -188,6 +189,8 @@ declare namespace LocalJSX {
     interface AppLogin {
     }
     interface AppRegister {
+        "horizontal"?: boolean;
+        "onRegister"?: (event: CustomEvent<any>) => void;
     }
     interface AppReset {
     }

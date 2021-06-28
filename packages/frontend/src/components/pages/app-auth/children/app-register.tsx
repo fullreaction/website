@@ -25,17 +25,20 @@ export class AppRegister {
       UserValidator.validateUser(user);
       if (user.errors.size == 0)
         AuthService.register(this.email, this.password)
-          .then(() => {
-            // navigate to main page?
+          .then(e => {
+            this.register.emit(e);
           })
           .catch((e: gvmHttpErrorResponse) => {
             authStore.isError = true;
             authStore.errorText = e.message;
+            this.register.emit(e);
           });
+      else {
+        console.log(user.errors);
+      }
       this.email = '';
       this.password = '';
       this.confPassword = '';
-      this.register.emit();
     }
   }
 

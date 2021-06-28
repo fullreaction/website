@@ -45,6 +45,7 @@ class AuthServiceController {
           this.user.user_email = email;
           this.user.user_id = data;
           this.user.loggedIn = true;
+          console.log(data);
           resolve('200');
         })
         .catch((e: gvmHttpErrorResponse) => {
@@ -113,6 +114,7 @@ class AuthServiceController {
             resolve('200');
           })
           .catch((e: gvmHttpErrorResponse) => {
+            console.log(e);
             reject(e);
           });
       } else resolve('200');

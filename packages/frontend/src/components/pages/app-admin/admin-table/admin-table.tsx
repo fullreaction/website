@@ -93,6 +93,12 @@ export class AdminTable {
   render = () => (
     <Host class="Table-Wrapper">
       <div class="Table-Actions">
+        <button class="Table-Action Button" onClick={() => this.apply()}>
+          Apply
+        </button>
+        <button class="Table-Action Button" onClick={() => this.revert()}>
+          Revert
+        </button>
         <button class="Table-Action Button" onClick={() => (this.addTemplate = !this.addTemplate)}>
           Add
         </button>
@@ -103,19 +109,12 @@ export class AdminTable {
         <button class="Table-Action Button" onClick={() => (this.editMode = !this.editMode)}>
           {this.editMode ? 'Finish' : 'Edit'}
         </button>
-        <button class="Table-Action Button" onClick={() => this.apply()}>
-          Apply
-        </button>
-        <button class="Table-Action Button" onClick={() => this.revert()}>
-          Revert
-        </button>
       </div>
       <div class={{ 'Table-Register': true, 'Folded': !this.addTemplate }}>
         <app-register
           horizontal
           onRegister={() => {
-            console.log('worked');
-            AdminService.fetchList(data => (this.data = [...data]));
+            AdminService.fetchList(e => (this.data = e));
           }}
         ></app-register>
       </div>
@@ -134,10 +133,10 @@ export class AdminTable {
             <div class="Table-CellWrapper">Updated At</div>
           </th>
         </tr>
-        {this.data.map(user => (
+        {this.data.map((user, index) => (
           <tr class="Table-Row">
             <td class="Table-Cell">
-              <input type="checkbox" ref={e => this.selection.push(e)} onChange={() => this.selectorStatus()}></input>
+              <input type="checkbox" ref={e => (this.selection[index] = e)} onChange={() => this.selectorStatus()}></input>
             </td>
             <td class="Table-Cell" contentEditable={this.editMode} onBlur={e => this.edit(user, 'user_email', e)}>
               <div class="Table-CellWrapper">

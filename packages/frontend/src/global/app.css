@@ -121,3 +121,7 @@ body {
 .Separator {
   flex-grow: 1;
 }
+
+[hidden] {
+  display: none;
+}

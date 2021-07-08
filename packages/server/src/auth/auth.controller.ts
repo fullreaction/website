@@ -48,9 +48,14 @@ export class AuthController {
 
   @Patch('reset')
   async resetPassword(
-    @Body('email') email: string,
+    @Body('token') token: string,
     @Body('password') password: string,
   ) {
-    await this.authService.changePassword(email, password);
+    await this.authService.changePassword(token, password);
+  }
+
+  @Post('reset')
+  async sendResetEmail(@Body('email') email: string) {
+    this.authService.sendResetEmail(email);
   }
 }

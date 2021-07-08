@@ -1,11 +1,22 @@
 /*colors subject to change because I am bad at them*/
 
+.Auth-Slot {
+  width: 400px;
+}
+.Auth-Horizontal {
+  flex-direction: row !important;
+}
+
 .Auth-Host,
 .Auth-Extra,
 .Auth-Form {
   display: flex;
+  flex: 1 1 auto;
   flex-direction: column;
   align-items: center;
+}
+.Auth-Form .Auth-Form {
+  width: 100%;
 }
 .Auth-Host {
   margin-top: 50px;
@@ -14,8 +25,8 @@
   width: 100%;
 }
 .Auth-Input {
-  width: 350px;
-  margin: 10px 0 10px 0;
+  width: 80%;
+  margin: 10px 4px 10px 4px;
 }
 
 .Auth-Inverted.Auth-Inverted {
@@ -39,4 +50,8 @@
 }
 .Auth-Link {
   text-decoration: none;
+}
+/* Button class breaks hidden attribute */
+.Hidden {
+  display: none !important;
 }

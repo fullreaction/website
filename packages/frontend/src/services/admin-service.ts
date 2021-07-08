@@ -1,7 +1,7 @@
-import { ROOT_URL } from '../utils/httpUtils';
+import { gvmHttpErrorResponse, handleFetch, ROOT_URL } from '../utils/httpUtils';
 import { User } from '../models/user.model';
 
-export class AdminService {
+class AdminServiceController {
   private users: User[] = [];
 
   async fetchList(): Promise<void>;
@@ -9,7 +9,7 @@ export class AdminService {
   async fetchList(done?: (users: User[]) => void): Promise<void> {
     this.users = [];
     fetch(ROOT_URL + 'api/user/list', { method: 'GET' })
-      .then(e => e.json())
+      .then(handleFetch)
       .then(data => {
         data.map(val => {
           this.users.push({
@@ -22,8 +22,8 @@ export class AdminService {
         });
         if (typeof done != 'undefined') done([...this.users]);
       })
-      .catch(() => {
-        //
+      .catch((e: gvmHttpErrorResponse) => {
+        console.log(e);
       });
   }
 
@@ -32,7 +32,7 @@ export class AdminService {
   }
 
   commitList(newList: User[]) {
-    console.log('commitList');
+    console.log(newList);
     const editedItems: { user: User; deleted: boolean }[] = [];
     this.users.forEach(item => {
       const i = newList.findIndex(u => u.user_id == item.user_id);
@@ -46,7 +46,7 @@ export class AdminService {
     if (editedItems != []) {
       const fetchData: RequestInit = {
         method: 'PATCH',
-        body: JSON.stringify(editedItems),
+        body: JSON.stringify({ editedItems: editedItems }),
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
       };
@@ -57,9 +57,12 @@ export class AdminService {
             this.users[this.users.findIndex(u => u.user_id == item.user_id)].errors.set('user_email', item.error);
           });
         })
-        .catch(() => {
+        .catch((e: gvmHttpErrorResponse) => {
           this.fetchList();
+          console.log(e);
         });
     }
   }
 }
+
+export const AdminService = new AdminServiceController();

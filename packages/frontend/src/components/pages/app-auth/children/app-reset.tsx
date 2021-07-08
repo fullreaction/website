@@ -1,4 +1,5 @@
 import { Component, h, Host, State } from '@stencil/core';
+import { AuthService } from '../../../../services/auth-service';
 
 @Component({
   tag: 'app-reset',
@@ -11,9 +12,7 @@ export class AppReset {
   reset(e) {
     e.preventDefault();
     //Validation required
-    if (this.password == this.confPassword) {
-      // send email
-    }
+    AuthService.requestReset(this.email);
   }
   render = () => (
     <Host class="Auth-Child">
@@ -27,7 +26,7 @@ export class AppReset {
           required
         ></input>
 
-        <input type="submit" class="Auth-Input Button" value="Reset"></input>
+        <input type="submit" class="Auth-Input Button" value="Continue"></input>
       </form>
       <a class="Auth-Input Button Auth-Inverted" href="login">
         Go back

@@ -1,5 +1,9 @@
-import { Component, h, State } from '@stencil/core';
+import { Component, h, Host, Prop, State, Event, EventEmitter } from '@stencil/core';
 import { AuthService } from '../../../../services/auth-service';
+import { gvmHttpErrorResponse } from '../../../../utils/httpUtils';
+import authStore from '../authStore';
+import { User } from '../../../../models/user.model';
+import { UserValidator } from '../../../../utils/userValidation';
 
 @Component({
   tag: 'app-register',
@@ -9,14 +13,38 @@ export class AppRegister {
   @State() email: string;
   @State() password: string;
   @State() confPassword: string;
-  register(e) {
+
+  @Prop() horizontal = false;
+
+  @Event() register: EventEmitter;
+
+  registerHandler(e) {
     e.preventDefault();
-    //Validation required
-    if (this.password == this.confPassword) AuthService.register(this.email, this.password);
+    if (this.password == this.confPassword) {
+      const user: User = { user_email: this.email, user_pass: this.password, errors: new Map() };
+      UserValidator.validateUser(user);
+      if (user.errors.size == 0)
+        AuthService.register(this.email, this.password)
+          .then(e => {
+            this.register.emit(e);
+          })
+          .catch((e: gvmHttpErrorResponse) => {
+            authStore.isError = true;
+            authStore.errorText = e.message;
+            this.register.emit(e);
+          });
+      else {
+        console.log(user.errors);
+      }
+      this.email = '';
+      this.password = '';
+      this.confPassword = '';
+    }
   }
+
   render = () => (
-    <div>
-      <form class="Auth-Form" onSubmit={e => this.register(e)}>
+    <Host>
+      <form class={{ 'Auth-Form': true, 'Auth-Horizontal': this.horizontal }} onSubmit={e => this.registerHandler(e)}>
         <input
           type="email"
           class="Auth-Input InputText"
@@ -42,10 +70,10 @@ export class AppRegister {
           required
         ></input>
         <input type="submit" class="Auth-Input Button" value="Register"></input>
+        <a class={{ 'Auth-Input': true, 'Button': true, 'Auth-Inverted': true, 'Hidden': document.referrer == document.URL || document.referrer == '' }} href={document.referrer}>
+          Go back
+        </a>
       </form>
-      <a class="Auth-Input  Button Auth-Inverted" href="login">
-        Go back
-      </a>
-    </div>
+    </Host>
   );
 }

@@ -11,10 +11,13 @@ import { fromBinaryUUID, toBinaryUUID } from 'binary-uuid';
 export class UserDAO {
   constructor(private db: DatabaseService) {}
   async createUser(email: string, password: string) {
-    await this.db.database<User>('users').insert({
-      user_email: email,
-      user_pass: password,
-    });
+    await this.db
+      .database<User>('users')
+      .insert({
+        user_email: email,
+        user_pass: password,
+      })
+      .catch((e) => console.log(e));
     const user = this.selectUser(email);
     return user;
   }

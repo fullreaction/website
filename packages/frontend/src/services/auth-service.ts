@@ -1,15 +1,14 @@
-import { handleFetch, ROOT_URL } from '../utils/httpUtils';
+import { gvmHttpErrorResponse, handleFetch, ROOT_URL } from '../utils/httpUtils';
 
 import { User } from '../models/user.model';
-
-// caught errors are empty
+import authStore from '../components/pages/app-auth/authStore';
 
 class AuthServiceController {
-  public error = { hasError: false, text: '' };
-  private user: User & { loggedIn: boolean };
+  private user: User & { loggedIn: boolean } = { loggedIn: false, errors: new Map() };
 
   login(email: string, password: string) {
     return new Promise((resolve, reject) => {
+      this.clearErrors();
       const fetchData: RequestInit = {
         method: 'POST',
         body: JSON.stringify({ email, password }),
@@ -19,14 +18,14 @@ class AuthServiceController {
       fetch(ROOT_URL + 'auth/login', fetchData)
         .then(handleFetch)
         .then(data => {
-          this.user.user_email = data.email;
-          this.user.user_id = data.id;
+          console.log(data);
+          this.user.user_email = data.user_email;
+          this.user.user_id = data.user_id;
           this.user.loggedIn = true;
           console.log(this.user);
           resolve('200');
         })
-        .catch(e => {
-          console.log(e);
+        .catch((e: gvmHttpErrorResponse) => {
           reject(e);
         });
     });
@@ -34,6 +33,7 @@ class AuthServiceController {
 
   register(email: string, password: string) {
     return new Promise((resolve, reject) => {
+      this.clearErrors();
       const fetchData: RequestInit = {
         method: 'POST',
         body: JSON.stringify({ email, password }),
@@ -45,27 +45,49 @@ class AuthServiceController {
           this.user.user_email = email;
           this.user.user_id = data;
           this.user.loggedIn = true;
+          console.log(data);
           resolve('200');
         })
-        .catch(e => {
-          console.log(e);
-          reject();
+        .catch((e: gvmHttpErrorResponse) => {
+          reject(e);
         });
     });
   }
 
-  reset(email: string, password: string) {
+  reset(token: string, password: string) {
     return new Promise((resolve, reject) => {
+      this.clearErrors();
       const fetchData: RequestInit = {
         method: 'PATCH',
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ token: token, password: password }),
         headers: { 'Content-Type': 'application/json' },
       };
       fetch(ROOT_URL + 'auth/reset', fetchData)
         .then(handleFetch)
-        .catch(e => {
-          console.log(e);
-          reject();
+        .then(() => {
+          resolve('200');
+        })
+        .catch((e: gvmHttpErrorResponse) => {
+          reject(e);
+        });
+    });
+  }
+
+  requestReset(email: string) {
+    return new Promise((resolve, reject) => {
+      this.clearErrors();
+      const fetchData: RequestInit = {
+        method: 'POST',
+        body: JSON.stringify({ email }),
+        headers: { 'Content-Type': 'application/json' },
+      };
+      fetch(ROOT_URL + 'auth/reset', fetchData)
+        .then(handleFetch)
+        .then(() => {
+          resolve('200');
+        })
+        .catch((e: gvmHttpErrorResponse) => {
+          reject(e);
         });
       resolve('200');
     });
@@ -76,6 +98,7 @@ class AuthServiceController {
 
   checkStatus() {
     return new Promise((resolve, reject) => {
+      this.clearErrors();
       if (!this.user.loggedIn) {
         const fetchData: RequestInit = {
           method: 'GET',
@@ -90,17 +113,16 @@ class AuthServiceController {
             this.user.loggedIn = true;
             resolve('200');
           })
-          .catch(e => {
-            this.user.loggedIn = false;
+          .catch((e: gvmHttpErrorResponse) => {
             console.log(e);
-            reject();
+            reject(e);
           });
       } else resolve('200');
     });
   }
-
-  clearError() {
-    this.error = { hasError: false, text: '' };
+  clearErrors() {
+    authStore.isError = false;
+    authStore.errorText = '';
   }
 }
 

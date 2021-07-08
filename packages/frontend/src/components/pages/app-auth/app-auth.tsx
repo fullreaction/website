@@ -1,27 +1,15 @@
 import { Component, h, Host, State } from '@stencil/core';
-import { AuthService } from '../../../services/auth-service';
+import authStore from './authStore';
 
 /*
   Things to think about:
 
-  * Front end{
-    * set up error logic
-    * reset-complete url query
+  * Front end {
+    * way to get to and from auth components
 
   }
 
-  * Services {
-    * Setting up @Injectable() yourself
-    * Observables?
-    * fetch() instead of httpClient {
-      * learn how to read readableStream
-    }
-  }
-
-  * gvmHttpErrorResponse{
-      * extends angular HttpErrorResponse
-      * uses angular HttpHeaders
-  }
+  Issues:
 
 
 
@@ -40,13 +28,14 @@ export class AppAuth {
   private headers: Map<string, string> = new Map([
     ['/auth/login', 'Log in to your account'],
     ['/auth/register', 'Create Account'],
-    ['/auth/reset', 'Reset password'], //reset-complete???
+    ['/auth/reset', 'Reset password'],
+    ['/auth/reset-complete', 'Reset password'],
   ]);
   render = () => (
     <Host class="Auth-Host">
       <h2 class="Auth-Header Heading-2">{this.headers.get(this.url)}</h2>
 
-      <stencil-route-switch scrollTopOffset={0}>
+      <stencil-route-switch scrollTopOffset={0} class="Auth-Slot">
         <stencil-route url="/auth/login" component="app-login" />
         <stencil-route url="/auth/register" component="app-register" />
         <stencil-route url="/auth/reset" component="app-reset" />
@@ -54,7 +43,7 @@ export class AppAuth {
       </stencil-route-switch>
 
       <div class="Auth-Extra">
-        <div class="Auth-Errors Text-1"> {AuthService.error.text} </div>
+        <span class="Auth-Errors Text-1"> {authStore.errorText} </span>
       </div>
     </Host>
   );

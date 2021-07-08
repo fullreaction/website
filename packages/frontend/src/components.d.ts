@@ -19,6 +19,8 @@ export namespace Components {
     }
     interface AppFooter {
     }
+    interface AppForm {
+    }
     interface AppHeader {
     }
     interface AppHero {
@@ -80,6 +82,12 @@ declare global {
     var HTMLAppFooterElement: {
         prototype: HTMLAppFooterElement;
         new (): HTMLAppFooterElement;
+    };
+    interface HTMLAppFormElement extends Components.AppForm, HTMLStencilElement {
+    }
+    var HTMLAppFormElement: {
+        prototype: HTMLAppFormElement;
+        new (): HTMLAppFormElement;
     };
     interface HTMLAppHeaderElement extends Components.AppHeader, HTMLStencilElement {
     }
@@ -165,6 +173,7 @@ declare global {
         "app-errors": HTMLAppErrorsElement;
         "app-features": HTMLAppFeaturesElement;
         "app-footer": HTMLAppFooterElement;
+        "app-form": HTMLAppFormElement;
         "app-header": HTMLAppHeaderElement;
         "app-hero": HTMLAppHeroElement;
         "app-highlight": HTMLAppHighlightElement;
@@ -192,6 +201,8 @@ declare namespace LocalJSX {
     interface AppFeatures {
     }
     interface AppFooter {
+    }
+    interface AppForm {
     }
     interface AppHeader {
     }
@@ -229,6 +240,7 @@ declare namespace LocalJSX {
         "app-errors": AppErrors;
         "app-features": AppFeatures;
         "app-footer": AppFooter;
+        "app-form": AppForm;
         "app-header": AppHeader;
         "app-hero": AppHero;
         "app-highlight": AppHighlight;
@@ -253,6 +265,7 @@ declare module "@stencil/core" {
             "app-errors": LocalJSX.AppErrors & JSXBase.HTMLAttributes<HTMLAppErrorsElement>;
             "app-features": LocalJSX.AppFeatures & JSXBase.HTMLAttributes<HTMLAppFeaturesElement>;
             "app-footer": LocalJSX.AppFooter & JSXBase.HTMLAttributes<HTMLAppFooterElement>;
+            "app-form": LocalJSX.AppForm & JSXBase.HTMLAttributes<HTMLAppFormElement>;
             "app-header": LocalJSX.AppHeader & JSXBase.HTMLAttributes<HTMLAppHeaderElement>;
             "app-hero": LocalJSX.AppHero & JSXBase.HTMLAttributes<HTMLAppHeroElement>;
             "app-highlight": LocalJSX.AppHighlight & JSXBase.HTMLAttributes<HTMLAppHighlightElement>;

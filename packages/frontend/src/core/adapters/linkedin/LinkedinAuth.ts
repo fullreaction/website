@@ -1,5 +1,6 @@
 import {AuthBase} from '../../base';
 
+// @ts-ignore
 interface ResponseError {
   error: 'user_cancelled_login' | 'user_cancelled_authorize';
   error_description: string;

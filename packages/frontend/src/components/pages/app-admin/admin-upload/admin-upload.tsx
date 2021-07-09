@@ -9,10 +9,18 @@ export class AdminUpload {
     <Host class="Upload">
       <div class="Upload-Side">
         <div class="Button">Upload Media</div>
-        <div class="Upload-Collections">COLLECTIONS</div>
-        <div class="Upload-Collection">Cats</div>
-        <div class="Upload-Collection">Dogs</div>
-        <div class="Upload-Collection">Images</div>
+        <div class="Upload-Collections">
+          COLLECTIONS
+          <div class="Upload-Dots">
+            <img src="\assets\icon\3Dots-icon.svg" />
+          </div>
+        </div>
+        <div class="Upload-Collection">
+          Images
+          <div class="Upload-EditDots">
+            <img src="\assets\icon\3Dots-icon.svg" />
+          </div>
+        </div>
       </div>
       <div class="Upload-Content">
         <input class="Upload-Searchbar" type="text" placeholder="Search" />

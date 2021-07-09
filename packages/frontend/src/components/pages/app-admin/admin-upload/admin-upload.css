@@ -4,12 +4,14 @@
 
 .Upload-Side {
   width: 200px;
-  min-height: 1000px;
+  min-height: 842px;
   padding: 16px;
   background-color: var(--background-color);
 }
 
 .Upload-Collections {
+  display: flex;
+  flex-direction: row;
   margin-top: 30px;
   margin-bottom: 10px;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
@@ -18,19 +20,36 @@
 }
 
 .Upload-Collection {
-  width: 200px;
-  padding: 2px;
-  font-size: 14;
-  background-color: var(--background-color);
-}
-
-.Upload-Collection:hover {
+  display: flex;
+  flex-direction: row;
   width: 212px;
   padding: 2px;
   font-size: 14;
   background-color: var(--background-color);
+  transition-duration: 0.2s;
+}
+
+.Upload-Collection:hover {
   background-color: rgba(53, 198, 255, 0.2);
 }
+
+.Upload-Collection:active {
+  background-color: rgba(53, 198, 255, 0.2);
+}
+
+.Upload-Dots {
+  margin-left: 58px;
+}
+
+.Upload-Dots :hover {
+  background-color: rgba(53, 198, 255, 0.2);
+}
+
+.Upload-EditDots {
+  position: absolute;
+  left: 188px;
+}
+
 .Upload-Content {
   flex: 1;
   padding: 16px;

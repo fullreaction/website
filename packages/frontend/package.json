@@ -22,7 +22,7 @@
     "@stencil/core": "^2.6.0",
     "@stencil/router": "^1.0.1",
     "@stencil/store": "^1.4.1",
-    "highlight.js":  "^11.0.1"
+    "highlight.js": "^11.0.1"
   },
   "license": "MIT"
 }

@@ -55,7 +55,7 @@
   padding: 16px;
 }
 .Upload-Searchbar {
-  width: 500px;
+  width: 700px;
   height: 33px;
   padding-left: 10px;
   margin-left: 20px;
@@ -67,25 +67,30 @@
 .Upload-Button-Box {
   display: flex;
   flex-direction: row;
-  gap: 6px;
+  gap: 20px;
 }
 .Upload-Buttons {
   height: 33px;
-  margin-left: 20px;
   font-size: 16px;
   border: 1px solid;
   border-radius: 3px;
 }
 .Upload-Button-1 {
   width: 127px;
-  margin-left: 390px;
+  margin-left: 600px;
   color: #ff593d;
   background-color: #ffffff;
   border-color: #ff593d;
 }
+.Upload-Button-1:hover {
+  background-color: #f8f4f4;
+}
 .Upload-Button-2 {
   width: 147px;
   color: #ffffff;
-  background-color: #ff593d;
+  background-color: var(--primary-color);
   border-color: #ff593d;
+}
+.Upload-Button-2:hover {
+  background-color: var(--primary-dark-color);
 }

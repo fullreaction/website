@@ -14,7 +14,14 @@ export class AdminUpload {
         <div class="Upload-Collection">Dogs</div>
         <div class="Upload-Collection">Images</div>
       </div>
-      <div class="Upload-Content">Content</div>
+      <div class="Upload-Content">
+        <input class="Upload-Searchbar" type="text" placeholder="Search" />
+        <div class="Upload-Drag-drop"></div>
+        <div class="Upload-Button-Box">
+          <button class="Upload-Buttons Upload-Button-1">Cancel</button>
+          <button class="Upload-Buttons Upload-Button-2"> Select Media</button>
+        </div>
+      </div>
     </Host>
   );
 }

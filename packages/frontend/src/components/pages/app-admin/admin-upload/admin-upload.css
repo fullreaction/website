@@ -35,3 +35,38 @@
   flex: 1;
   padding: 16px;
 }
+.Upload-Searchbar {
+  width: 500px;
+  height: 33px;
+  padding-left: 10px;
+  margin-left: 20px;
+}
+.Upload-Drag-Drop {
+  width: 100px;
+  height: 200px;
+}
+.Upload-Button-Box {
+  display: flex;
+  flex-direction: row;
+  gap: 6px;
+}
+.Upload-Buttons {
+  height: 33px;
+  margin-left: 20px;
+  font-size: 16px;
+  border: 1px solid;
+  border-radius: 3px;
+}
+.Upload-Button-1 {
+  width: 127px;
+  margin-left: 390px;
+  color: #ff593d;
+  background-color: #ffffff;
+  border-color: #ff593d;
+}
+.Upload-Button-2 {
+  width: 147px;
+  color: #ffffff;
+  background-color: #ff593d;
+  border-color: #ff593d;
+}

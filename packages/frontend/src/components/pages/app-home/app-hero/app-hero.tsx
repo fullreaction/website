@@ -35,9 +35,15 @@ export class AppFooter {
         <h1 class="Hero-Header Heading-1">
           Publish to any <i>Platform</i> with ease
         </h1>
-        <p class="Hero-Subheader Text-1">One API to publish your content to Facebook, Linkedin, Instagram, Youtube and more</p>
+        <p class="Hero-Subheader Text-1">
+          One API to publish your content to Facebook, Linkedin, Instagram, Youtube and more
+        </p>
 
-        <form name="signup form" class={{ 'Hero-Form': true, 'Hidden': this.submitResponse != undefined }} onSubmit={e => this.submit(e)}>
+        <form
+          name="signup form"
+          class={{ 'Hero-Form': true, 'Hidden': this.submitResponse != undefined }}
+          onSubmit={e => this.submit(e)}
+        >
           <input
             type="email"
             value={this.email}

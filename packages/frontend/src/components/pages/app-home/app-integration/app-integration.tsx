@@ -22,7 +22,9 @@ export class AppIntegration {
   render = () => (
     <Host class="Integration">
       <h2 class="Integration-Title Heading-2">Integrations</h2>
-      <p class="Integration-Text Text-1">One API to publish your content to Facebook, Linkedin, Instagram, Youtube and more</p>
+      <p class="Integration-Text Text-1">
+        One API to publish your content to Facebook, Linkedin, Instagram, Youtube and more
+      </p>
       <ul class="Integration-List">
         {integrations.map(platform => (
           <li class="Integration-Box Text-1">
@@ -32,7 +34,13 @@ export class AppIntegration {
         ))}
       </ul>
       <div>
-        <a class="Github-Button" href="https://github.com/fullreaction/fullreaction/issues" title="Create an issue on GitHub" target="_blank" rel="noreferrer">
+        <a
+          class="Github-Button"
+          href="https://github.com/fullreaction/fullreaction/issues"
+          title="Create an issue on GitHub"
+          target="_blank"
+          rel="noreferrer"
+        >
           <img width="16" height="16" src="/assets/social-icons/Github.svg" alt="Github icon" />
           Missing a integration?
         </a>

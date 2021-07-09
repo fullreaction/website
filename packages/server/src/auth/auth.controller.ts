@@ -1,13 +1,4 @@
-import {
-  Controller,
-  Post,
-  Body,
-  Get,
-  Patch,
-  Req,
-  UseGuards,
-  Param,
-} from '@nestjs/common';
+import { Controller, Post, Body, Get, Patch, Req, UseGuards, Param } from '@nestjs/common';
 import { Request } from 'express';
 import { AuthService } from './auth.service';
 import { User } from './users/user.model';
@@ -38,19 +29,13 @@ export class AuthController {
   }
 
   @Post('register')
-  async registerUser(
-    @Body('email') email: string,
-    @Body('password') password: string,
-  ) {
+  async registerUser(@Body('email') email: string, @Body('password') password: string) {
     const user = await this.authService.addUser(email, password);
     return { id: user.user_id, email: user.user_email };
   }
 
   @Patch('reset')
-  async resetPassword(
-    @Body('token') token: string,
-    @Body('password') password: string,
-  ) {
+  async resetPassword(@Body('token') token: string, @Body('password') password: string) {
     await this.authService.changePassword(token, password);
   }
 

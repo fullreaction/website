@@ -3,8 +3,6 @@ import { DatabaseService } from '../dbService';
 
 // Contact Data Access Object
 
-// NOTICE: .returning() isn't supported by mysql
-
 @Injectable()
 export class ContactDAO {
   constructor(private db: DatabaseService) {}

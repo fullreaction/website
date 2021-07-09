@@ -5,8 +5,6 @@ import { fromBinaryUUID, toBinaryUUID } from 'binary-uuid';
 
 // User Data Access Object
 
-// NOTICE: .returning() isn't supported by mysql
-
 @Injectable()
 export class UserDAO {
   constructor(private db: DatabaseService) {}
@@ -22,7 +20,6 @@ export class UserDAO {
     return user;
   }
 
-  // selector is just an idea, let's see.
   async selectUser(
     selector: string, // email OR id
   ) {

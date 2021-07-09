@@ -11,13 +11,7 @@ import { SessionSerializer } from './utils/serializer';
 
 @Module({
   controllers: [AuthController],
-  providers: [
-    AuthService,
-    LocalStrategy,
-    SessionSerializer,
-    ResetTokenDAO,
-    DatabaseService,
-  ],
+  providers: [AuthService, LocalStrategy, SessionSerializer, ResetTokenDAO, DatabaseService],
   imports: [UserModule, PassportModule, MailingModule],
 })
 export class AuthModule {}

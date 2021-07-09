@@ -1,42 +1,19 @@
 /*colors subject to change because I am bad at them*/
-
-.Auth-Host,
-.Auth-Extra,
-.Auth-Form {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+.fr-pristine {
+  background-color: yellow;
 }
-.Auth-Host {
-  margin-top: 50px;
-}
-.Auth-Child {
-  width: 100%;
-}
-.Auth-Input {
-  width: 350px;
-  margin: 10px 0 10px 0;
+.fr-dirty{
+  background-color: #eee;
 }
 
-.Auth-Inverted.Auth-Inverted {
-  color: var(--primary-color);
-  background-color: white;
-  border: 1px solid lightgrey;
+.fr-valid{
+  border-color: #1f7f23 !important;
 }
-.Auth-Inverted.Auth-Inverted:hover {
-  background-color: lightgrey;
+.fr-invalid{
+  border-color: #e5533a !important;
 }
-.Auth-Extra {
-  padding: 8px;
-  margin-top: 20px;
-}
-.Auth-Errors {
-  padding: 8px;
 
-  font-weight: bold;
-  color: var(--error-color);
-  text-align: center;
+.fr-touched{
 }
-.Auth-Link {
-  text-decoration: none;
+.fr-untouched{
 }

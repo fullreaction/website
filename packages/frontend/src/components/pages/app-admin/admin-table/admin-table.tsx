@@ -51,7 +51,7 @@ export class AdminTable {
 
   delete() {
     this.data = [
-      ...this.data.filter((user, index) => {
+      ...this.data.filter((_, index) => {
         if (this.selection[index].checked) {
           this.selection[index].checked = false;
           return false;
@@ -87,7 +87,18 @@ export class AdminTable {
   }
 
   formatDate(date: Date) {
-    return date.getUTCHours() + ':' + date.getUTCMinutes() + ' - ' + date.getUTCDate() + '/' + (date.getUTCMonth() + 1) + '/' + date.getFullYear() + ' UTC';
+    return (
+      date.getUTCHours() +
+      ':' +
+      date.getUTCMinutes() +
+      ' - ' +
+      date.getUTCDate() +
+      '/' +
+      (date.getUTCMonth() + 1) +
+      '/' +
+      date.getFullYear() +
+      ' UTC'
+    );
   }
 
   render = () => (
@@ -136,7 +147,11 @@ export class AdminTable {
         {this.data.map((user, index) => (
           <tr class="Table-Row">
             <td class="Table-Cell">
-              <input type="checkbox" ref={e => (this.selection[index] = e)} onChange={() => this.selectorStatus()}></input>
+              <input
+                type="checkbox"
+                ref={e => (this.selection[index] = e)}
+                onChange={() => this.selectorStatus()}
+              ></input>
             </td>
             <td class="Table-Cell" contentEditable={this.editMode} onBlur={e => this.edit(user, 'user_email', e)}>
               <div class="Table-CellWrapper">

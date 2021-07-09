@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "engines": {
-    "node": "15.0"
+    "node": ">= 16.0.0"
   },
   "repository": {
     "type": "git",

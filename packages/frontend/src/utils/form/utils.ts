@@ -1,10 +1,8 @@
 import { AbstractControl } from './model';
 
-export const getClasses = (classList: Record<string, boolean>, control: AbstractControl) => ({
-  ...classList,
-
+export const getFormClasses = (control: AbstractControl) => ({
   'fr-pristine': control.pristine,
-  'fr-dirty': control.pristine,
+  'fr-dirty': control.dirty,
 
   'fr-valid': control.valid,
   'fr-invalid': control.invalid,

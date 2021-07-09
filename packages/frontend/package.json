@@ -7,6 +7,9 @@
   "module": "./dist/index.js",
   "collection": "./dist/collection/collection-manifest.json",
   "types": "./dist/types/components.d.ts",
+  "engines": {
+    "node": ">= 16.0.0"
+  },
   "scripts": {
     "build": "stencil build",
     "start": "stencil build --dev --watch --serve --no-open",

@@ -9,6 +9,8 @@ import { ValidationErrors } from "./utils/form";
 export namespace Components {
     interface AdminTable {
     }
+    interface AdminUpload {
+    }
     interface AppAuth {
     }
     interface AppDocs {
@@ -61,6 +63,12 @@ declare global {
     var HTMLAdminTableElement: {
         prototype: HTMLAdminTableElement;
         new (): HTMLAdminTableElement;
+    };
+    interface HTMLAdminUploadElement extends Components.AdminUpload, HTMLStencilElement {
+    }
+    var HTMLAdminUploadElement: {
+        prototype: HTMLAdminUploadElement;
+        new (): HTMLAdminUploadElement;
     };
     interface HTMLAppAuthElement extends Components.AppAuth, HTMLStencilElement {
     }
@@ -178,6 +186,7 @@ declare global {
     };
     interface HTMLElementTagNameMap {
         "admin-table": HTMLAdminTableElement;
+        "admin-upload": HTMLAdminUploadElement;
         "app-auth": HTMLAppAuthElement;
         "app-docs": HTMLAppDocsElement;
         "app-errors": HTMLAppErrorsElement;
@@ -201,6 +210,8 @@ declare global {
 }
 declare namespace LocalJSX {
     interface AdminTable {
+    }
+    interface AdminUpload {
     }
     interface AppAuth {
     }
@@ -250,6 +261,7 @@ declare namespace LocalJSX {
     }
     interface IntrinsicElements {
         "admin-table": AdminTable;
+        "admin-upload": AdminUpload;
         "app-auth": AppAuth;
         "app-docs": AppDocs;
         "app-errors": AppErrors;
@@ -276,6 +288,7 @@ declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
             "admin-table": LocalJSX.AdminTable & JSXBase.HTMLAttributes<HTMLAdminTableElement>;
+            "admin-upload": LocalJSX.AdminUpload & JSXBase.HTMLAttributes<HTMLAdminUploadElement>;
             "app-auth": LocalJSX.AppAuth & JSXBase.HTMLAttributes<HTMLAppAuthElement>;
             "app-docs": LocalJSX.AppDocs & JSXBase.HTMLAttributes<HTMLAppDocsElement>;
             "app-errors": LocalJSX.AppErrors & JSXBase.HTMLAttributes<HTMLAppErrorsElement>;

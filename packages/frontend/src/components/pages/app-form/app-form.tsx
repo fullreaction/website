@@ -6,7 +6,7 @@ import {
   array,
   control,
   group,
-  getClasses,
+  getFormClasses,
 } from '../../../utils/form';
 
 interface LoginForm {
@@ -73,11 +73,11 @@ export class AppForm {
 
     return (
       <Host>
-        <form class="Auth-Form" onSubmit={this.submit}>
+        <form class="Form-Form" onSubmit={this.submit}>
           <input
             type="email"
             value={form.email.value}
-            class={getClasses({ 'Auth-Input': true, 'InputText': true }, form.email)}
+            class={{ 'Form-Input': true, 'InputText': true, ...getFormClasses(form.email) }}
             placeholder="Email address"
             required
             onInput={e => form.email.setValue((e.target as HTMLInputElement).value)}
@@ -87,7 +87,7 @@ export class AppForm {
           <input
             type="password"
             value={form.password.value}
-            class={getClasses({ 'Auth-Input': true, 'InputText': true }, form.password)}
+            class={{ 'Form-Input': true, 'InputText': true, ...getFormClasses(form.password) }}
             placeholder="Password"
             onInput={e => form.password.setValue((e.target as HTMLInputElement).value)}
             required
@@ -103,19 +103,19 @@ export class AppForm {
                   id={`firstname[${i}]`}
                   type="text"
                   name={`name[${i}]`}
-                  class="Auth-Input InputText"
+                  class="Form-Input InputText"
                   value={control.controls.firstname.value}
                 />
                 <input
                   id={`name[${i}]`}
                   type="text"
                   name={`lastname[${i}]`}
-                  class="Auth-Input InputText"
+                  class="Form-Input InputText"
                   value={control.controls.lastname.value}
                 />
               </div>
             ))}
-            <input type="button" class="Auth-Input Button" value="add" onClick={() => this.addRow()} />
+            <input type="button" class="Form-Input Button" value="add" onClick={() => this.addRow()} />
           </fieldset>
           <fieldset>
             <legend>Reactions</legend>
@@ -126,12 +126,12 @@ export class AppForm {
                   id={`reaction[${i}]`}
                   type="text"
                   name={`reaction[${i}]`}
-                  class="Auth-Input InputText"
+                  class="Form-Input InputText"
                   value={control.value}
                 />
               </div>
             ))}
-            <input type="button" class="Auth-Input Button" value="add" onClick={() => this.addRow()} />
+            <input type="button" class="Form-Input Button" value="add" onClick={() => this.addRow()} />
           </fieldset>
           <fieldset>
             <legend>Address</legend>
@@ -139,7 +139,7 @@ export class AppForm {
               type="text"
               value={address.street.value.toString()}
               class={{
-                'Auth-Input': true,
+                'Form-Input': true,
                 'InputText': true,
               }}
               placeholder="Email address"
@@ -148,31 +148,31 @@ export class AppForm {
             <input
               type="text"
               value={address.town.value.toString()}
-              class="Auth-Input InputText"
+              class="Form-Input InputText"
               placeholder="Email address"
               required
             />
             <input
               type="text"
               value={address.country.value.toString()}
-              class="Auth-Input InputText"
+              class="Form-Input InputText"
               placeholder="Email address"
               required
             />
           </fieldset>
 
-          <input type="submit" class="Auth-Input Button" value="Log in" />
+          <input type="submit" class="Form-Input Button" value="Log in" />
         </form>
-        <div class="Auth-Extra">
+        <div class="Form-Extra">
           <p>
             Forgotten your password?
-            <a class="Auth-Link" href="">
+            <a class="Form-Link" href="">
               Click To Reset
             </a>
           </p>
           <p>
             Don&apos;t have an account yet?
-            <a class="Auth-Link" href="">
+            <a class="Form-Link" href="">
               Register
             </a>
           </p>

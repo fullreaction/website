@@ -15,6 +15,7 @@ class AuthServiceController {
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
       };
+
       fetch(ROOT_URL + 'auth/login', fetchData)
         .then(handleFetch)
         .then(data => {

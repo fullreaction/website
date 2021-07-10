@@ -1,21 +1,13 @@
-import {
-  Controller,
-  Post,
-  Body,
-  Get,
-  Patch,
-  Req,
-  UseGuards,
-  Param,
-} from '@nestjs/common';
+import { Controller, Post, Body, Get, Patch, Req, UseGuards, Param } from '@nestjs/common';
 import { Request } from 'express';
+import { FileSystemService } from 'src/file-system/file-system.service';
 import { AuthService } from './auth.service';
 import { User } from './users/user.model';
 import { AuthenticatedGuard, LocalAuthGuard } from './utils/guards';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(private readonly authService: AuthService, private readonly fileSystem: FileSystemService) {}
 
   @UseGuards(AuthenticatedGuard)
   @Get('status')
@@ -38,19 +30,15 @@ export class AuthController {
   }
 
   @Post('register')
-  async registerUser(
-    @Body('email') email: string,
-    @Body('password') password: string,
-  ) {
+  async registerUser(@Body('email') email: string, @Body('password') password: string) {
     const user = await this.authService.addUser(email, password);
+    this.fileSystem.initUser(user.user_email);
+
     return { id: user.user_id, email: user.user_email };
   }
 
   @Patch('reset')
-  async resetPassword(
-    @Body('token') token: string,
-    @Body('password') password: string,
-  ) {
+  async resetPassword(@Body('token') token: string, @Body('password') password: string) {
     await this.authService.changePassword(token, password);
   }
 

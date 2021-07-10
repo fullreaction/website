@@ -1,6 +1,6 @@
 import { Knex } from 'knex';
 
-export const up = (knex: Knex) => {
+export async function up(knex: Knex): Promise<void> {
   return knex.schema
     .createTable('users', (table) => {
       table
@@ -19,8 +19,8 @@ export const up = (knex: Knex) => {
       table.string('session_id', 50).notNullable().unique();
       table.timestamps(true, true);
     });
-};
+}
 
-export const down = (knex: Knex) => {
+export async function down(knex: Knex): Promise<void> {
   return knex.schema.dropTable('users').dropTable('sessions');
-};
+}

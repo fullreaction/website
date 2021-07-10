@@ -15,9 +15,7 @@ export class UserController {
 
   @UseGuards(AuthenticatedGuard)
   @Patch('update')
-  async updateUsers(
-    @Body('editedItems') editedItems: { user: User; deleted: boolean }[],
-  ) {
+  async updateUsers(@Body('editedItems') editedItems: { user: User; deleted: boolean }[]) {
     return await this.userService.updateList(editedItems);
   }
 }

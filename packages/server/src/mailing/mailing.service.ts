@@ -43,15 +43,11 @@ export class MailingService {
         ],
       });
 
-      const res = await this.http.post(
-        this.Mailchimp.url + 'lists/' + this.Mailchimp.audienceId,
-        mcDataPost,
-        {
-          headers: {
-            Authorization: 'auth ' + this.Mailchimp.apikey,
-          },
+      const res = await this.http.post(this.Mailchimp.url + 'lists/' + this.Mailchimp.audienceId, mcDataPost, {
+        headers: {
+          Authorization: 'auth ' + this.Mailchimp.apikey,
         },
-      );
+      });
       res.subscribe({
         next: (e) => {
           console.log(e);
@@ -81,10 +77,7 @@ export class MailingService {
         to: [{ email: this.Mandrill.email }],
       },
     });
-    const res = await this.http.post(
-      this.Mandrill.url + 'messages/send',
-      mcDataPost,
-    );
+    const res = await this.http.post(this.Mandrill.url + 'messages/send', mcDataPost);
     res.subscribe({
       next: (e) => {
         console.log(e);
@@ -123,10 +116,7 @@ export class MailingService {
     }
     const mcDataPost = JSON.stringify(mcData);
 
-    const res = await this.http.post(
-      this.Mandrill.url + 'messages/send',
-      mcDataPost,
-    );
+    const res = await this.http.post(this.Mandrill.url + 'messages/send', mcDataPost);
     res.subscribe({
       next: (e) => {
         console.log(e);

@@ -8,16 +8,18 @@ export async function up(knex: Knex): Promise<void> {
       table.increments('dir_id').primary().unique().notNullable();
       table.string('dir_name').notNullable();
       table.integer('parent_id').unsigned();
-      table.binary('user_id', 16); //Only for root dir
+      table.binary('owner', 16);
 
-      table.foreign('user_id').references('user_id').inTable('users');
+      table.foreign('owner').references('user_id').inTable('users');
       table.foreign('parent_id').references('dir_id').inTable('directories');
     })
     .createTable('files', (table) => {
       table.increments('file_id').primary().unique().notNullable();
       table.string('file_name').notNullable();
       table.integer('parent_id').unsigned().notNullable();
+      table.binary('owner', 16);
 
+      table.foreign('owner').references('user_id').inTable('users'); // Just in case there is an error with directories
       table.foreign('parent_id').references('dir_id').inTable('directories');
     })
     .raw('ALTER TABLE files ADD COLUMN file_data BLOB NULL AFTER file_name') //knex doesn't have blob filetype

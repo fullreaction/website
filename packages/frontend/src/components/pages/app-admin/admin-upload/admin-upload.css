@@ -19,13 +19,30 @@
   font-weight: bold;
 }
 
+.Upload-Dots-Content {
+  position: absolute;
+  z-index: 1;
+  display: none;
+  min-width: 160px;
+  background-color: #f1f1f1;
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+}
+
+.Upload-Dots-Content button {
+  display: block;
+  padding: 12px 16px;
+  color: black;
+  text-decoration: none;
+}
+
 .Upload-Collection {
   display: flex;
   flex-direction: row;
   width: 212px;
-  padding: 2px;
+  padding: 3px;
   font-size: 14;
   background-color: var(--background-color);
+  border: none;
   transition-duration: 0.2s;
 }
 
@@ -33,7 +50,7 @@
   background-color: rgba(53, 198, 255, 0.2);
 }
 
-.Upload-Collection:active {
+.Upload-Collection:focus {
   background-color: rgba(53, 198, 255, 0.2);
 }
 
@@ -46,8 +63,10 @@
 }
 
 .Upload-EditDots {
-  position: absolute;
+  position: fixed;
   left: 188px;
+  visibility: hidden;
+  border: none;
 }
 
 .Upload-Content {

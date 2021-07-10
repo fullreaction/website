@@ -1,7 +1,7 @@
 import { Knex } from 'knex';
 
 export async function up(knex: Knex): Promise<void> {
-  knex.raw(
+  /*knex.raw(
     `CREATE OR REPLACE TRIGGER fix_relationshipsDirs
   AFTER INSERT
   ON directories FOR EACH ROW
@@ -12,7 +12,7 @@ export async function up(knex: Knex): Promise<void> {
  where p.child_id=new.parent_id and c.parent_id=new.dir_id
 
 `,
-  );
+  );*/
 }
 
 export async function down(knex: Knex): Promise<void> {

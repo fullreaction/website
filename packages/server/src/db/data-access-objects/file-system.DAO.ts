@@ -1,7 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { ESRCH } from 'constants';
-import knex, { Knex } from 'knex';
-import { User } from 'src/auth/users/user.model';
+
 import { Directory } from 'src/file-system/file-system.models';
 
 import { DatabaseService } from '../dbService';
@@ -57,19 +55,37 @@ export class FileSystemDAO {
   }
 
   async getChildren(dir: Directory) {
-    const directories = await this.db
-      .database('directories')
-      .join('relationships', 'dir_id', '=', 'relationships.child_id')
-      .select('*')
-      .where('relationships.parent_id', '=', dir.id);
-    console.log(directories);
+    let directories, files;
+    if (dir.parent_id == null) {
+      const rootDir = this.db
+        .database('directories')
+        .select('dir_id')
+        .where({ parent_id: null, owner: dir.owner.user_id });
+      directories = await this.db
+        .database<Directory>('directories')
+        .join('relationships', 'dir_id', '=', 'relationships.child_id')
+        .select('*')
+        .where('relationships.parent_id', '=', rootDir);
+      files = await this.db
+        .database<File>('files')
+        .join('relationships', 'file_id', '=', 'relationships.child_id')
+        .select('*')
+        .where('relationships.parent_id', '=', rootDir);
+    } else {
+      directories = await this.db
+        .database<Directory>('directories')
+        .join('relationships', 'dir_id', '=', 'relationships.child_id')
+        .select('*')
+        .where('relationships.parent_id', '=', dir.id);
+      console.log(directories);
 
-    const files = await this.db
-      .database('files')
-      .join('relationships', 'file_id', '=', 'relationships.child_id')
-      .select('*')
-      .where('relationships.parent_id', '=', dir.id);
-    console.log(files);
+      files = await this.db
+        .database<File>('files')
+        .join('relationships', 'file_id', '=', 'relationships.child_id')
+        .select('*')
+        .where('relationships.parent_id', '=', dir.id);
+      console.log(files);
+    }
     return { files: files, directories: directories };
   }
 

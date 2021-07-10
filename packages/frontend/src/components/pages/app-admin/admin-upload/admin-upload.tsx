@@ -11,16 +11,25 @@ export class AdminUpload {
         <div class="Button">Upload Media</div>
         <div class="Upload-Collections">
           COLLECTIONS
-          <div class="Upload-Dots">
+          <button class="Upload-Dots">
             <img src="\assets\icon\3Dots-icon.svg" />
-          </div>
+            <div id="addDropdown" class="Upload-Dots-Content">
+              <button>Add Collection</button>
+            </div>
+          </button>
         </div>
-        <div class="Upload-Collection">
+        <button class="Upload-Collection">
           Images
           <div class="Upload-EditDots">
             <img src="\assets\icon\3Dots-icon.svg" />
           </div>
-        </div>
+        </button>
+        <button class="Upload-Collection">
+          Cats
+          <div class="Upload-EditDots">
+            <img src="\assets\icon\3Dots-icon.svg" />
+          </div>
+        </button>
       </div>
       <div class="Upload-Content">
         <input class="Upload-Searchbar" type="text" placeholder="Search" />

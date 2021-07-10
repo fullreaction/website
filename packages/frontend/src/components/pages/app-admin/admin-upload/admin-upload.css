@@ -74,19 +74,47 @@
   padding: 16px;
 }
 .Upload-Searchbar {
-  width: 700px;
+  width: 845px;
   height: 33px;
   padding-left: 10px;
-  margin-left: 20px;
+  margin-left: 10px;
 }
-.Upload-Drag-Drop {
-  width: 100px;
-  height: 200px;
+.Upload-Categories {
+  margin: 28px 0px 0px 20px;
+  font-size: small;
+  font-weight: bold;
+}
+.Upload-File-Box {
+  width: 1050px;
+  height: 390px;
+  margin-top: 10px;
+}
+.Upload-Images {
+  display: flex;
+  flex-direction: row;
+}
+.Upload-Image-Text {
+  display: flex;
+  flex-direction: row;
+  gap: 30px;
+  margin-left: -15px;
+  font-size: smaller;
+  list-style-type: none;
+}
+.Upload-Blank-Image {
+  width: 80px;
+  height: 80px;
+  margin: 5px 0px 0px 20px;
+}
+.Upload-Inner-Image {
+  margin-bottom: 55px;
+  margin-left: -25px;
 }
 .Upload-Button-Box {
   display: flex;
   flex-direction: row;
   gap: 20px;
+  margin-left: 150px;
 }
 .Upload-Buttons {
   height: 33px;

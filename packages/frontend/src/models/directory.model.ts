@@ -1,4 +1,4 @@
-import { User } from 'src/auth/users/user.model';
+import { User } from './user.model';
 
 export interface Directory {
   owner: User;

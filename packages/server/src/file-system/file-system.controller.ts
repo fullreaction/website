@@ -1,6 +1,6 @@
-import { Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Post, Req } from '@nestjs/common';
 import { Request } from 'express';
-import { AuthenticatedGuard } from 'src/auth/utils/guards';
+import { Directory } from './file-system.models';
 import { FileSystemService } from './file-system.service';
 
 /*
@@ -19,12 +19,12 @@ export class FileSystemController {
 
   @Get('file')
   async getFile() {
-    return 'Got file';
+    //
   }
 
-  @Get('directory')
-  async getDir() {
-    return 'Got Dir';
+  @Post('getdir')
+  async getDir(@Body('dir') dir: Directory) {
+    return this.fileSystem.getChildren(dir);
   }
 
   @Post('file')
@@ -34,10 +34,9 @@ export class FileSystemController {
     else return 'No File';
   }
 
-  @Post('directory')
-  async uploadDirectory(@Req() req: Request) {
-    const data = req.body;
-    if (data.directory) return 'OK';
-    else return 'No File';
+  @Post('dir')
+  async uploadDirectory(@Body('dir') dir: Directory, @Body('parent') parent: Directory) {
+    console.log(dir);
+    return this.fileSystem.addDirectory(dir, parent);
   }
 }

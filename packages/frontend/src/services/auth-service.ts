@@ -93,7 +93,8 @@ class AuthServiceController {
       resolve('200');
     });
   }
-  getUser() {
+  async getUser() {
+    await this.checkStatus();
     return this.user;
   }
 

@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { toBinaryUUID } from 'binary-uuid';
 
 import { Directory } from 'src/file-system/file-system.models';
 
@@ -11,15 +12,18 @@ export class FileSystemDAO {
   constructor(private db: DatabaseService) {}
 
   async initUser(email: string) {
+    const owner = this.db.database('users').select('user_id').where({ user_email: email });
     await this.db.database('directories').insert({
       dir_name: email,
       parent_id: null,
-      user_id: this.db.database('users').select('user_id').where({ user_email: email }),
+      owner: owner,
     });
-    const root = await this.db.database('directories').select('dir_id').where({ dir_name: email });
+    const res = await this.db.database('directories').select('dir_id').where({ dir_name: email });
+    console.log(res[0].dir_id);
     await this.db.database('relationships').insert({
-      parent_id: root,
-      child_id: root,
+      parent_id: res[0].dir_id,
+      child_id: res[0].dir_id,
+
       depth: 0,
     });
   }
@@ -41,17 +45,31 @@ export class FileSystemDAO {
   }
   async addDirectory(directory: Directory, parent: Directory) {
     let dirId;
-    this.db
+    const parent_id =
+      parent != null
+        ? parent.id
+        : await this.db
+            .database('directories')
+            .select('dir_id')
+            .where({ owner: toBinaryUUID(directory.owner.user_id as string), parent_id: null });
+
+    await this.db
       .database('directories')
       .insert({
         dir_name: directory.name,
-        owner: directory.owner.user_id,
-        parent_id: parent.id,
+        owner: toBinaryUUID(directory.owner.user_id as string),
+        parent_id: parent_id[0].dir_id,
       })
       .then((res) => {
         dirId = res[0];
       });
-    this.fixRelationships(parent.id, dirId);
+    await this.db.database('relationships').insert({
+      parent_id: dirId,
+      child_id: dirId,
+
+      depth: 0,
+    });
+    this.fixRelationships(parent_id[0].dir_id, dirId);
   }
 
   async getChildren(dir: Directory) {
@@ -91,15 +109,14 @@ export class FileSystemDAO {
 
   // Needs to be turned into trigger via migration
   private async fixRelationships(parentId: number, childId: number) {
-    this.db.database
-      .from(this.db.database.raw('?? (??,??,??)', ['relationships', 'parent_id', 'child_id', 'depth']))
-      .insert(() => {
+    this.db
+      .database('relationships')
+      .insert(
         this.db
-          .database()
-          .from('relationships p, c')
+          .database({ p: 'relationships', c: 'relationships' })
           .where('p.child_id', '=', parentId)
           .andWhere('c.parent_id', '=', childId)
-          .select('p.parent, c.child, p.depth+c.depth+1');
-      });
+          .select('p.parent_id', 'c.child_id', 'p.depth + c.depth+1'),
+      );
   }
 }

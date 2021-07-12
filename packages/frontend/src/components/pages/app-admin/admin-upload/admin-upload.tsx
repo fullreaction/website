@@ -1,5 +1,7 @@
 import { Component, h, Host } from '@stencil/core';
 
+import { FileSystemService } from '../../../../services/file-system-service';
+
 @Component({
   tag: 'admin-upload',
   styleUrl: 'admin-upload.css',
@@ -7,8 +9,16 @@ import { Component, h, Host } from '@stencil/core';
 export class AdminUpload {
   render = () => (
     <Host class="Upload">
-      <div class="Upload-Side">Side</div>
-      <div class="Upload-Content">Content</div>
+      <button>Get files</button>
+      <button onClick={() => FileSystemService.getRoot()}>Get directory</button>
+      <button>upload file</button>
+      <button
+        onClick={() => {
+          FileSystemService.makeDir('testDir', null);
+        }}
+      >
+        make directory
+      </button>
     </Host>
   );
 }

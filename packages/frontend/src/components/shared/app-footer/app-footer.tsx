@@ -1,4 +1,5 @@
 import { Component, h, Host, State } from '@stencil/core';
+import axios from 'axios';
 
 @Component({
   tag: 'app-footer',
@@ -7,58 +8,58 @@ import { Component, h, Host, State } from '@stencil/core';
 export class AppFooter {
   @State() email: string;
   @State() text: string;
-  @State() submitResponse: string;
-  @State() isErrorResponse: boolean;
 
-  submit(e) {
-    e.preventDefault();
-    const fetchData = {
-      method: 'POST',
-      body: JSON.stringify({ email: this.email, text: this.text }),
-      headers: { 'Content-Type': 'application/json' },
-    };
+  @State() isResponse: boolean | null = null;
 
-    fetch('http://localhost:3000/mailing/contact', fetchData)
-      .then(res => {
-        console.log(res);
-        this.submitResponse = 'Thank you for contacting us.';
-        this.isErrorResponse = false;
-      })
-      .catch(err => {
-        console.log(err);
-        this.submitResponse = 'An error has occured.';
-        this.isErrorResponse = true;
-      });
+  async submit() {
+    try {
+      await axios.post('/mailing/contact', { email: this.email, text: this.text });
+      this.isResponse = true;
+    } catch (error) {
+      this.isResponse = false;
+    }
   }
 
   render() {
     return (
       <Host class="Footer">
-        <form class="Footer-ContactForm" hidden={this.submitResponse != undefined} onSubmit={e => this.submit(e)}>
-          <h2 class="Footer-FormHeader Heading-2">Contact Us</h2>
-          <input
-            value={this.email}
-            onInput={e => (this.email = (e.target as HTMLInputElement).value)}
-            type="email"
-            class="Footer-FormEmail InputText"
-            name="contact-email"
-            placeholder="Email"
-            required
-          />
-          <textarea
-            value={this.text}
-            onInput={e => (this.text = (e.target as HTMLTextAreaElement).value)}
-            class="Footer-FormBody InputArea"
-            name="contact-body"
-            placeholder="Message"
-            required
-          />
-          <input type="submit" class="Footer-FormSubmit Button" value="Send" />
-        </form>
-        <span class={this.isErrorResponse ? 'Footer-Error Text-1' : 'Footer-Response Text-1'}>{this.submitResponse}</span>
-
+        {this.isResponse === null && this.renderForm()}
+        {this.isResponse === true && <span class="Footer-Response Text-1">Thank you for contacting us.</span>}
+        {this.isResponse === false && <span class="Footer-Error Text-1">An error has occurred.</span>}
         <img class="Footer-Logo" src="/assets/icon/logo.svg" alt="Logo" />
       </Host>
+    );
+  }
+
+  renderForm() {
+    return (
+      <form
+        class="Footer-ContactForm"
+        onSubmit={e => {
+          e.preventDefault();
+          this.submit();
+        }}
+      >
+        <h2 class="Footer-FormHeader Heading-2">Contact Us</h2>
+        <input
+          value={this.email}
+          onInput={e => (this.email = (e.target as HTMLInputElement).value)}
+          type="email"
+          class="Footer-FormEmail InputText"
+          name="contact-email"
+          placeholder="Email"
+          required
+        />
+        <textarea
+          value={this.text}
+          onInput={e => (this.text = (e.target as HTMLTextAreaElement).value)}
+          class="Footer-FormBody InputArea"
+          name="contact-body"
+          placeholder="Message"
+          required
+        />
+        <input type="submit" class="Footer-FormSubmit Button" value="Send" />
+      </form>
     );
   }
 }

@@ -14,7 +14,7 @@ type gvmInnerError = {
   innerError: gvmInnerError;
 };
 
-type gvmError = {
+export type gvmError = {
   code: string;
   message: string;
   target?: string;

@@ -5,13 +5,19 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { ValidationErrors } from "./utils/form";
+import { RouterHistory } from "@stencil/router";
+import { FormControl, ValidationErrors } from "./utils/form";
+import { gvmError } from "./utils/httpUtils";
 export namespace Components {
     interface AdminTable {
     }
     interface AdminUpload {
     }
+    interface AppAdmin {
+        "history": RouterHistory;
+    }
     interface AppAuth {
+        "history": RouterHistory;
     }
     interface AppDocs {
     }
@@ -24,6 +30,11 @@ export namespace Components {
     interface AppFooter {
     }
     interface AppForm {
+    }
+    interface AppFormTextfield {
+        "control": FormControl<any>;
+        "placeholder": string;
+        "type": string;
     }
     interface AppHeader {
     }
@@ -38,13 +49,18 @@ export namespace Components {
     interface AppIntegration {
     }
     interface AppLogin {
+        "history": RouterHistory;
+    }
+    interface AppMissingPage {
     }
     interface AppRegister {
-        "horizontal": boolean;
+        "error": gvmError | null;
+        "history": RouterHistory;
     }
     interface AppReset {
     }
     interface AppResetComplete {
+        "history": RouterHistory;
     }
     interface AppRoot {
     }
@@ -69,6 +85,12 @@ declare global {
     var HTMLAdminUploadElement: {
         prototype: HTMLAdminUploadElement;
         new (): HTMLAdminUploadElement;
+    };
+    interface HTMLAppAdminElement extends Components.AppAdmin, HTMLStencilElement {
+    }
+    var HTMLAppAdminElement: {
+        prototype: HTMLAppAdminElement;
+        new (): HTMLAppAdminElement;
     };
     interface HTMLAppAuthElement extends Components.AppAuth, HTMLStencilElement {
     }
@@ -106,6 +128,12 @@ declare global {
         prototype: HTMLAppFormElement;
         new (): HTMLAppFormElement;
     };
+    interface HTMLAppFormTextfieldElement extends Components.AppFormTextfield, HTMLStencilElement {
+    }
+    var HTMLAppFormTextfieldElement: {
+        prototype: HTMLAppFormTextfieldElement;
+        new (): HTMLAppFormTextfieldElement;
+    };
     interface HTMLAppHeaderElement extends Components.AppHeader, HTMLStencilElement {
     }
     var HTMLAppHeaderElement: {
@@ -141,6 +169,12 @@ declare global {
     var HTMLAppLoginElement: {
         prototype: HTMLAppLoginElement;
         new (): HTMLAppLoginElement;
+    };
+    interface HTMLAppMissingPageElement extends Components.AppMissingPage, HTMLStencilElement {
+    }
+    var HTMLAppMissingPageElement: {
+        prototype: HTMLAppMissingPageElement;
+        new (): HTMLAppMissingPageElement;
     };
     interface HTMLAppRegisterElement extends Components.AppRegister, HTMLStencilElement {
     }
@@ -187,18 +221,21 @@ declare global {
     interface HTMLElementTagNameMap {
         "admin-table": HTMLAdminTableElement;
         "admin-upload": HTMLAdminUploadElement;
+        "app-admin": HTMLAppAdminElement;
         "app-auth": HTMLAppAuthElement;
         "app-docs": HTMLAppDocsElement;
         "app-errors": HTMLAppErrorsElement;
         "app-features": HTMLAppFeaturesElement;
         "app-footer": HTMLAppFooterElement;
         "app-form": HTMLAppFormElement;
+        "app-form-textfield": HTMLAppFormTextfieldElement;
         "app-header": HTMLAppHeaderElement;
         "app-hero": HTMLAppHeroElement;
         "app-highlight": HTMLAppHighlightElement;
         "app-home": HTMLAppHomeElement;
         "app-integration": HTMLAppIntegrationElement;
         "app-login": HTMLAppLoginElement;
+        "app-missing-page": HTMLAppMissingPageElement;
         "app-register": HTMLAppRegisterElement;
         "app-reset": HTMLAppResetElement;
         "app-reset-complete": HTMLAppResetCompleteElement;
@@ -213,7 +250,11 @@ declare namespace LocalJSX {
     }
     interface AdminUpload {
     }
+    interface AppAdmin {
+        "history"?: RouterHistory;
+    }
     interface AppAuth {
+        "history"?: RouterHistory;
     }
     interface AppDocs {
     }
@@ -226,6 +267,11 @@ declare namespace LocalJSX {
     interface AppFooter {
     }
     interface AppForm {
+    }
+    interface AppFormTextfield {
+        "control"?: FormControl<any>;
+        "placeholder"?: string;
+        "type"?: string;
     }
     interface AppHeader {
     }
@@ -240,14 +286,19 @@ declare namespace LocalJSX {
     interface AppIntegration {
     }
     interface AppLogin {
+        "history"?: RouterHistory;
+    }
+    interface AppMissingPage {
     }
     interface AppRegister {
-        "horizontal"?: boolean;
+        "error"?: gvmError | null;
+        "history"?: RouterHistory;
         "onRegister"?: (event: CustomEvent<any>) => void;
     }
     interface AppReset {
     }
     interface AppResetComplete {
+        "history"?: RouterHistory;
     }
     interface AppRoot {
     }
@@ -262,18 +313,21 @@ declare namespace LocalJSX {
     interface IntrinsicElements {
         "admin-table": AdminTable;
         "admin-upload": AdminUpload;
+        "app-admin": AppAdmin;
         "app-auth": AppAuth;
         "app-docs": AppDocs;
         "app-errors": AppErrors;
         "app-features": AppFeatures;
         "app-footer": AppFooter;
         "app-form": AppForm;
+        "app-form-textfield": AppFormTextfield;
         "app-header": AppHeader;
         "app-hero": AppHero;
         "app-highlight": AppHighlight;
         "app-home": AppHome;
         "app-integration": AppIntegration;
         "app-login": AppLogin;
+        "app-missing-page": AppMissingPage;
         "app-register": AppRegister;
         "app-reset": AppReset;
         "app-reset-complete": AppResetComplete;
@@ -289,18 +343,21 @@ declare module "@stencil/core" {
         interface IntrinsicElements {
             "admin-table": LocalJSX.AdminTable & JSXBase.HTMLAttributes<HTMLAdminTableElement>;
             "admin-upload": LocalJSX.AdminUpload & JSXBase.HTMLAttributes<HTMLAdminUploadElement>;
+            "app-admin": LocalJSX.AppAdmin & JSXBase.HTMLAttributes<HTMLAppAdminElement>;
             "app-auth": LocalJSX.AppAuth & JSXBase.HTMLAttributes<HTMLAppAuthElement>;
             "app-docs": LocalJSX.AppDocs & JSXBase.HTMLAttributes<HTMLAppDocsElement>;
             "app-errors": LocalJSX.AppErrors & JSXBase.HTMLAttributes<HTMLAppErrorsElement>;
             "app-features": LocalJSX.AppFeatures & JSXBase.HTMLAttributes<HTMLAppFeaturesElement>;
             "app-footer": LocalJSX.AppFooter & JSXBase.HTMLAttributes<HTMLAppFooterElement>;
             "app-form": LocalJSX.AppForm & JSXBase.HTMLAttributes<HTMLAppFormElement>;
+            "app-form-textfield": LocalJSX.AppFormTextfield & JSXBase.HTMLAttributes<HTMLAppFormTextfieldElement>;
             "app-header": LocalJSX.AppHeader & JSXBase.HTMLAttributes<HTMLAppHeaderElement>;
             "app-hero": LocalJSX.AppHero & JSXBase.HTMLAttributes<HTMLAppHeroElement>;
             "app-highlight": LocalJSX.AppHighlight & JSXBase.HTMLAttributes<HTMLAppHighlightElement>;
             "app-home": LocalJSX.AppHome & JSXBase.HTMLAttributes<HTMLAppHomeElement>;
             "app-integration": LocalJSX.AppIntegration & JSXBase.HTMLAttributes<HTMLAppIntegrationElement>;
             "app-login": LocalJSX.AppLogin & JSXBase.HTMLAttributes<HTMLAppLoginElement>;
+            "app-missing-page": LocalJSX.AppMissingPage & JSXBase.HTMLAttributes<HTMLAppMissingPageElement>;
             "app-register": LocalJSX.AppRegister & JSXBase.HTMLAttributes<HTMLAppRegisterElement>;
             "app-reset": LocalJSX.AppReset & JSXBase.HTMLAttributes<HTMLAppResetElement>;
             "app-reset-complete": LocalJSX.AppResetComplete & JSXBase.HTMLAttributes<HTMLAppResetCompleteElement>;

@@ -9,10 +9,19 @@ import { AuthService } from './auth.service';
 import { LocalStrategy } from './local.strategy';
 import { UserModule } from './users/user.module';
 import { SessionSerializer } from './utils/serializer';
+import { FileSystemDAO } from '../db/data-access-objects/file-system.DAO';
 
 @Module({
   controllers: [AuthController],
-  providers: [AuthService, LocalStrategy, SessionSerializer, ResetTokenDAO, FileSystemService],
+  providers: [
+    DatabaseService,
+    AuthService,
+    LocalStrategy,
+    SessionSerializer,
+    ResetTokenDAO,
+    FileSystemService,
+    FileSystemDAO,
+  ],
   imports: [UserModule, PassportModule, MailingModule],
 })
 export class AuthModule {}

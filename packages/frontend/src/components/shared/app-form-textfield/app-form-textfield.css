@@ -1,0 +1,8 @@
+.Form-Textfield {
+  display: flex;
+  flex-direction: column;
+}
+
+.Form-Textfield > .InputText {
+  flex-grow: 1;
+}

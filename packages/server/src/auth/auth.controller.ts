@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Get, Patch, Req, UseGuards, Param } from '@nestjs/common';
+import { Controller, Post, Body, Get, Patch, Req, UseGuards, Query } from '@nestjs/common';
 import { Request } from 'express';
 import { FileSystemService } from 'src/file-system/file-system.service';
 import { AuthService } from './auth.service';
@@ -17,7 +17,7 @@ export class AuthController {
   }
 
   @Get('check')
-  async check(@Param() email: string) {
+  async check(@Query('email') email: string) {
     const u = await this.authService.findOne(email);
     if (u) return true;
     else return false;

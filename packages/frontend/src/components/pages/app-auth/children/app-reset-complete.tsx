@@ -1,54 +1,52 @@
-import { Component, h, Host, State } from '@stencil/core';
-import { AuthService } from '../../../../services/auth-service';
-import { gvmHttpErrorResponse } from '../../../../utils/httpUtils';
-import authStore from '../authStore';
+import { Component, h, Host, Prop } from '@stencil/core';
+import { RouterHistory } from '@stencil/router';
+import { AuthEndpoints } from '../../../../services/auth-endpoints';
+import { AbstractControl, control, group, minLengthValidator, requiredValidator } from '../../../../utils/form';
+
+const submitGuard = (model: AbstractControl, cb: () => void) => e => {
+  e.preventDefault();
+  if (model.valid) cb();
+};
+
+interface Form {
+  password: string;
+  confPassword: string;
+}
 
 @Component({
   tag: 'app-reset-complete',
-  styleUrl: '../app-auth.css',
 })
 export class AppResetComplete {
-  private token: string;
-  @State() password: string;
-  @State() confPassword: string;
-  reset(e) {
-    e.preventDefault();
-    //Validation required
-    const urlParams = new URLSearchParams(window.location.search);
-    this.token = urlParams.get('token');
-    if (this.password == this.confPassword)
-      AuthService.reset(this.token, this.password)
-        .then(() => {
-          //
-        })
-        .catch((e: gvmHttpErrorResponse) => {
-          authStore.isError = true;
-          authStore.errorText = e.message;
-          console.log(authStore.errorText);
-        });
-  }
-  render = () => (
-    <Host class="Auth-Child">
-      <form class="Auth-Form" onSubmit={e => this.reset(e)}>
-        <input
-          type="password"
-          class="Auth-Input InputText"
-          value={this.password}
-          onInput={e => (this.password = (e.target as HTMLInputElement).value)}
-          placeholder="Password"
-          required
-        ></input>
-        <input
-          type="password"
-          class="Auth-Input InputText"
-          value={this.confPassword}
-          onInput={e => (this.confPassword = (e.target as HTMLInputElement).value)}
-          placeholder="Confirm Password"
-          required
-        ></input>
+  @Prop() history: RouterHistory;
 
-        <input type="submit" class="Auth-Input Button" value="Reset Password"></input>
-      </form>
-    </Host>
-  );
+  //TODO compare passwords
+  private model = group<Form>({
+    password: control('', { validators: [requiredValidator, minLengthValidator(8)] }),
+    confPassword: control('', { validators: [requiredValidator, minLengthValidator(8)] }),
+  });
+
+  reset() {
+    try {
+      const token = this.history.location.query.token;
+      const { password } = this.model.getRawValue();
+      AuthEndpoints.reset(token, password);
+    } catch (error) {
+      //TODO show error
+      console.log(error);
+    }
+  }
+  render = () => {
+    const { password, confPassword } = this.model.controls;
+
+    return (
+      <Host class="Form">
+        <form class="Form" onSubmit={submitGuard(this.model, () => this.reset())}>
+          <h2 class="Heading-2">Reset password</h2>
+          <app-form-textfield type="password" placeholder="Password" control={password} />
+          <app-form-textfield type="password" placeholder="Confirm Password" control={confPassword} />
+          <input type="submit" class="Button" value="Reset Password" />
+        </form>
+      </Host>
+    );
+  };
 }

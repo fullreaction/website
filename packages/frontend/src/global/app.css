@@ -50,6 +50,14 @@ body {
 .Button a {
   color: currentColor;
 }
+.Button-Inverted {
+  color: var(--primary-color);
+  background-color: white;
+  border: 1px solid lightgrey;
+}
+.Button-Inverted:hover {
+  background-color: lightgrey;
+}
 
 .InputText,
 .InputArea {
@@ -124,4 +132,13 @@ body {
 
 [hidden] {
   display: none;
+}
+
+.Form {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-width: 400px;
+  width: 100%;
+  margin:auto;
 }

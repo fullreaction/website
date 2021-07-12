@@ -1,7 +1,6 @@
 import { Component, h, Host, State } from '@stencil/core';
 import { User } from '../../../../models/user.model';
 import { AdminService } from '../../../../services/admin-service';
-import { AuthService } from '../../../../services/auth-service';
 import { UserValidator } from '../../../../utils/userValidation';
 
 @Component({
@@ -19,13 +18,7 @@ export class AdminTable {
   private selection: HTMLInputElement[] = [];
 
   constructor() {
-    AuthService.checkStatus()
-      .then(() => {
-        AdminService.fetchList(e => (this.data = e));
-      })
-      .catch(() => {
-        window.location.href = '/auth/login';
-      });
+    AdminService.fetchList(e => (this.data = e));
   }
 
   // Add middleground if I learn how to stylize checkboxes
@@ -123,16 +116,15 @@ export class AdminTable {
       </div>
       <div class={{ 'Table-Register': true, 'Folded': !this.addTemplate }}>
         <app-register
-          horizontal
           onRegister={() => {
             AdminService.fetchList(e => (this.data = e));
           }}
-        ></app-register>
+        />
       </div>
       <table class="Table">
         <tr class="Table-Row">
           <th class="Table-Header">
-            <input type="checkbox" ref={e => (this.masterSelector = e)} onChange={() => this.masterToggle()}></input>
+            <input type="checkbox" ref={e => (this.masterSelector = e)} onChange={() => this.masterToggle()} />
           </th>
           <th class="Table-Header">
             <div class="Table-CellWrapper">Email</div>
@@ -147,11 +139,7 @@ export class AdminTable {
         {this.data.map((user, index) => (
           <tr class="Table-Row">
             <td class="Table-Cell">
-              <input
-                type="checkbox"
-                ref={e => (this.selection[index] = e)}
-                onChange={() => this.selectorStatus()}
-              ></input>
+              <input type="checkbox" ref={e => (this.selection[index] = e)} onChange={() => this.selectorStatus()} />
             </td>
             <td class="Table-Cell" contentEditable={this.editMode} onBlur={e => this.edit(user, 'user_email', e)}>
               <div class="Table-CellWrapper">

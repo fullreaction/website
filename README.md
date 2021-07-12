@@ -1,1 +1,2 @@
-# website
+#DB
+CREATE SCHEMA `gvm_db` DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ;

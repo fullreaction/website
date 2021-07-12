@@ -1830,7 +1830,7 @@ export class FormGroup<T> extends AbstractControl<T> {
    * The `value` property is the best way to get the value of the group, because
    * it excludes disabled controls in the `FormGroup`.
    */
-  getRawValue(): any {
+  getRawValue(): T {
     return this._reduceChildren({}, (acc: { [k: string]: AbstractControl }, control: AbstractControl, name: string) => {
       acc[name] = control instanceof FormControl ? control.value : (<any>control).getRawValue();
       return acc;

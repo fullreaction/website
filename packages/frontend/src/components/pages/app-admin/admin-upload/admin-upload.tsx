@@ -37,11 +37,17 @@ export class AdminUpload {
         <div class="Upload-File-Box">
           <div class="Upload-Images">
             <img class="Upload-Blank-Image" src="\assets\icon\Blank-Image.svg" />
-            <img class="Upload-Inner-Image" src="\assets\icon\3Dots-Icon.svg" />
+            <button class="Upload-Inner-Image">
+              <img src="\assets\icon\3Dots-Icon.svg" />
+            </button>
             <img class="Upload-Blank-Image" src="\assets\icon\Blank-Image.svg" />
-            <img class="Upload-Inner-Image" src="\assets\icon\3Dots-Icon.svg" />
+            <button class="Upload-Inner-Image">
+              <img src="\assets\icon\3Dots-Icon.svg" />
+            </button>
             <img class="Upload-Blank-Image" src="\assets\icon\Blank-Image.svg" />
-            <img class="Upload-Inner-Image" src="\assets\icon\3Dots-Icon.svg" />
+            <button class="Upload-Inner-Image">
+              <img src="\assets\icon\3Dots-Icon.svg" />
+            </button>
           </div>
           <ul class="Upload-Image-Text">
             <li> Image.png </li>
@@ -51,8 +57,8 @@ export class AdminUpload {
         </div>
 
         <div class="Upload-Button-Box">
-          <button class="Upload-Buttons Upload-Button-1">Cancel</button>
-          <button class="Upload-Buttons Upload-Button-2"> Select Media</button>
+          <button class="Upload-Button-1">Cancel</button>
+          <button class="Upload-Button-2 Button"> Select Media</button>
         </div>
       </div>
     </Host>

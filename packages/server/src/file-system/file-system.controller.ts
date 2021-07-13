@@ -5,10 +5,8 @@ import { FileSystemService } from './file-system.service';
 
 /*
   * Items in single directory can't have the same name
-  * Turn fixRelationships into a trigger
-
-
-
+  * Files
+  * Change name, properties, stuff
   * TEST EVERYTHING
 
 */
@@ -22,21 +20,22 @@ export class FileSystemController {
     //
   }
 
+  @Post('uploadfile')
+  async uploadFile() {
+    //
+  }
+
   @Post('getdir')
-  async getDir(@Body('dir') dir: Directory) {
-    return this.fileSystem.getChildren(dir);
+  async getDirectory(@Body('dir') directory: Directory) {
+    return this.fileSystem.getChildren(directory);
   }
 
-  @Post('file')
-  async uploadFile(@Req() req: Request) {
-    const data = req.body;
-    if (data.file) return 'OK';
-    else return 'No File';
+  @Post('makedir')
+  async uploadDirectory(@Body('dir') directory: Directory, @Body('parent') parent: Directory) {
+    return this.fileSystem.addDirectory(directory, parent);
   }
-
-  @Post('dir')
-  async uploadDirectory(@Body('dir') dir: Directory, @Body('parent') parent: Directory) {
-    console.log(dir);
-    return this.fileSystem.addDirectory(dir, parent);
+  @Post('removeDir')
+  async removeDirectory(@Body('dir') directory: Directory) {
+    return this.fileSystem.removeDirectory(directory);
   }
 }

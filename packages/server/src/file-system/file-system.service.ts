@@ -10,14 +10,17 @@ export class FileSystemService {
     this.fileSystemDAO.initUser(email);
   }
 
-  addFile(file: File, directory: Directory) {
-    this.fileSystemDAO.addFile(file, directory);
+  async addFile(file: File, directory: Directory) {
+    return await this.fileSystemDAO.addFile(file, directory);
   }
-  addDirectory(directory: Directory, parent: Directory) {
-    this.fileSystemDAO.addDirectory(directory, parent);
+  async addDirectory(directory: Directory, parent: Directory) {
+    return await this.fileSystemDAO.addDirectory(directory, parent);
+  }
+  async removeDirectory(directory: Directory) {
+    return await this.fileSystemDAO.removeDirectory(directory);
   }
 
-  async getChildren(dir: Directory) {
-    return await this.fileSystemDAO.getChildren(dir);
+  async getChildren(directory: Directory) {
+    return await this.fileSystemDAO.getChildren(directory);
   }
 }

@@ -10,8 +10,8 @@ export async function up(knex: Knex): Promise<void> {
       table.integer('parent_id').unsigned();
       table.binary('owner', 16);
 
-      table.foreign('owner').references('user_id').inTable('users');
-      table.foreign('parent_id').references('dir_id').inTable('directories');
+      table.foreign('owner').references('user_id').inTable('users').onDelete('CASCADE');
+      table.foreign('parent_id').references('dir_id').inTable('directories').onDelete('CASCADE');
     })
     .createTable('files', (table) => {
       table.increments('file_id').primary().unique().notNullable();
@@ -19,8 +19,8 @@ export async function up(knex: Knex): Promise<void> {
       table.integer('parent_id').unsigned().notNullable();
       table.binary('owner', 16);
 
-      table.foreign('owner').references('user_id').inTable('users'); // Just in case there is an error with directories
-      table.foreign('parent_id').references('dir_id').inTable('directories');
+      table.foreign('owner').references('user_id').inTable('users').onDelete('CASCADE'); // Just in case there is an error with directories
+      table.foreign('parent_id').references('dir_id').inTable('directories').onDelete('CASCADE');
     })
     .raw('ALTER TABLE files ADD COLUMN file_data BLOB NULL AFTER file_name') //knex doesn't have blob filetype
     .createTable('relationships', (table) => {
@@ -29,8 +29,8 @@ export async function up(knex: Knex): Promise<void> {
       table.integer('child_id').unsigned().notNullable();
       table.integer('depth').unsigned().notNullable();
 
-      table.foreign('parent_id').references('dir_id').inTable('directories');
-      table.foreign('child_id').references('dir_id').inTable('directories');
+      table.foreign('parent_id').references('dir_id').inTable('directories').onDelete('CASCADE');
+      table.foreign('child_id').references('dir_id').inTable('directories').onDelete('CASCADE');
     });
 }
 

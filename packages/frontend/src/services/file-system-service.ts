@@ -37,7 +37,20 @@ class FileSystemServiceController {
       headers: { 'Content-Type': 'application/json' },
       credentials: 'include',
     };
-    fetch(ROOT_URL + 'filesystem/dir', fetchData)
+    fetch(ROOT_URL + 'filesystem/makedir', fetchData)
+      .then(handleFetch)
+      .then(data => console.log(data))
+      .catch(e => console.log(e));
+  }
+
+  async removeDir(dir: Directory) {
+    const fetchData: RequestInit = {
+      method: 'POST',
+      body: JSON.stringify({ dir: dir }),
+      headers: { 'Content-Type': 'Application/json' },
+      credentials: 'include',
+    };
+    fetch(ROOT_URL + 'filesystem/removedir', fetchData)
       .then(handleFetch)
       .then(data => console.log(data))
       .catch(e => console.log(e));

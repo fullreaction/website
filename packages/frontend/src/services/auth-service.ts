@@ -104,7 +104,6 @@ class AuthServiceController {
       if (!this.user.loggedIn) {
         const fetchData: RequestInit = {
           method: 'GET',
-
           credentials: 'include',
         };
         fetch(ROOT_URL + 'auth/status', fetchData)

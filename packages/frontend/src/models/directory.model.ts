@@ -1,7 +1,5 @@
-import { User } from './user.model';
-
 export interface Directory {
-  owner: User;
+  owner: string | Buffer;
   name?: string;
   parent_id?: number;
   id?: number;

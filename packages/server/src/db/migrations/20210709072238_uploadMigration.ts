@@ -16,13 +16,13 @@ export async function up(knex: Knex): Promise<void> {
     .createTable('files', (table) => {
       table.increments('file_id').primary().unique().notNullable();
       table.string('file_name').notNullable();
+      table.string('file_path').notNullable();
       table.integer('parent_id').unsigned().notNullable();
       table.binary('owner', 16);
 
       table.foreign('owner').references('user_id').inTable('users').onDelete('CASCADE'); // Just in case there is an error with directories
       table.foreign('parent_id').references('dir_id').inTable('directories').onDelete('CASCADE');
     })
-    .raw('ALTER TABLE files ADD COLUMN file_data BLOB NULL AFTER file_name') //knex doesn't have blob filetype
     .createTable('relationships', (table) => {
       table.increments('rel_id').primary().unique().notNullable();
       table.integer('parent_id').unsigned().notNullable();

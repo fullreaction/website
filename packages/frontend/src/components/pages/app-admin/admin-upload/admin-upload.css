@@ -1,5 +1,6 @@
 .Upload {
   display: flex;
+  flex-direction: column;
 }
 
 .Upload-Side {

@@ -10,7 +10,7 @@ export class FileSystemService {
     this.fileSystemDAO.initUser(email);
   }
 
-  async addFile(file: File, directory: Directory) {
+  async addFile(file: Express.Multer.File, directory: Directory) {
     return await this.fileSystemDAO.addFile(file, directory);
   }
   async addDirectory(directory: Directory, parent: Directory) {

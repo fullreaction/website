@@ -5,31 +5,61 @@ import { AuthService } from './auth-service';
 // ONLY FOR TESTING, NOT SUITABLE FOR USE
 
 class FileSystemServiceController {
+  currentDir: { directories: Directory[]; files };
   async getRoot() {
-    const user = await AuthService.getUser();
-    const root: Directory = {
-      owner: user,
-      name: user.user_email,
-      parent_id: null,
-    };
-    console.log(root);
+    await this.updateRoot();
+    console.log(this.currentDir);
+    return this.currentDir;
+  }
+  updateRoot() {
+    // eslint-disable-next-line no-async-promise-executor
+    return new Promise(async (resolve, reject) => {
+      const user = await AuthService.getUser();
+      const root: Directory = {
+        owner: user.user_id,
+        name: user.user_email,
+        parent_id: null,
+      };
+
+      const fetchData: RequestInit = {
+        method: 'POST',
+        body: JSON.stringify({ dir: root }),
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+      };
+      fetch(ROOT_URL + 'filesystem/getdir', fetchData)
+        .then(handleFetch)
+        .then(data => {
+          this.currentDir = data;
+          resolve('200');
+        })
+        .catch(e => {
+          console.log(e);
+          reject(e);
+        });
+    });
+  }
+  async uploadFile(file: File, parent: Directory) {
+    const formData = new FormData();
+    formData.append('file', file);
+    console.log(parent);
+    console.log(JSON.stringify(parent));
+    formData.append('dir', JSON.stringify(parent));
     const fetchData: RequestInit = {
       method: 'POST',
-      body: JSON.stringify({ dir: root }),
-      headers: { 'Content-Type': 'application/json' },
+      body: formData,
       credentials: 'include',
     };
-    fetch(ROOT_URL + 'filesystem/getdir', fetchData)
+    fetch(ROOT_URL + 'filesystem/uploadfile', fetchData)
       .then(handleFetch)
-      .then(data => console.log(data))
-      .catch(e => console.log(e));
+      .then(console.log)
+      .catch(console.log);
   }
-
   async makeDir(dirName, parent: Directory) {
     const user = await AuthService.getUser();
     const dir: Directory = {
       name: dirName,
-      owner: user,
+      owner: user.user_id,
     };
     const fetchData: RequestInit = {
       method: 'POST',

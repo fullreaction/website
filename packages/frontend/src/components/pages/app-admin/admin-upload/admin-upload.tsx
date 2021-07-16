@@ -1,5 +1,6 @@
 import { Component, h, Host } from '@stencil/core';
-import { Directory } from '../../../../models/directory.model';
+import { Directory } from '../../../../models/upload.models';
+import { AdminService } from '../../../../services/admin-service';
 import { AuthService } from '../../../../services/auth-service';
 
 import { FileSystemService } from '../../../../services/file-system-service';
@@ -15,8 +16,14 @@ export class AdminUpload {
   private currentChildren: { directories: Directory[]; files };
   async onFileChange(ev) {
     this.file = ev.target.files[0];
-
-    FileSystemService.uploadFile(this.file, (await FileSystemService.getRoot()).directories[0]);
+    const dir: Directory = {
+      dir_id: 1,
+      dir_name: 'asd@asd.com',
+      owner: (await AuthService.getUser()).user_id,
+      parent_id: null,
+    };
+    console.log(dir);
+    FileSystemService.uploadFile(this.file, dir);
   }
   async uploadFile() {
     console.log(await FileSystemService.getRoot());
@@ -24,7 +31,7 @@ export class AdminUpload {
   render = () => (
     <Host class="Upload">
       <div>
-        <button>Get files</button>
+        <button onClick={() => FileSystemService.getFile()}>Get files</button>
         <button onClick={async () => (this.currentChildren = await FileSystemService.getRoot())}>Get directory</button>
         <button onClick={this.uploadFile}>upload file</button>
         <button
@@ -37,10 +44,10 @@ export class AdminUpload {
         <button
           onClick={async () => {
             const dir: Directory = {
-              id: 2,
+              dir_id: 2,
               parent_id: 1,
               owner: (await AuthService.getUser()).user_id,
-              name: 'test',
+              dir_name: 'test',
             };
             FileSystemService.removeDir(dir);
           }}

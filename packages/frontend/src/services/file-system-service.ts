@@ -1,14 +1,14 @@
-import { Directory } from '../models/directory.model';
+import { Directory, FileEntry } from '../models/upload.models';
 import { handleFetch, ROOT_URL } from '../utils/httpUtils';
 import { AuthService } from './auth-service';
 
 // ONLY FOR TESTING, NOT SUITABLE FOR USE
 
 class FileSystemServiceController {
-  currentDir: { directories: Directory[]; files };
+  currentDir: { directories: Directory[]; files: FileEntry[] };
   async getRoot() {
-    await this.updateRoot();
-    console.log(this.currentDir);
+    await this.updateRoot().then(() => console.log(this.currentDir));
+
     return this.currentDir;
   }
   updateRoot() {
@@ -17,7 +17,7 @@ class FileSystemServiceController {
       const user = await AuthService.getUser();
       const root: Directory = {
         owner: user.user_id,
-        name: user.user_email,
+        dir_name: user.user_email,
         parent_id: null,
       };
 
@@ -39,11 +39,18 @@ class FileSystemServiceController {
         });
     });
   }
+  async getFile() {
+    const fetchData: RequestInit = {
+      method: 'POST',
+      body: JSON.stringify({ file: this.currentDir.files[0] }),
+      headers: { 'Content-type': 'application/json' },
+      credentials: 'include',
+    };
+    fetch(ROOT_URL + 'filesystem/getfile', fetchData).then(res => res.body);
+  }
   async uploadFile(file: File, parent: Directory) {
     const formData = new FormData();
     formData.append('file', file);
-    console.log(parent);
-    console.log(JSON.stringify(parent));
     formData.append('dir', JSON.stringify(parent));
     const fetchData: RequestInit = {
       method: 'POST',
@@ -58,7 +65,7 @@ class FileSystemServiceController {
   async makeDir(dirName, parent: Directory) {
     const user = await AuthService.getUser();
     const dir: Directory = {
-      name: dirName,
+      dir_name: dirName,
       owner: user.user_id,
     };
     const fetchData: RequestInit = {

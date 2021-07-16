@@ -1,6 +1,6 @@
-import { HttpException, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { FileSystemDAO } from 'src/db/data-access-objects/file-system.DAO';
-import { Directory } from './file-system.models';
+import { Directory, FileEntry } from './file-system.models';
 
 @Injectable()
 export class FileSystemService {
@@ -12,6 +12,9 @@ export class FileSystemService {
 
   async addFile(file: Express.Multer.File, directory: Directory) {
     return await this.fileSystemDAO.addFile(file, directory);
+  }
+  async getFile(file: FileEntry) {
+    return await this.fileSystemDAO.getFile(file);
   }
   async addDirectory(directory: Directory, parent: Directory) {
     return await this.fileSystemDAO.addDirectory(directory, parent);

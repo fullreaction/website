@@ -1,6 +1,10 @@
+import { Res } from '@nestjs/common';
 import { Body, Controller, Get, Post, UploadedFile, UseInterceptors } from '@nestjs/common';
+import { Response } from 'express';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { Directory } from './file-system.models';
+import { createReadStream } from 'fs';
+import { join } from 'path';
+import { Directory, FileEntry } from './file-system.models';
 import { FileSystemService } from './file-system.service';
 
 /*
@@ -18,15 +22,18 @@ import { FileSystemService } from './file-system.service';
 export class FileSystemController {
   constructor(private readonly fileSystem: FileSystemService) {}
 
-  @Get('getfile')
-  async getFile() {
-    //
+  @Post('getfile')
+  async getFile(@Res() res: Response, @Body('file') file: FileEntry) {
+    const filePath = await this.fileSystem.getFile(file);
+    const f = createReadStream(join(process.cwd(), filePath));
+    f.pipe(res); // There is no StreamableFile in nestjs/common
   }
 
   @Post('uploadfile')
   @UseInterceptors(FileInterceptor('file', { dest: 'uploadedFiles' }))
-  async postFile(@UploadedFile() file: Express.Multer.File, @Body('dir') directory: Directory) {
-    this.fileSystem.addFile(file, directory);
+  async postFile(@UploadedFile() file: Express.Multer.File, @Body('dir') directory: string) {
+    console.log(directory);
+    this.fileSystem.addFile(file, JSON.parse(directory));
   }
 
   @Post('getdir')
@@ -36,7 +43,6 @@ export class FileSystemController {
 
   @Post('makedir')
   async uploadDirectory(@Body('dir') directory: Directory, @Body('parent') parent: Directory) {
-    console.log(directory);
     return this.fileSystem.addDirectory(directory, parent);
   }
   @Post('removeDir')

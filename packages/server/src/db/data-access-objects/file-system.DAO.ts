@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import { toBinaryUUID } from 'binary-uuid';
+import { fromBinaryUUID, toBinaryUUID } from 'binary-uuid';
 
-import { Directory } from 'src/file-system/file-system.models';
+import { Directory, FileEntry } from 'src/file-system/file-system.models';
 
 import { DatabaseService } from '../dbService';
 
@@ -23,24 +23,26 @@ export class FileSystemDAO {
     console.log(res[0].dir_id);
   }
 
+  //Done
   async addFile(file: Express.Multer.File, directory: Directory) {
     console.log(directory.owner);
+
     this.db
       .database('files')
       .insert({
-        file_name: file.filename,
-        file_path: 'LOADING',
-        owner: directory.owner,
-        parent_id: directory.id,
+        file_name: file.originalname,
+        owner: toBinaryUUID(directory.owner as string),
+        parent_id: directory.dir_id,
+        file_path: file.destination + '/' + file.filename,
       })
       .then((id) => {
         console.log(id[0] + file.filename);
         file.filename = id[0] + file.filename;
-        this.db
-          .database('files')
-          .where({ file_id: id[0] })
-          .update({ file_path: 'uploadedFiles/' + file.filename });
       });
+  }
+  async getFile(file: FileEntry) {
+    const fPath = await this.db.database<FileEntry>('files').where({ file_id: file.file_id }).select('file_path');
+    return fPath[0].file_path;
   }
   // Done
   async addDirectory(directory: Directory, parent: Directory) {
@@ -51,7 +53,7 @@ export class FileSystemDAO {
         .select('dir_id')
         .where({ owner: toBinaryUUID(directory.owner as string), parent_id: null });
       parent_Id = res[0].dir_id;
-    } else parent_Id = parent.id;
+    } else parent_Id = parent.dir_id;
 
     await this.db.database('directories').insert({
       dir_name: directory.name,
@@ -61,30 +63,34 @@ export class FileSystemDAO {
   }
 
   async removeDirectory(directory: Directory) {
-    if (directory.id != null) {
-      await this.db.database('directories').delete('*').where({ dir_id: directory.id });
+    if (directory.dir_id != null) {
+      await this.db.database('directories').delete('*').where({ dir_id: directory.dir_id });
     }
   }
 
-  // Dir-side done
   async getChildren(directory: Directory) {
-    let directories, files;
+    let directories: Directory[], files: FileEntry[];
     if (directory.parent_id == null) {
       const rootDir = await this.db
         .database('directories')
         .select('dir_id')
         .where({ parent_id: null, owner: toBinaryUUID(directory.owner as string) });
       directories = await this.db.database<Directory>('directories').where('parent_id', '=', rootDir[0].dir_id);
-      files = await this.db.database<File>('files').where('parent_id', '=', rootDir[0].dir_id);
+      files = await this.db.database<FileEntry>('files').where('parent_id', '=', rootDir[0].dir_id);
     } else {
-      directories = await this.db.database<Directory>('directories').where('parent_id', '=', directory.id);
+      directories = await this.db.database<Directory>('directories').where('parent_id', '=', directory.dir_id);
 
-      files = await this.db.database<File>('files').where('parent_id', '=', directory.id);
+      files = await this.db
+        .database<FileEntry>('files')
+        .where('parent_id', '=', directory.dir_id)
+        .select('file_id', 'file_name', 'owner', 'parent_id');
     }
-
-    return {
-      files: Object.values(JSON.parse(JSON.stringify(files))),
-      directories: Object.values(JSON.parse(JSON.stringify(directories))),
-    };
+    directories.forEach((item) => {
+      item.owner = fromBinaryUUID(item.owner as Buffer);
+    });
+    files.forEach((item) => {
+      item.owner = fromBinaryUUID(item.owner as Buffer);
+    });
+    return { files, directories };
   }
 }

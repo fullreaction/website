@@ -1,0 +1,19 @@
+% for loop in matlab:
+% https://www.mathworks.com/matlabcentral/answers/31156-how-do-i-create-a-for-loop-in-matlab
+% create a function:
+% https://www.instructables.com/Creating-a-Function-in-MATLAB/
+
+
+% CREATING A FUNCTION IN A SEPARATE FILE
+% To run just type:
+% my_factorial(5)
+% in the command window of matlab and it'll show the answer - factorial of each number from 1 to n
+% THE NAME OF THE FILE MUST BE THE SAME AS THE FUNCTION NAME! i.e.
+% my_factorial.m
+
+function f = my_factorial(n)
+        f = zeros(1, n);
+        for i=1:n
+            f(i) = factorial(i);
+        end
+end

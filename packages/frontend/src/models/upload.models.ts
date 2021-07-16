@@ -1,6 +1,6 @@
 export interface Directory {
   owner: string | Buffer;
-  name?: string;
+  dir_name?: string;
   parent_id?: number;
   dir_id?: number;
 }

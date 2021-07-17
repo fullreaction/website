@@ -19,9 +19,24 @@ export async function up(knex: Knex): Promise<void> {
     )
     .then(console.log);
 
+  // Join with files,
+  // for both dir and file tables
+  knex
+    .raw(
+      `CREATE TRIGGER fixNameDuplication BEFORE INSERT ON directories
+    FOR EACH ROW
+    BEGIN
+      SELECT COUNT(DISTINCT dir_name) INTO count_ FROM directories WHERE dir_name = NEW.dir_name OR dir_name LIKE CONCAT(NEW.dir_name,' (%)');
+      IF count_>0 THEN
+        SET NEW.dir_name=CONCAT(NEW.dir_name,' (',count_,')');
+      END IF;
+    END`,
+    )
+    .then(console.log);
   knex.raw('DELIMITER ;');
 }
 
 export async function down(knex: Knex): Promise<void> {
   knex.raw('DROP TRIGGER add_relationships_dir').catch(console.log);
+  knex.raw('DROP TRIGGER fixNameDuplication').catch(console.log);
 }

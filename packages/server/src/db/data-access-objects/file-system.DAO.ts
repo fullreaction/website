@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { fromBinaryUUID, toBinaryUUID } from 'binary-uuid';
+import { unlink } from 'fs';
 
 import { Directory, FileEntry } from 'src/file-system/file-system.models';
 
@@ -14,11 +15,14 @@ export class FileSystemDAO {
   // Done
   async initUser(email: string) {
     const owner = this.db.database('users').select('user_id').where({ user_email: email });
-    this.db.database('directories').insert({
-      dir_name: email,
-      parent_id: null,
-      owner: owner,
-    });
+    this.db
+      .database('directories')
+      .insert({
+        dir_name: email,
+        parent_id: null,
+        owner: owner,
+      })
+      .catch(console.log);
     const res = await this.db.database('directories').select('dir_id').where({ dir_name: email });
     console.log(res[0].dir_id);
   }
@@ -40,9 +44,16 @@ export class FileSystemDAO {
         file.filename = id[0] + file.filename;
       });
   }
-  async getFile(file: FileEntry) {
-    const fPath = await this.db.database<FileEntry>('files').where({ file_id: file.file_id }).select('file_path');
+  async getFile(file_id: number) {
+    const fPath = await this.db.database<FileEntry>('files').where({ file_id: file_id }).select('file_path');
     return fPath[0].file_path;
+  }
+  async removeFile(file_id: number) {
+    const fPath = await this.db.database<FileEntry>('files').where({ file_id: file_id }).select('file_path');
+    this.db.database<FileEntry>('fies').where({ file_id: file_id }).delete('*');
+    unlink(fPath[0].file_path, (err) => {
+      if (err) console.log(err);
+    });
   }
   // Done
   async addDirectory(directory: Directory, parent: Directory) {
@@ -56,12 +67,14 @@ export class FileSystemDAO {
     } else parent_Id = parent.dir_id;
 
     await this.db.database('directories').insert({
-      dir_name: directory.name,
+      dir_name: directory.dir_name,
       owner: toBinaryUUID(directory.owner as string),
       parent_id: parent_Id,
     });
   }
-
+  async changeDirectoryName(directory: Directory, name: string) {
+    this.db.database<Directory>('directories').where({ dir_id: directory.dir_id }).update({ dir_name: name });
+  }
   async removeDirectory(directory: Directory) {
     if (directory.dir_id != null) {
       await this.db.database('directories').delete('*').where({ dir_id: directory.dir_id });
@@ -69,6 +82,7 @@ export class FileSystemDAO {
   }
 
   async getChildren(directory: Directory) {
+    console.log(directory);
     let directories: Directory[], files: FileEntry[];
     if (directory.parent_id == null) {
       const rootDir = await this.db

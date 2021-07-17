@@ -1,6 +1,5 @@
 import { Component, h, Host } from '@stencil/core';
 import { Directory } from '../../../../models/upload.models';
-import { AdminService } from '../../../../services/admin-service';
 import { AuthService } from '../../../../services/auth-service';
 
 import { FileSystemService } from '../../../../services/file-system-service';

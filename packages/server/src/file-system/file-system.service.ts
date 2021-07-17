@@ -13,8 +13,11 @@ export class FileSystemService {
   async addFile(file: Express.Multer.File, directory: Directory) {
     return await this.fileSystemDAO.addFile(file, directory);
   }
-  async getFile(file: FileEntry) {
-    return await this.fileSystemDAO.getFile(file);
+  async getFile(file_id: number) {
+    return await this.fileSystemDAO.getFile(file_id);
+  }
+  async removeFile(file_id: number) {
+    return await this.fileSystemDAO.removeFile(file_id);
   }
   async addDirectory(directory: Directory, parent: Directory) {
     return await this.fileSystemDAO.addDirectory(directory, parent);

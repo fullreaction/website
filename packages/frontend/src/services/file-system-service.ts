@@ -40,13 +40,9 @@ class FileSystemServiceController {
     });
   }
   async getFile() {
-    const fetchData: RequestInit = {
-      method: 'POST',
-      body: JSON.stringify({ file: this.currentDir.files[0] }),
-      headers: { 'Content-type': 'application/json' },
-      credentials: 'include',
-    };
-    fetch(ROOT_URL + 'filesystem/getfile', fetchData).then(res => res.body);
+    const file = this.currentDir.files[0];
+
+    const res = await fetch(ROOT_URL + 'filesystem/getfile/' + file.file_id, { method: 'GET', credentials: 'include' });
   }
   async uploadFile(file: File, parent: Directory) {
     const formData = new FormData();
@@ -82,7 +78,7 @@ class FileSystemServiceController {
 
   async removeDir(dir: Directory) {
     const fetchData: RequestInit = {
-      method: 'POST',
+      method: 'DELETE',
       body: JSON.stringify({ dir: dir }),
       headers: { 'Content-Type': 'Application/json' },
       credentials: 'include',

@@ -8,12 +8,8 @@ import { Directory, FileEntry } from './file-system.models';
 import { FileSystemService } from './file-system.service';
 
 /*
-
-  * Use binary(16) instead of varbinary(16) for user_id
-  * Change binary to string when getting user_id and its references
-  * Items in single directory can't have the same name
-  * Change directory and file names
-  * Files
+  * on dir/file name update trigger
+  * Exceptions.
   * Change name, properties, stuff
   * TEST EVERYTHING
 
@@ -36,6 +32,10 @@ export class FileSystemController {
     console.log(directory);
     this.fileSystem.addFile(file, JSON.parse(directory));
   }
+  @Patch('changefilename')
+  async changeFileName(file: FileEntry, name: string) {
+    this.fileSystem.changeFileName(file, name);
+  }
 
   @Delete('deletefile/:id')
   async removeFile(@Param('id') file_id: number) {
@@ -51,8 +51,8 @@ export class FileSystemController {
     return this.fileSystem.addDirectory(directory, parent);
   }
   @Patch('changedirname')
-  async changeDirName(@Body('dir') directory: Directory, @Body('name') name: string) {
-    //
+  async changeDirectoryName(@Body('dir') directory: Directory, @Body('name') name: string) {
+    this.fileSystem.changeDirectoryName(directory, name);
   }
   @Delete('removeDir')
   async removeDirectory(@Body('dir') directory: Directory) {

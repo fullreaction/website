@@ -76,6 +76,20 @@ class FileSystemServiceController {
       .catch(e => console.log(e));
   }
 
+  async modDir(name: string) {
+    this.updateRoot();
+    const fetchData: RequestInit = {
+      method: 'PATCH',
+      body: JSON.stringify({ dir: this.currentDir.directories[0], name: name }),
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+    };
+    fetch(ROOT_URL + 'filesystem/changedirname', fetchData)
+      .then(handleFetch)
+      .then(data => console.log(data))
+      .catch(e => console.log(e));
+  }
+
   async removeDir(dir: Directory) {
     const fetchData: RequestInit = {
       method: 'DELETE',

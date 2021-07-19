@@ -15,7 +15,7 @@ export class FileSystemDAO {
   // Done
   async initUser(email: string) {
     const owner = this.db.database('users').select('user_id').where({ user_email: email });
-    this.db
+    await this.db
       .database('directories')
       .insert({
         dir_name: email,
@@ -23,8 +23,6 @@ export class FileSystemDAO {
         owner: owner,
       })
       .catch(console.log);
-    const res = await this.db.database('directories').select('dir_id').where({ dir_name: email });
-    console.log(res[0].dir_id);
   }
 
   //Done
@@ -48,6 +46,11 @@ export class FileSystemDAO {
     const fPath = await this.db.database<FileEntry>('files').where({ file_id: file_id }).select('file_path');
     return fPath[0].file_path;
   }
+
+  async changeFileName(file: FileEntry, name: string) {
+    this.db.database<FileEntry>('files').update({ file_name: name }).where({ file_id: file.file_id });
+  }
+
   async removeFile(file_id: number) {
     const fPath = await this.db.database<FileEntry>('files').where({ file_id: file_id }).select('file_path');
     this.db.database<FileEntry>('fies').where({ file_id: file_id }).delete('*');
@@ -55,7 +58,7 @@ export class FileSystemDAO {
       if (err) console.log(err);
     });
   }
-  // Done
+
   async addDirectory(directory: Directory, parent: Directory) {
     let parent_Id;
     if (parent == null) {
@@ -72,9 +75,11 @@ export class FileSystemDAO {
       parent_id: parent_Id,
     });
   }
+
   async changeDirectoryName(directory: Directory, name: string) {
-    this.db.database<Directory>('directories').where({ dir_id: directory.dir_id }).update({ dir_name: name });
+    this.db.database<Directory>('directories').update({ dir_name: name }).where({ dir_id: directory.dir_id });
   }
+
   async removeDirectory(directory: Directory) {
     if (directory.dir_id != null) {
       await this.db.database('directories').delete('*').where({ dir_id: directory.dir_id });
@@ -82,7 +87,6 @@ export class FileSystemDAO {
   }
 
   async getChildren(directory: Directory) {
-    console.log(directory);
     let directories: Directory[], files: FileEntry[];
     if (directory.parent_id == null) {
       const rootDir = await this.db

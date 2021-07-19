@@ -38,6 +38,7 @@ export class AdminUpload {
         <input class="Upload-Searchbar" type="text" placeholder="Search" />
         <div class="Upload-Categories"> COLLECTIONS &#62;&nbsp; Cats </div>
         <div class="Upload-File-Box">
+ 
           <div class="Upload-Images">
             <div class="Upload-Outer-Image">
               <img class="Upload-Blank-Image" src="\assets\icon\Blank-Image.svg" />
@@ -67,6 +68,7 @@ export class AdminUpload {
               </div>
             </div>
           </div>
+          {/*arrayOfFileNames.map() = <div></div>*/}
           <ul class="Upload-Image-Text">
             <li> Image.png </li>
             <li> Image.png </li>

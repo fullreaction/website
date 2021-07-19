@@ -91,7 +91,7 @@
 }
 .Upload-File-Box {
   width: 1050px;
-  height: 380px;
+  height: 43%;
   margin-top: 10px;
 }
 .Upload-Images {
@@ -129,14 +129,18 @@
 .Upload-Dropdown {
   position: relative;
   height: 0px;
+  width: 0px;
   overflow: hidden;
   font-size: smaller;
 }
 .Upload-Button-Box {
   display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  align-content: center;
+  align-items: center;
   flex-direction: row;
   gap: 20px;
-  justify-content: flex-end;
 }
 
 .Upload-Button-1 {

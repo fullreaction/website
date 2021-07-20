@@ -18,7 +18,7 @@ export class UserDAO {
         user_pass: password,
       })
       .catch((e) => console.log(e));
-    const user = this.selectUser(email);
+    const user = await this.selectUser(email);
     return user;
   }
 

@@ -9,7 +9,9 @@ export class AppSupport {
     return (
       <Host>
         <h2 class="Support-Header Heading-2">Support</h2>
-        <p class="Support-Text Text-1">One API to publish your content to Facebook, Linkedin, Instagram, Youtube and more</p>
+        <p class="Support-Text Text-1">
+          One API to publish your content to Facebook, Linkedin, Instagram, Youtube and more
+        </p>
         <div class="Support-Wrap">
           <stencil-route-link url="/docs" class="Button Support-Link">
             Documentation

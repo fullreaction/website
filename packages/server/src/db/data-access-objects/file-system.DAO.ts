@@ -77,7 +77,12 @@ export class FileSystemDAO {
   }
 
   async changeDirectoryName(directory: Directory, name: string) {
-    this.db.database<Directory>('directories').update({ dir_name: name }).where({ dir_id: directory.dir_id });
+    this.db
+      .database<Directory>('directories')
+      .update({ dir_name: name })
+      .where({ dir_id: directory.dir_id })
+      .then(console.log)
+      .catch(console.log);
   }
 
   async removeDirectory(directory: Directory) {

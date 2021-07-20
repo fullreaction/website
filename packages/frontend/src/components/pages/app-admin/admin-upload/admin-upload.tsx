@@ -35,7 +35,7 @@ export class AdminUpload {
         <button onClick={this.uploadFile}>upload file</button>
         <button
           onClick={async () => {
-            FileSystemService.makeDir('testface.png', null);
+            FileSystemService.makeDir('facetest@face', null);
           }}
         >
           make directory

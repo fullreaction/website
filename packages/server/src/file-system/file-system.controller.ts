@@ -1,4 +1,4 @@
-import { Delete, Param, Patch, Query, Res } from '@nestjs/common';
+import { Delete, Param, Patch, Res } from '@nestjs/common';
 import { Body, Controller, Get, Post, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { Response } from 'express';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -8,9 +8,7 @@ import { Directory, FileEntry } from './file-system.models';
 import { FileSystemService } from './file-system.service';
 
 /*
-  * on dir/file name update trigger
-  * Exceptions.
-  * Change name, properties, stuff
+
   * TEST EVERYTHING
 
 */

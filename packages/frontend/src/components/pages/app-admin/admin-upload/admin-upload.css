@@ -128,19 +128,19 @@
 }
 .Upload-Dropdown {
   position: relative;
-  height: 0px;
   width: 0px;
+  height: 0px;
   overflow: hidden;
   font-size: smaller;
 }
 .Upload-Button-Box {
   display: flex;
+  flex-direction: row;
   flex-wrap: wrap;
-  justify-content: flex-end;
+  gap: 20px;
   align-content: center;
   align-items: center;
-  flex-direction: row;
-  gap: 20px;
+  justify-content: flex-end;
 }
 
 .Upload-Button-1 {

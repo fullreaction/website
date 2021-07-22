@@ -1,4 +1,4 @@
-import { Component, h, Host } from '@stencil/core';
+import { Component, h, Host, State } from '@stencil/core';
 import { FileSystem } from '../../../../services/file-system-services';
 
 @Component({
@@ -6,28 +6,33 @@ import { FileSystem } from '../../../../services/file-system-services';
   styleUrl: 'admin-upload.css',
 })
 export class AdminUpload {
-  dropdownFunction() {
-    document.getElementById('updrop1').style.height = '80px';
-  }
+  @State() toggleVis = true;
+
   render = () => (
     <Host class="Upload">
       <div class="Upload-Side">
         <button
           class="Button"
           onClick={() => {
-            FileSystem.getgrussy();
+            FileSystem.AddDirectory();
           }}
         >
           Upload Media
         </button>
         <div class="Upload-Collections">
           COLLECTIONS
-          <button class="Upload-Dots">
+          <button
+            onClick={() => {
+              this.toggleVis = !this.toggleVis;
+              console.log(this.toggleVis);
+            }}
+            class="Upload-Dots"
+          >
             <img src="\assets\icon\3Dots-icon.svg" />
-            <div id="addDropdown" class="Upload-Dots-Content">
-              <button>Add Collection</button>
-            </div>
           </button>
+          <div class={{ 'Upload-Dots-Content': true, 'Toggle-Vis': !this.toggleVis }}>
+            <button class="Add-Collection">Add Collection</button>
+          </div>
         </div>
         <button class="Upload-Collection">
           Images
@@ -49,7 +54,7 @@ export class AdminUpload {
           <div class="Upload-Images">
             <div class="Upload-Outer-Image">
               <img class="Upload-Blank-Image" src="\assets\icon\Blank-Image.svg" />
-              <div class="Upload-Inner-Image" onClick={() => this.dropdownFunction()}>
+              <div class="Upload-Inner-Image">
                 <img src="\assets\icon\3Dots-Icon.svg" />
                 <div id="updrop1" class="Upload-Dropdown">
                   Gonna <br> </br>need <br> </br> this <br></br>later
@@ -58,7 +63,7 @@ export class AdminUpload {
             </div>
             <div class="Upload-Outer-Image">
               <img class="Upload-Blank-Image" src="\assets\icon\Blank-Image.svg" />
-              <div class="Upload-Inner-Image" onClick={() => this.dropdownFunction()}>
+              <div class="Upload-Inner-Image">
                 <img src="\assets\icon\3Dots-Icon.svg" />
                 <div id="updrop2" class="Upload-Dropdown">
                   Gonna <br> </br>need <br> </br> this <br></br>later
@@ -67,7 +72,7 @@ export class AdminUpload {
             </div>
             <div class="Upload-Outer-Image">
               <img class="Upload-Blank-Image" src="\assets\icon\Blank-Image.svg" />
-              <div class="Upload-Inner-Image" onClick={() => this.dropdownFunction()}>
+              <div class="Upload-Inner-Image">
                 <img src="\assets\icon\3Dots-Icon.svg" />
                 <div id="updrop3" class="Upload-Dropdown">
                   Gonna <br> </br>need <br> </br> this <br></br>later

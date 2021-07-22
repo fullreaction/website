@@ -3,7 +3,7 @@ import { ROOT_URL } from '../utils/httpUtils';
 import { AuthService } from './auth-service';
 
 class FileSystemServiceController {
-  async getgrussy() {
+  async AddDirectory() {
     const user = await AuthService.getUser();
     const root: Directory = {
       owner: user.user_id,
@@ -17,7 +17,7 @@ class FileSystemServiceController {
 
     const fetchData: RequestInit = {
       method: 'POST',
-      body: JSON.stringify({ dir: dir, parent: root }),
+      body: JSON.stringify({ dir: dir, parent: null }),
       headers: { 'Content-Type': 'application/json' },
       credentials: 'include',
     };

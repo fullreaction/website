@@ -38,6 +38,13 @@ class FileSystemServiceController {
       .then(console.log)
       .catch(console.log);
   }
+
+  async GetChildren() {
+    //Owner= user_id, Name= user_email. parent_id = null
+    //method = post
+    //fetch needs handlefetch and then put data in a class object
+    //console logs errors
+  }
 }
 
 export const FileSystem = new FileSystemServiceController();

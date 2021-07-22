@@ -41,33 +41,33 @@ export class AdminUpload {
           FileSystemService.getChild();
         }}
       ></button>
+      <button
+        onClick={() => {
+          FileSystemService.makeDir();
+        }}
+      ></button>
+
       <div class="Upload-Content">
         <input class="Upload-Searchbar" type="text" placeholder="Search" />
         <div class="Upload-Categories"> COLLECTIONS &#62;&nbsp;</div>
         <div class="Upload-File-Box">
           <div class="Upload-Images">
             <div class="Upload-Outer-Image">
-              <img class="Upload-Blank-Image" src="\assets\icon\Blank-Image.svg" />
               <div class="Upload-Inner-Image" onClick={() => this.dropdownFunction()}>
-                <img src="\assets\icon\3Dots-Icon.svg" />
                 <div id="updrop1" class="Upload-Dropdown">
                   Gonna <br> </br>need <br> </br> this <br></br>later
                 </div>
               </div>
             </div>
             <div class="Upload-Outer-Image">
-              <img class="Upload-Blank-Image" src="\assets\icon\Blank-Image.svg" />
               <div class="Upload-Inner-Image" onClick={() => this.dropdownFunction()}>
-                <img src="\assets\icon\3Dots-Icon.svg" />
                 <div id="updrop2" class="Upload-Dropdown">
                   Gonna <br> </br>need <br> </br> this <br></br>later
                 </div>
               </div>
             </div>
             <div class="Upload-Outer-Image">
-              <img class="Upload-Blank-Image" src="\assets\icon\Blank-Image.svg" />
               <div class="Upload-Inner-Image" onClick={() => this.dropdownFunction()}>
-                <img src="\assets\icon\3Dots-Icon.svg" />
                 <div id="updrop3" class="Upload-Dropdown">
                   Gonna <br> </br>need <br> </br> this <br></br>later
                 </div>

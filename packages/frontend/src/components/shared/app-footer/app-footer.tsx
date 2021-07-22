@@ -55,7 +55,9 @@ export class AppFooter {
           />
           <input type="submit" class="Footer-FormSubmit Button" value="Send" />
         </form>
-        <span class={this.isErrorResponse ? 'Footer-Error Text-1' : 'Footer-Response Text-1'}>{this.submitResponse}</span>
+        <span class={this.isErrorResponse ? 'Footer-Error Text-1' : 'Footer-Response Text-1'}>
+          {this.submitResponse}
+        </span>
 
         <img class="Footer-Logo" src="/assets/icon/logo.svg" alt="Logo" />
       </Host>

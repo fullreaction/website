@@ -1,5 +1,4 @@
 import { gvmHttpErrorResponse, handleFetch, ROOT_URL } from '../utils/httpUtils';
-
 import { User } from '../models/user.model';
 import authStore from '../components/pages/app-auth/authStore';
 
@@ -15,7 +14,6 @@ class AuthServiceController {
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
       };
-
       fetch(ROOT_URL + 'auth/login', fetchData)
         .then(handleFetch)
         .then(data => {

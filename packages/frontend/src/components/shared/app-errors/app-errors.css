@@ -3,10 +3,11 @@
   width: 100%;
 }
 .Errors-Wrap {
-  display: block;
-  padding: 0;
   margin: 0;
+  padding: 0;
+  display: block;
   list-style: none;
 }
 .Errors-List {
+
 }

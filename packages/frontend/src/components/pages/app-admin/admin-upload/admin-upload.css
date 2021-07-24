@@ -4,10 +4,32 @@
 }
 
 .Upload-Side {
+  display: flex;
+  flex-direction: column;
   width: 200px;
-  min-height: 842px;
   padding: 16px;
   background-color: var(--background-color);
+}
+
+.Upload-Media-Button {
+  box-sizing: border-box;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  justify-content: center;
+  width: 198px;
+  height: 42px;
+  padding: 8px 16px;
+  font-size: 16px;
+  color: white;
+  text-decoration: none;
+  cursor: pointer;
+  background: var(--primary-color);
+  border: none;
+}
+
+.Upload-Media-Button:hover {
+  background-color: var(--primary-dark-color);
 }
 
 .Upload-Collections {
@@ -22,8 +44,8 @@
 
 .Upload-Dots-Content {
   z-index: 1;
-  min-width: 120px;
-  margin-left: 2px;
+  min-width: 125px;
+  margin-left: 8px;
   overflow: hidden;
   background: none;
 }
@@ -43,11 +65,19 @@
   font-weight: bold;
   background-color: var(--background-color);
   border: none;
-  border-radius: 2px;
+  border-top-right-radius: 3px;
+  border-bottom-right-radius: 3px;
+  transition-duration: 0.2s;
 }
 
 .Add-Collection:hover {
-  background-color: #eef5fb;
+  background-color: #f4faff;
+  border-left: 5px solid rgba(0, 0, 0, 0.157);
+}
+
+.Add-Collection:focus {
+  background-color: #f4faff;
+  border-left: 5px solid rgba(0, 0, 0, 0.157);
 }
 
 .Upload-Collection {
@@ -82,85 +112,6 @@
 
 .Upload-EditDots {
   position: fixed;
-  left: 188px;
-  visibility: hidden;
+  left: 193px;
   border: none;
-}
-
-.Upload-Content {
-  flex: 1;
-  padding: 16px;
-}
-.Upload-Searchbar {
-  width: 78%;
-  height: 37px;
-  padding-left: 10px;
-  margin-left: 10px;
-  border: 1px solid;
-  border-radius: 3px;
-}
-.Upload-Categories {
-  margin: 28px 0px 0px 20px;
-  font-size: small;
-  font-weight: bold;
-}
-.Upload-File-Box {
-  width: 1050px;
-  height: 380px;
-  margin-top: 10px;
-}
-.Upload-Images {
-  display: flex;
-  flex-direction: row;
-}
-.Upload-Image-Text {
-  display: flex;
-  flex-direction: row;
-  gap: 30px;
-  margin-left: -15px;
-  font-size: smaller;
-  list-style-type: none;
-}
-.Upload-Blank-Image {
-  width: 80px;
-  height: 80px;
-  margin: 5px 0px 0px 20px;
-}
-.Upload-Inner-Image {
-  align-items: center;
-  margin-bottom: 55px;
-  margin-left: -32px;
-  background-color: transparent;
-  border: none;
-}
-.Upload-Inner-Image:hover {
-  cursor: pointer;
-}
-.Upload-Button-Box {
-  display: flex;
-  flex-direction: row;
-  gap: 20px;
-  justify-content: flex-end;
-}
-
-.Upload-Button-1 {
-  width: 153px;
-  height: 42px;
-  font-size: 16px;
-  color: #ff593d;
-  background-color: #ffffff;
-  border: 1px solid;
-  border-color: #ff593d;
-  border-radius: 3px;
-}
-.Upload-Button-1:hover {
-  cursor: pointer;
-  background-color: #f8f4f4;
-}
-.Upload-Button-2 {
-  width: 170px;
-  margin-right: 10px;
-}
-.Upload-Button-2:hover {
-  background-color: var(--primary-dark-color);
 }

@@ -3,21 +3,21 @@ import { ROOT_URL } from '../utils/httpUtils';
 import { AuthService } from './auth-service';
 
 class FileSystemServiceController {
-  async AddDirectory() {
+  async AddDirectory(name: Directory['dir_name']) {
     const user = await AuthService.getUser();
-    const root: Directory = {
+    const parent: Directory = {
       owner: user.user_id,
       dir_name: user.user_email,
       parent_id: null,
     };
     const dir: Directory = {
       owner: user.user_id,
-      dir_name: 'Shween',
+      dir_name: name,
     };
 
     const fetchData: RequestInit = {
       method: 'POST',
-      body: JSON.stringify({ dir: dir, parent: null }),
+      body: JSON.stringify({ dir, parent: null }),
       headers: { 'Content-Type': 'application/json' },
       credentials: 'include',
     };

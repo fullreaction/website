@@ -6,7 +6,8 @@ import { FileSystem } from '../../../../services/file-system-services';
   styleUrl: 'admin-upload.css',
 })
 export class AdminUpload {
-  @State() toggleVis = true;
+  @State() toggleVis = false;
+  @State() overlayVis = false;
 
   render = () => (
     <Host class="Upload">
@@ -27,7 +28,9 @@ export class AdminUpload {
             <button
               class="Add-Collection"
               onClick={() => {
-                FileSystem.AddDirectory('test');
+                this.overlayVis = !this.overlayVis;
+                this.toggleVis = !this.toggleVis;
+                console.log(this.overlayVis);
               }}
             >
               Add Collection
@@ -40,6 +43,32 @@ export class AdminUpload {
             <img src="\assets\icon\3Dots-icon.svg" />
           </div>
         </button>
+      </div>
+      <div class={{ 'Add-Overlay': true, 'Overlay-Vis': this.overlayVis }}>
+        <div class="Add-Overlay-Content">
+          <div class="Add-Overlay-Text"> Name your Collection</div>
+          <input class="Add-Overlay-Input"></input>
+          <div class="Add-Overlay-Buttons">
+            <button
+              class="Add-Overlay-Button Button-Confirm"
+              onClick={() => {
+                FileSystem.AddDirectory('test');
+                this.overlayVis = !this.overlayVis;
+              }}
+            >
+              Confirm
+            </button>
+            <button
+              class="Add-Overlay-Button Button-Cancel"
+              onClick={() => {
+                this.overlayVis = !this.overlayVis;
+                console.log(this.overlayVis);
+              }}
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
       </div>
     </Host>
   );

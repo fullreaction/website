@@ -27,10 +27,9 @@ class FileSystemServiceController {
       headers: { 'Content-Type': 'application/json' },
       credentials: 'include',
     };
-    fetch(ROOT_URL + 'filesystem/getdir', fetchData)
-      .then(handleFetch)
-      .then(data => console.log(data))
-      .catch(e => console.log(e));
+    const res = await fetch(ROOT_URL + 'filesystem/getdir', fetchData);
+    const ret = await res.json();
+    return ret;
   }
 }
 export const FileSystemService = new FileSystemServiceController();

@@ -1,4 +1,5 @@
 import { Component, h, Host } from '@stencil/core';
+import { Directory, FileEntry } from '../../../../models/upload.models';
 import { AuthService } from '../../../../services/auth-service';
 import { FileSystemService } from '../../../../services/file-system-services';
 
@@ -7,8 +8,9 @@ import { FileSystemService } from '../../../../services/file-system-services';
   styleUrl: 'admin-upload.css',
 })
 export class AdminUpload {
-  dropdownFunction() {
-    document.getElementById('updrop1').style.height = '80px';
+  children: { directories: Directory[]; files: FileEntry[] };
+  async childrenStore() {
+    this.children = await FileSystemService.getChild();
   }
   render = () => (
     <Host class="Upload">
@@ -36,11 +38,7 @@ export class AdminUpload {
           </div>
         </button>
       </div>
-      <button
-        onClick={() => {
-          FileSystemService.getChild();
-        }}
-      ></button>
+
       <button
         onClick={() => {
           FileSystemService.makeDir();
@@ -53,21 +51,21 @@ export class AdminUpload {
         <div class="Upload-File-Box">
           <div class="Upload-Images">
             <div class="Upload-Outer-Image">
-              <div class="Upload-Inner-Image" onClick={() => this.dropdownFunction()}>
+              <div class="Upload-Inner-Image">
                 <div id="updrop1" class="Upload-Dropdown">
                   Gonna <br> </br>need <br> </br> this <br></br>later
                 </div>
               </div>
             </div>
             <div class="Upload-Outer-Image">
-              <div class="Upload-Inner-Image" onClick={() => this.dropdownFunction()}>
+              <div class="Upload-Inner-Image">
                 <div id="updrop2" class="Upload-Dropdown">
                   Gonna <br> </br>need <br> </br> this <br></br>later
                 </div>
               </div>
             </div>
             <div class="Upload-Outer-Image">
-              <div class="Upload-Inner-Image" onClick={() => this.dropdownFunction()}>
+              <div class="Upload-Inner-Image">
                 <div id="updrop3" class="Upload-Dropdown">
                   Gonna <br> </br>need <br> </br> this <br></br>later
                 </div>

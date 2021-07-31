@@ -66,6 +66,7 @@ export class FileSystemDAO {
         .database('directories')
         .select('dir_id')
         .where({ owner: toBinaryUUID(directory.owner as string), parent_id: null });
+      console.log(res[0].dir_id);
       parent_Id = res[0].dir_id;
     } else parent_Id = parent.dir_id;
 
@@ -115,5 +116,28 @@ export class FileSystemDAO {
       item.owner = fromBinaryUUID(item.owner as Buffer);
     });
     return { files, directories };
+  }
+
+  async getSkeleton(directory: Directory) {
+    let ret: { dir_name: string; dir_id: number }[];
+
+    if (directory.parent_id == null) {
+      const rootDir = await this.db
+        .database('directories')
+        .select('dir_id')
+        .where({ parent_id: null, owner: toBinaryUUID(directory.owner as string) });
+
+      ret = await this.db
+        .database<Directory>('directories')
+        .select('dir_name', 'dir_id', 'parent_id')
+        .where({ parent_id: rootDir[0].dir_id });
+    } else {
+      ret = await this.db
+        .database<Directory>('directories')
+        .select('dir_name', 'dir_id', 'parent_id')
+        .where({ parent_id: directory.dir_id });
+    }
+
+    return ret;
   }
 }

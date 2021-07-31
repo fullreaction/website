@@ -66,9 +66,8 @@
 }
 
 .Upload-EditDots {
-  position: fixed;
-  left: 188px;
-  visibility: hidden;
+  margin-left: auto;
+
   border: none;
 }
 
@@ -90,36 +89,36 @@
   font-weight: bold;
 }
 .Upload-File-Box {
+  display: flex;
+
   width: 1050px;
   height: 43%;
   margin-top: 10px;
 }
-.Upload-Images {
-  display: flex;
-  flex-direction: row;
-}
+
 .Upload-Image-Text {
   display: flex;
-  flex-direction: row;
-  gap: 25px;
-  margin-left: -15px;
+
+  align-self: center;
   font-size: smaller;
   list-style-type: none;
 }
-.Upload-Blank-Image {
-  width: 80px;
-  height: 80px;
-  margin: 5px 0px 0px 20px;
+
+.Upload-Item {
+  display: flex;
+  flex-direction: column;
+  padding: 8px;
 }
+
 .Upload-Outer-Image {
-  display: inline-flex;
-  flex-direction: row;
+  align-self: center;
+  margin-bottom: 8px;
 }
 .Upload-Inner-Image {
   align-items: center;
   height: 20px;
   margin-top: 2px;
-  margin-left: -28px;
+
   background-color: transparent;
   border: none;
 }

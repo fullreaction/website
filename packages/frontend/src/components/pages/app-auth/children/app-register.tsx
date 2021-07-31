@@ -70,7 +70,15 @@ export class AppRegister {
           required
         ></input>
         <input type="submit" class="Auth-Input Button" value="Register"></input>
-        <a class={{ 'Auth-Input': true, 'Button': true, 'Auth-Inverted': true, 'Hidden': document.referrer == document.URL || document.referrer == '' }} href={document.referrer}>
+        <a
+          class={{
+            'Auth-Input': true,
+            'Button': true,
+            'Auth-Inverted': true,
+            'Hidden': document.referrer == document.URL || document.referrer == '',
+          }}
+          href={document.referrer}
+        >
           Go back
         </a>
       </form>

@@ -10,9 +10,6 @@ import authStore from './authStore';
   }
 
   Issues:
-
-
-
 */
 
 // I'm not sure about <stencil-route-switch> but

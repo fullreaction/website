@@ -16,6 +16,7 @@ export class AuthenticatedGuard implements CanActivate {
   async canActivate(context: ExecutionContext) {
     const req = context.switchToHttp().getRequest();
     const isAuthed = await req.isAuthenticated();
+
     return isAuthed;
   }
 }

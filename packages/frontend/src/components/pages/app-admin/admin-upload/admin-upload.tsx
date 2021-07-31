@@ -9,13 +9,26 @@ import { FileSystemService } from '../../../../services/file-system-services';
 })
 export class AdminUpload {
   children: { directories: Directory[]; files: FileEntry[] };
-  async childrenStore() {
-    this.children = await FileSystemService.getChild();
+  componentWillLoad() {
+    return FileSystemService.getChild(null);
+  }
+
+  directoryClicked(dir: Directory) {
+    FileSystemService.path += dir.dir_name + '/';
   }
   render = () => (
     <Host class="Upload">
       <div class="Upload-Side">
-        <div class="Button">Upload Media</div>
+        <buttonasync
+          class="Button"
+          onClick={async () => {
+            const user = await AuthService.getUser();
+            const newDir: Directory = { dir_name: 'Naming Convention', parent_id: null, owner: user.user_id };
+            FileSystemService.makeDir(newDir, null);
+          }}
+        >
+          Upload Media
+        </buttonasync>
         <div class="Upload-Collections">
           COLLECTIONS
           <button class="Upload-Dots">
@@ -27,56 +40,36 @@ export class AdminUpload {
         </div>
         <button class="Upload-Collection">
           Images
-          <div class="Upload-EditDots">
-            <img src="\assets\icon\3Dots-icon.svg" />
-          </div>
+          <div></div>
         </button>
-        <button class="Upload-Collection">
-          Cats
-          <div class="Upload-EditDots">
-            <img src="\assets\icon\3Dots-icon.svg" />
-          </div>
-        </button>
+        {FileSystemService.skeleton.children.map(val => (
+          <button class="Upload-Collection">
+            {val.dir_name}
+            <img class="Upload-EditDots" src="\assets\icon\3Dots-icon.svg" />
+          </button>
+        ))}
       </div>
-
-      <button
-        onClick={() => {
-          FileSystemService.makeDir();
-        }}
-      ></button>
 
       <div class="Upload-Content">
         <input class="Upload-Searchbar" type="text" placeholder="Search" />
         <div class="Upload-Categories"> COLLECTIONS &#62;&nbsp;</div>
         <div class="Upload-File-Box">
-          <div class="Upload-Images">
-            <div class="Upload-Outer-Image">
-              <div class="Upload-Inner-Image">
-                <div id="updrop1" class="Upload-Dropdown">
-                  Gonna <br> </br>need <br> </br> this <br></br>later
-                </div>
-              </div>
+          {FileSystemService.dirChildren.directories.map(val => (
+            <div class="Upload-Item">
+              <img class="Upload-Outer-Image" src="\assets\icon\blank-image.svg">
+                <img class="Upload-inner-Image" src="\assets\icon\3Dots-icon.svg"></img>
+              </img>
+              <span class="Upload-Image-Text">{val.dir_name}</span>
             </div>
-            <div class="Upload-Outer-Image">
-              <div class="Upload-Inner-Image">
-                <div id="updrop2" class="Upload-Dropdown">
-                  Gonna <br> </br>need <br> </br> this <br></br>later
-                </div>
-              </div>
+          ))}
+          {FileSystemService.dirChildren.files.map(val => (
+            <div class="Upload-Item">
+              <img class="Upload-Outer-Image" src="\assets\icon\blank-image.svg">
+                <img class="Upload-inner-Image" src="\assets\icon\3Dots-icon.svg"></img>
+              </img>
+              <span class="Upload-Image-Text">{val.file_name}</span>
             </div>
-            <div class="Upload-Outer-Image">
-              <div class="Upload-Inner-Image">
-                <div id="updrop3" class="Upload-Dropdown">
-                  Gonna <br> </br>need <br> </br> this <br></br>later
-                </div>
-              </div>
-            </div>
-          </div>
-          <ul class="Upload-Image-Text">
-            <li> Image.png </li>
-            <li> Image.png </li>
-            <li> Image.png </li>
-          </ul>
+          ))}
         </div>
         <div class="Upload-Button-Box">
           <button class="Upload-Button-1">Cancel</button>

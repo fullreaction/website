@@ -19,6 +19,7 @@ export class AuthService {
     if (user && user.user_pass === pass) {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { user_pass, ...result } = user;
+
       return result;
     }
     if (!user)

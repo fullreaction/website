@@ -1,4 +1,4 @@
-import { Component, h, Host } from '@stencil/core';
+import { Component, h, Host, State } from '@stencil/core';
 import { Directory, FileEntry } from '../../../../models/upload.models';
 import { AuthService } from '../../../../services/auth-service';
 import { FileSystemService } from '../../../../services/file-system-services';
@@ -8,39 +8,42 @@ import { FileSystemService } from '../../../../services/file-system-services';
   styleUrl: 'admin-upload.css',
 })
 export class AdminUpload {
-  children: { directories: Directory[]; files: FileEntry[] };
-  componentWillLoad() {
-    return FileSystemService.getChild(null);
-  }
+  @State() toggleVis = false;
+  @State() overlayVis = false;
 
-  directoryClicked(dir: Directory) {
-    FileSystemService.path += dir.dir_name + '/';
-  }
   render = () => (
     <Host class="Upload">
       <div class="Upload-Side">
-        <buttonasync
-          class="Button"
-          onClick={async () => {
-            const user = await AuthService.getUser();
-            const newDir: Directory = { dir_name: 'Naming Convention', parent_id: null, owner: user.user_id };
-            FileSystemService.makeDir(newDir, null);
-          }}
-        >
-          Upload Media
-        </buttonasync>
+        <button class="Upload-Media-Button">Upload Media</button>
         <div class="Upload-Collections">
           COLLECTIONS
-          <button class="Upload-Dots">
+          <button
+            onClick={() => {
+              this.toggleVis = !this.toggleVis;
+              console.log(this.toggleVis);
+            }}
+            class="Upload-Dots"
+          >
             <img src="\assets\icon\3Dots-icon.svg" />
-            <div id="addDropdown" class="Upload-Dots-Content">
-              <button>Add Collection</button>
-            </div>
           </button>
+          <div class={{ 'Upload-Dots-Content': true, 'Toggle-Vis': this.toggleVis }}>
+            <button
+              class="Add-Collection"
+              onClick={() => {
+                this.overlayVis = !this.overlayVis;
+                this.toggleVis = !this.toggleVis;
+                console.log(this.overlayVis);
+              }}
+            >
+              Add Collection
+            </button>
+          </div>
         </div>
         <button class="Upload-Collection">
           Images
-          <div></div>
+          <div class="Upload-EditDots">
+            <img src="\assets\icon\3Dots-icon.svg" />
+          </div>
         </button>
         {FileSystemService.skeleton.children.map(val => (
           <button class="Upload-Collection">

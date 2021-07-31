@@ -1,12 +1,31 @@
-.Upload {
-  display: flex;
-}
-
 .Upload-Side {
+  display: flex;
+  flex-direction: column;
   width: 200px;
-  min-height: 842px;
+  height: 100%;
   padding: 16px;
   background-color: var(--background-color);
+}
+
+.Upload-Media-Button {
+  box-sizing: border-box;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  justify-content: center;
+  width: 198px;
+  height: 42px;
+  padding: 8px 16px;
+  font-size: 16px;
+  color: white;
+  text-decoration: none;
+  cursor: pointer;
+  background: var(--primary-color);
+  border: none;
+}
+
+.Upload-Media-Button:hover {
+  background-color: var(--primary-dark-color);
 }
 
 .Upload-Collections {
@@ -20,25 +39,48 @@
 }
 
 .Upload-Dots-Content {
-  position: absolute;
   z-index: 1;
   display: none;
-  min-width: 160px;
-  background-color: #f1f1f1;
-  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  min-width: 125px;
+  margin-left: 8px;
+  overflow: hidden;
+  background: none;
 }
 
-.Upload-Dots-Content button {
-  display: block;
-  padding: 12px 16px;
-  color: black;
-  text-decoration: none;
+.Toggle-Vis {
+  display: block !important;
+}
+
+.Add-Collection {
+  position: fixed;
+  z-index: 1;
+  align-items: center;
+  justify-content: center;
+  width: 120px;
+  height: 30px;
+  font-weight: 500;
+  font-weight: bold;
+  background-color: var(--background-color);
+  border: none;
+  border-top-right-radius: 3px;
+  border-bottom-right-radius: 3px;
+  transition-duration: 0.2s;
+}
+
+.Add-Collection:hover {
+  background-color: #f4faff;
+  border-left: 5px solid rgba(0, 0, 0, 0.157);
+}
+
+.Add-Collection:focus {
+  background-color: #f4faff;
+  border-left: 5px solid rgba(0, 0, 0, 0.157);
 }
 
 .Upload-Collection {
   display: flex;
   flex-direction: row;
-  width: 212px;
+  width: 216px;
   padding: 3px;
   font-size: 14;
   background-color: var(--background-color);
@@ -47,46 +89,56 @@
 }
 
 .Upload-Collection:hover {
-  background-color: rgba(53, 198, 255, 0.2);
+  background-color: #eef5fb;
 }
 
 .Upload-Collection:focus {
-  background-color: rgba(53, 198, 255, 0.2);
+  background-color: #eef5fb;
 }
 
 .Upload-Dots {
   margin-left: 58px;
-  background: none;
+  background-color: var(--background-color);
   border: none;
+  transition-duration: 0.1s;
 }
 
 .Upload-Dots :hover {
-  cursor: pointer;
-  background-color: rgba(53, 198, 255, 0.2);
+  background-color: #eef5fb;
 }
 
 .Upload-EditDots {
-  margin-left: auto;
-
+  position: fixed;
+  left: 193px;
   border: none;
 }
 
-.Upload-Content {
-  flex: 1;
-  padding: 16px;
+.Add-Overlay {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 2;
+  display: none;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
 }
-.Upload-Searchbar {
-  width: 78%;
-  height: 37px;
-  padding-left: 10px;
-  margin-left: 10px;
-  border: 1px solid;
-  border-radius: 3px;
+
+.Overlay-Vis {
+  display: block !important;
 }
-.Upload-Categories {
-  margin: 28px 0px 0px 20px;
-  font-size: small;
-  font-weight: bold;
+
+.Add-Overlay-Content {
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  width: 300px;
+  height: 140px;
+  background-color: var(--background-color);
+  border-radius: 5px;
+  transform: translate(-50%, -50%);
 }
 .Upload-File-Box {
   display: flex;
@@ -162,4 +214,53 @@
 }
 .Upload-Button-2:hover {
   background-color: var(--primary-dark-color);
+
+  .Add-Overlay-Text {
+    margin-top: 20px;
+    font-weight: bold;
+    text-align: center;
+  }
+
+  .Add-Overlay-Input {
+    width: 200px;
+    height: 20px;
+    margin-top: 5px;
+    margin-left: 48px;
+    border: 1px solid rgba(0, 0, 0, 0.459);
+    border-radius: 2px;
+  }
+
+  .Add-Overlay-Buttons {
+    display: flex;
+    flex-direction: row;
+  }
+
+  .Add-Overlay-Button {
+    box-sizing: border-box;
+    gap: 8px;
+    align-items: center;
+    justify-content: center;
+    width: 150px;
+    height: 40px;
+    padding: 8px 16px;
+    margin-top: 28px;
+    font-size: 16px;
+    color: white;
+    text-decoration: none;
+    cursor: pointer;
+    background: var(--primary-color);
+    border: none;
+  }
+
+  .Add-Overlay-Button:hover {
+    background-color: var(--primary-dark-color);
+  }
+
+  .Button-Confirm {
+    border-bottom-left-radius: 5px;
+  }
+
+  .Button-Cancel {
+    border-bottom-right-radius: 5px;
+  }
 }

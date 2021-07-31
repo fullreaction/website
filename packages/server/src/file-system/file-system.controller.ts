@@ -22,7 +22,6 @@ export class FileSystemController {
   @Post('uploadfile')
   @UseInterceptors(FileInterceptor('file', { dest: 'uploadedFiles' }))
   async postFile(@UploadedFile() file: Express.Multer.File, @Body('dir') directory: string) {
-    console.log(directory);
     this.fileSystem.addFile(file, JSON.parse(directory));
   }
 
@@ -40,7 +39,7 @@ export class FileSystemController {
   async getDirectory(@Body('dir') directory: Directory) {
     console.log(directory);
     const res = await this.fileSystem.getChildren(directory);
-    console.log(res);
+
     return res;
   }
 

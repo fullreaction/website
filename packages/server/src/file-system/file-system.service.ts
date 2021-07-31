@@ -1,4 +1,4 @@
-import { HttpException, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { FileSystemDAO } from 'src/db/data-access-objects/file-system.DAO';
 import { Directory, FileEntry } from './file-system.models';
 

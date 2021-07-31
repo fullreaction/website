@@ -1,7 +1,16 @@
 import { Component, h, Host, State } from '@stencil/core';
-import { Directory, FileEntry } from '../../../../models/upload.models';
-import { AuthService } from '../../../../services/auth-service';
-import { FileSystemService } from '../../../../services/file-system-services';
+import { Directory } from '../../../../models/upload.models';
+
+import { FileSystemService, RecursiveSkeleton } from '../../../../services/file-system-services';
+
+/*
+  Make a recursive function
+    takes in RecursiveSkeleton, shows children, adding onclicks to them
+
+  if RecursiveSkeleton.children==null,
+  then filesystemservice.getchild(RecursiveSkeleton.dir_id)
+
+*/
 
 @Component({
   tag: 'admin-upload',
@@ -10,7 +19,34 @@ import { FileSystemService } from '../../../../services/file-system-services';
 export class AdminUpload {
   @State() toggleVis = false;
   @State() overlayVis = false;
+  componentWillLoad() {
+    return FileSystemService.getChild(null, null);
+  }
 
+  drawSkeleton(skel: RecursiveSkeleton) {
+    return skel.children.map(val => (
+      <div>
+        <button
+          class="Upload-Collection"
+          onClick={() => {
+            console.log(val);
+            if (val.children == null)
+              FileSystemService.getChild(val.dir_id, skel.dir_id).then(res => {
+                val.children = res.directories;
+                console.log(val.children);
+                val.open = true;
+              });
+            else val.open = !val.open;
+            console.log(val.open);
+          }}
+        >
+          <span>{val.dir_name}</span>
+          <img class="Upload-EditDots" src="\assets\icon\3Dots-icon.svg" />
+        </button>
+        {val.open ? this.drawSkeleton(val) : ''}
+      </div>
+    ));
+  }
   render = () => (
     <Host class="Upload">
       <div class="Upload-Side">
@@ -45,17 +81,12 @@ export class AdminUpload {
             <img src="\assets\icon\3Dots-icon.svg" />
           </div>
         </button>
-        {FileSystemService.skeleton.children.map(val => (
-          <button class="Upload-Collection">
-            {val.dir_name}
-            <img class="Upload-EditDots" src="\assets\icon\3Dots-icon.svg" />
-          </button>
-        ))}
+        {this.drawSkeleton(FileSystemService.skeleton)}
       </div>
 
       <div class="Upload-Content">
         <input class="Upload-Searchbar" type="text" placeholder="Search" />
-        <div class="Upload-Categories"> COLLECTIONS &#62;&nbsp;</div>
+        <div class="Upload-Path"> COLLECTIONS &#62;&nbsp;</div>
         <div class="Upload-File-Box">
           {FileSystemService.dirChildren.directories.map(val => (
             <div class="Upload-Item">

@@ -1,4 +1,4 @@
-import { Delete, Param, Patch, Res, UseGuards } from '@nestjs/common';
+import { Delete, Param, Patch, Query, Res } from '@nestjs/common';
 import { Body, Controller, Get, Post, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { Response } from 'express';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -6,7 +6,6 @@ import { createReadStream } from 'fs';
 import { join } from 'path';
 import { Directory, FileEntry } from './file-system.models';
 import { FileSystemService } from './file-system.service';
-import { AuthenticatedGuard } from 'src/auth/utils/guards';
 
 @Controller('filesystem')
 export class FileSystemController {
@@ -21,13 +20,17 @@ export class FileSystemController {
 
   @Post('uploadfile')
   @UseInterceptors(FileInterceptor('file', { dest: 'uploadedFiles' }))
-  async postFile(@UploadedFile() file: Express.Multer.File, @Body('dir') directory: string) {
-    this.fileSystem.addFile(file, JSON.parse(directory));
+  async postFile(
+    @UploadedFile() file: Express.Multer.File,
+    @Body('dir_id') dir_id: number,
+    @Body('owner') owner: string,
+  ) {
+    this.fileSystem.addFile(file, dir_id, owner);
   }
 
   @Patch('changefilename')
-  async changeFileName(file: FileEntry, name: string) {
-    this.fileSystem.changeFileName(file, name);
+  async changeFileName(file_id: number, name: string) {
+    this.fileSystem.changeFileName(file_id, name);
   }
 
   @Delete('deletefile/:id')
@@ -36,25 +39,31 @@ export class FileSystemController {
   }
 
   @Post('getdir')
-  async getDirectory(@Body('dir') directory: Directory) {
-    console.log(directory);
-    const res = await this.fileSystem.getChildren(directory);
-
+  async getChildren(@Body('dir_id') dir_id: number, @Body('owner') owner: string) {
+    const res = await this.fileSystem.getChildren(dir_id, owner);
     return res;
+  }
+  @Post('getSkel')
+  async getSkeleton(@Body('dir_id') dir_id: number, @Body('owner') owner: string) {
+    return this.fileSystem.getSkeleton(dir_id, owner);
   }
 
   @Post('makedir')
-  async uploadDirectory(@Body('dir') directory: Directory, @Body('parent') parent: Directory) {
-    return this.fileSystem.addDirectory(directory, parent);
+  async makeDirectory(
+    @Body('dir_name') dir_name: string,
+    @Body('owner') owner: string,
+    @Body('parent_id') parent_id: number,
+  ) {
+    return this.fileSystem.addDirectory(dir_name, owner, parent_id);
   }
 
   @Patch('changedirname')
-  async changeDirectoryName(@Body('dir') directory: Directory, @Body('name') name: string) {
-    this.fileSystem.changeDirectoryName(directory, name);
+  async changeDirectoryName(@Body('dir_id') dir_id: number, @Body('name') name: string) {
+    this.fileSystem.changeDirectoryName(dir_id, name);
   }
 
   @Delete('removeDir')
-  async removeDirectory(@Body('dir') directory: Directory) {
-    return this.fileSystem.removeDirectory(directory);
+  async removeDirectory(@Body('dir_id') dir_id: number) {
+    return this.fileSystem.removeDirectory(dir_id);
   }
 }

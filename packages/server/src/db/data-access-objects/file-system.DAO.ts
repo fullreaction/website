@@ -26,13 +26,13 @@ export class FileSystemDAO {
   }
 
   //Done
-  async addFile(file: Express.Multer.File, directory: Directory) {
+  async addFile(file: Express.Multer.File, dir_id: number, owner: string) {
     this.db
       .database('files')
       .insert({
         file_name: file.originalname,
-        owner: toBinaryUUID(directory.owner as string),
-        parent_id: directory.dir_id,
+        owner: toBinaryUUID(owner as string),
+        parent_id: dir_id,
         file_path: file.destination + '/' + file.filename,
       })
       .then((id) => {
@@ -45,8 +45,8 @@ export class FileSystemDAO {
     return fPath[0].file_path;
   }
 
-  async changeFileName(file: FileEntry, name: string) {
-    this.db.database<FileEntry>('files').update({ file_name: name }).where({ file_id: file.file_id });
+  async changeFileName(file_id: number, name: string) {
+    this.db.database<FileEntry>('files').update({ file_name: name }).where({ file_id: file_id });
   }
 
   async removeFile(file_id: number) {
@@ -57,54 +57,52 @@ export class FileSystemDAO {
     });
   }
 
-  async addDirectory(directory: Directory, parent: Directory) {
-    let parent_Id;
-    if (parent == null) {
+  async addDirectory(dir_name: string, owner: string, parent_id: number) {
+    if (parent_id == null) {
       const res = await this.db
         .database('directories')
         .select('dir_id')
-        .where({ owner: toBinaryUUID(directory.owner as string), parent_id: null });
-      parent_Id = res[0].dir_id;
-    } else parent_Id = parent.dir_id;
-
+        .where({ owner: toBinaryUUID(owner), parent_id: null });
+      parent_id = res[0].dir_id;
+    }
     await this.db.database('directories').insert({
-      dir_name: directory.dir_name,
-      owner: toBinaryUUID(directory.owner as string),
-      parent_id: parent_Id,
+      dir_name: dir_name,
+      owner: toBinaryUUID(owner),
+      parent_id: parent_id,
     });
   }
 
-  async changeDirectoryName(directory: Directory, name: string) {
+  async changeDirectoryName(dir_id: number, name: string) {
     this.db
       .database<Directory>('directories')
       .update({ dir_name: name })
-      .where({ dir_id: directory.dir_id })
+      .where({ dir_id: dir_id })
       .then(console.log)
       .catch(console.log);
   }
 
-  async removeDirectory(directory: Directory) {
-    if (directory.dir_id != null) {
-      await this.db.database('directories').delete('*').where({ dir_id: directory.dir_id });
+  async removeDirectory(dir_id: number) {
+    if (dir_id != null) {
+      await this.db.database('directories').delete('*').where({ dir_id: dir_id });
     }
   }
 
-  async getChildren(directory: Directory) {
+  async getChildren(dir_id: number, owner: string) {
     let directories: Directory[], files: FileEntry[];
 
-    if (directory.parent_id == null) {
+    if (dir_id == null) {
       const rootDir = await this.db
         .database('directories')
         .select('dir_id')
-        .where({ parent_id: null, owner: toBinaryUUID(directory.owner as string) });
+        .where({ parent_id: null, owner: toBinaryUUID(owner as string) });
       directories = await this.db.database<Directory>('directories').where('parent_id', '=', rootDir[0].dir_id);
       files = await this.db.database<FileEntry>('files').where('parent_id', '=', rootDir[0].dir_id);
     } else {
-      directories = await this.db.database<Directory>('directories').where('parent_id', '=', directory.dir_id);
+      directories = await this.db.database<Directory>('directories').where('parent_id', '=', dir_id);
 
       files = await this.db
         .database<FileEntry>('files')
-        .where('parent_id', '=', directory.dir_id)
+        .where('parent_id', '=', dir_id)
         .select('file_id', 'file_name', 'owner', 'parent_id');
     }
     directories.forEach((item) => {
@@ -116,24 +114,20 @@ export class FileSystemDAO {
     return { files, directories };
   }
 
-  async getSkeleton(directory: Directory) {
+  async getSkeleton(dir_id: number, owner: string) {
     let ret: { dir_name: string; dir_id: number }[];
-
-    if (directory.parent_id == null) {
+    if (dir_id == null) {
       const rootDir = await this.db
         .database('directories')
         .select('dir_id')
-        .where({ parent_id: null, owner: toBinaryUUID(directory.owner as string) });
+        .where({ parent_id: null, owner: toBinaryUUID(owner as string) });
 
       ret = await this.db
         .database<Directory>('directories')
-        .select('dir_name', 'dir_id', 'parent_id')
+        .select('dir_name', 'dir_id')
         .where({ parent_id: rootDir[0].dir_id });
     } else {
-      ret = await this.db
-        .database<Directory>('directories')
-        .select('dir_name', 'dir_id', 'parent_id')
-        .where({ parent_id: directory.dir_id });
+      ret = await this.db.database<Directory>('directories').select('dir_name', 'dir_id').where({ parent_id: dir_id });
     }
 
     return ret;

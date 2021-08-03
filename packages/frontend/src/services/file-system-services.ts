@@ -7,8 +7,7 @@ export class RecursiveSkeleton {
   dir_name: string;
   dir_id: number;
   open = false;
-  parent: RecursiveSkeleton;
-  children: RecursiveSkeleton[];
+  children: RecursiveSkeleton[] = [];
 }
 
 class FileSystemServiceController {
@@ -16,11 +15,16 @@ class FileSystemServiceController {
   skeleton = new RecursiveSkeleton();
   path = 'Collections/';
 
-  async makeDir(directory: Directory, parent: Directory) {
+  async init() {
+    await this.getSkeleton(null, this.skeleton);
+    await this.getChildren(null);
+  }
+  async makeDir(dir_name: string, parent_id: number) {
+    const user = await AuthService.getUser();
     const fetchData: RequestInit = {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ dir: directory, parent: parent }),
+      body: JSON.stringify({ dir_name: dir_name, owner: user.user_id, parent_id: parent_id }),
       credentials: 'include',
     };
 
@@ -28,29 +32,34 @@ class FileSystemServiceController {
       .then(console.log)
       .catch(console.log);
   }
-
-  async getChild(dir_id: number, parent_id: number) {
+  async getChildren(dir_id) {
+    const user = await AuthService.getUser();
     const fetchData: RequestInit = {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ dir_id: dir_id, owner: user.user_id }),
       credentials: 'include',
     };
-    console.log(dir_id);
-    const user = await AuthService.getUser();
-    if (dir_id == null) {
-      const root: Directory = { owner: user.user_id, parent_id: null, dir_name: user.user_email };
-      fetchData.body = JSON.stringify({ dir: root });
-    } else fetchData.body = JSON.stringify({ dir: { owner: user.user_id, dir_id: dir_id, parent_id: 23 } });
-
     const res = await fetch(ROOT_URL + 'filesystem/getdir', fetchData).then(handleFetch);
-
-    this.dirChildren = res;
-    if (dir_id == null) this.skeleton.children = res.directories;
-    console.log('RES BEGIN');
-    console.log(dir_id);
-    console.log(parent_id);
     console.log(res);
-    console.log('RES END');
+    this.dirChildren = res;
+  }
+  async getSkeleton(dir_id: number, skel: RecursiveSkeleton) {
+    const user = await AuthService.getUser();
+    const fetchData: RequestInit = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ dir_id: dir_id, owner: user.user_id }),
+      credentials: 'include',
+    };
+
+    const res = await fetch(ROOT_URL + 'filesystem/getskel', fetchData).then(handleFetch);
+    if (dir_id == null) this.dirChildren = res;
+    console.log(res);
+    skel.children = res.map(val => {
+      return { dir_id: val.dir_id, dir_name: val.dir_name, parent: skel };
+    });
+
     return res;
   }
 }

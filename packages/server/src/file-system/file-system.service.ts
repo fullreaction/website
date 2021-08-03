@@ -10,29 +10,33 @@ export class FileSystemService {
     this.fileSystemDAO.initUser(email);
   }
 
-  async addFile(file: Express.Multer.File, directory: Directory) {
-    this.fileSystemDAO.addFile(file, directory);
+  async addFile(file: Express.Multer.File, dir_id: number, owner: string) {
+    this.fileSystemDAO.addFile(file, dir_id, owner);
   }
   async getFile(file_id: number) {
     return await this.fileSystemDAO.getFile(file_id);
   }
-  async changeFileName(file: FileEntry, name: string) {
-    this.fileSystemDAO.changeFileName(file, name);
+  async changeFileName(file_id: number, name: string) {
+    this.fileSystemDAO.changeFileName(file_id, name);
   }
   async removeFile(file_id: number) {
     this.fileSystemDAO.removeFile(file_id);
   }
-  async addDirectory(directory: Directory, parent: Directory) {
-    this.fileSystemDAO.addDirectory(directory, parent);
+  async addDirectory(dir_name: string, owner: string, parent_id: number) {
+    this.fileSystemDAO.addDirectory(dir_name, owner, parent_id);
   }
-  async changeDirectoryName(directory: Directory, name: string) {
-    this.fileSystemDAO.changeDirectoryName(directory, name);
+  async changeDirectoryName(dir_id: number, name: string) {
+    this.fileSystemDAO.changeDirectoryName(dir_id, name);
   }
-  async removeDirectory(directory: Directory) {
-    this.fileSystemDAO.removeDirectory(directory);
+  async removeDirectory(dir_id: number) {
+    this.fileSystemDAO.removeDirectory(dir_id);
   }
 
-  async getChildren(directory: Directory) {
-    return await this.fileSystemDAO.getChildren(directory);
+  async getChildren(dir_id: number, owner: string) {
+    return await this.fileSystemDAO.getChildren(dir_id, owner);
+  }
+
+  async getSkeleton(dir_id: number, owner: string) {
+    return await this.fileSystemDAO.getSkeleton(dir_id, owner);
   }
 }

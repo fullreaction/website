@@ -1,5 +1,10 @@
 import { Knex } from 'knex';
 
+/*
+  When there are 2 folders of the same name and parent_id
+  merge
+*/
+
 export async function up(knex: Knex): Promise<void> {
   //Done
   knex
@@ -18,16 +23,14 @@ export async function up(knex: Knex): Promise<void> {
     )
     .then(console.log);
 
-  // Turn into procedure and then add to
-  // both tables before insert & update
   knex
     .raw(
-      `CREATE PROCEDURE count_name_duplicates (IN newName NVARCHAR(255), OUT count_ INT)
+      `CREATE PROCEDURE count_name_duplicates (IN newName NVARCHAR(255), IN newParentId INT, OUT count_ INT)
   BEGIN
     SELECT SUM(ind_count) INTO count_ from
     (
       SELECT COUNT(DISTINCT d.dir_name) AS ind_count FROM directories d
-      WHERE d.dir_name = newName OR d.dir_name LIKE CONCAT(newName,' (%)')
+      WHERE d.dir_name = newName OR d.dir_name LIKE CONCAT(newName,' (%)') AND d.parent_id = newParentId
       UNION ALL
       SELECT COUNT(DISTINCT f.file_name) FROM files f
       WHERE f.file_name = newName OR f.file_name LIKE CONCAT(newName,' (%)')
@@ -41,7 +44,7 @@ export async function up(knex: Knex): Promise<void> {
       FOR EACH ROW
       BEGIN
         DECLARE count_ INT DEFAULT 0;
-        CALL count_name_duplicates(NEW.dir_name, count_);
+        CALL count_name_duplicates(NEW.dir_name, NEW.parent_id count_);
         IF count_ > 0 THEN
           SET NEW.dir_name=CONCAT(NEW.dir_name,' (',count_,')');
         END IF;

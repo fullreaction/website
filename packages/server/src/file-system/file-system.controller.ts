@@ -54,7 +54,7 @@ export class FileSystemController {
     @Body('owner') owner: string,
     @Body('parent_id') parent_id: number,
   ) {
-    return this.fileSystem.addDirectory(dir_name, owner, parent_id);
+    await this.fileSystem.addDirectory(dir_name, owner, parent_id);
   }
 
   @Patch('changedirname')

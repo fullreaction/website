@@ -65,11 +65,16 @@ export class FileSystemDAO {
         .where({ owner: toBinaryUUID(owner), parent_id: null });
       parent_id = res[0].dir_id;
     }
-    await this.db.database('directories').insert({
-      dir_name: dir_name,
-      owner: toBinaryUUID(owner),
-      parent_id: parent_id,
-    });
+    await this.db
+      .database('directories')
+      .insert({
+        dir_name: dir_name,
+        owner: toBinaryUUID(owner),
+        parent_id: parent_id,
+      })
+      .catch((e) => {
+        throw new Error(e);
+      });
   }
 
   async changeDirectoryName(dir_id: number, name: string) {

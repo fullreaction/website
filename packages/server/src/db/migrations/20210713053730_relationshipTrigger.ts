@@ -44,7 +44,7 @@ export async function up(knex: Knex): Promise<void> {
       FOR EACH ROW
       BEGIN
         DECLARE count_ INT DEFAULT 0;
-        CALL count_name_duplicates(NEW.dir_name, NEW.parent_id count_);
+        CALL count_name_duplicates(NEW.dir_name, NEW.parent_id, count_);
         IF count_ > 0 THEN
           SET NEW.dir_name=CONCAT(NEW.dir_name,' (',count_,')');
         END IF;
@@ -57,7 +57,7 @@ export async function up(knex: Knex): Promise<void> {
     FOR EACH ROW
       BEGIN
         DECLARE count_ INT DEFAULT 0;
-        CALL count_name_duplicates(NEW.dir_name, count_);
+        CALL count_name_duplicates(NEW.dir_name, NEW.parent_id, count_);
         IF count_ > 0 THEN
           SET NEW.dir_name=CONCAT(NEW.dir_name,' (',count_,')');
         END IF;
@@ -70,7 +70,7 @@ export async function up(knex: Knex): Promise<void> {
       FOR EACH ROW
       BEGIN
         DECLARE count_ INT DEFAULT 0;
-         CALL count_name_duplicates(NEW.file_name, count_);
+         CALL count_name_duplicates(NEW.file_name, NEW.parent_id, count_);
         IF count_ > 0 THEN
           SET NEW.file_name=CONCAT(NEW.file_name,' (',count_,')');
         END IF;
@@ -83,7 +83,7 @@ export async function up(knex: Knex): Promise<void> {
       FOR EACH ROW
       BEGIN
         DECLARE count_ INT DEFAULT 0;
-         CALL count_name_duplicates(NEW.file_name, count_);
+         CALL count_name_duplicates(NEW.file_name, NEW.parent_id, count_);
         IF count_ > 0 THEN
           SET NEW.file_name=CONCAT(NEW.file_name,' (',count_,')');
         END IF;
@@ -101,5 +101,5 @@ export async function down(knex: Knex): Promise<void> {
   knex.raw('DROP TRIGGER IF EXISTS file_name_duplication').catch(console.log);
   knex.raw('DROP TRIGGER IF EXISTS file_upd_name_duplication').catch(console.log);
 
-  knex.raw('DROP PROCEDURE IF EXISTS count_name_duplications').catch(console.log);
+  knex.raw('DROP PROCEDURE IF EXISTS count_name_duplicates').catch(console.log);
 }

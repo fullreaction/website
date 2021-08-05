@@ -1,6 +1,7 @@
 import { Component, h, Host, State } from '@stencil/core';
 
 import { FileSystemService, RecursiveSkeleton } from '../../../../services/file-system-services';
+import { catchClickOut } from '../../../../utils/catchClickOut';
 
 /*
   Get items alphabetically
@@ -16,13 +17,16 @@ export class AdminUpload {
   @State() overlayVis = false;
   @State() forceRender = false;
 
-  @State() newDir = { name: '', parent: FileSystemService.skeleton };
+  @State() newDir: { name: string; parent: RecursiveSkeleton };
 
-  async componentWillLoad() {
-    return await FileSystemService.init();
+  componentWillLoad() {
+    return FileSystemService.init().then(() => {
+      this.newDir = { name: '', parent: FileSystemService.skeleton };
+    });
   }
 
   makeDir(e) {
+    console.log(this.newDir);
     e.preventDefault();
     FileSystemService.makeDir(this.newDir.name, this.newDir.parent.dir_id)
       .then(() => {
@@ -71,6 +75,12 @@ export class AdminUpload {
             <span class="Upload-CollectionName">{val.dir_name}</span>
             <button
               class="Upload-Dots"
+              ref={el =>
+                catchClickOut(el, out => {
+                  if (out == true) val.showSettings = false;
+                  this.forceRender = !this.forceRender;
+                })
+              } //Might be too heavy
               onClick={e => {
                 e.stopPropagation();
                 val.showSettings = !val.showSettings;
@@ -78,21 +88,35 @@ export class AdminUpload {
               }}
             >
               <img src="\assets\icon\3Dots-icon.svg" />
+              <div class="Upload-Dots-Wrapper">
+                <div class={{ 'Upload-Dots-Content': true, 'Toggle-Vis': val.showSettings }}>
+                  <button
+                    class="Content-Item"
+                    onClick={e => {
+                      e.stopPropagation();
+                      this.newDir.parent = val;
+                      this.overlayVis = true;
+                      val.showSettings = false;
+                      console.log(this.overlayVis);
+                    }}
+                  >
+                    <span>Add Collection</span>
+                  </button>
+                  <button
+                    class="Content-Item"
+                    onClick={e => {
+                      e.stopPropagation();
+                      this.newDir.parent = val;
+                      this.overlayVis = true;
+                      val.showSettings = false;
+                      console.log(this.overlayVis);
+                    }}
+                  >
+                    <span>Add Collection</span>
+                  </button>
+                </div>
+              </div>
             </button>
-            <div class="Upload-Dots-Content">
-              <button
-                class={{ 'Add-Collection': true, 'Toggle-Vis': val.showSettings }}
-                onClick={e => {
-                  e.stopPropagation();
-                  this.newDir.parent = val;
-                  this.overlayVis = true;
-                  val.showSettings = false;
-                  console.log(this.overlayVis);
-                }}
-              >
-                <span>Add Collection</span>
-              </button>
-            </div>
           </button>
           <div class="Upload-Subcollection">
             {val.showSubfolders == true && this.forceRender != null ? this.drawSkeleton(val) : ''}
@@ -116,12 +140,17 @@ export class AdminUpload {
         >
           <span>COLLECTIONS</span>
           <button
+            class="Upload-Dots"
+            ref={el =>
+              catchClickOut(el, out => {
+                if (out) this.toggleVis = false;
+              })
+            }
             onClick={e => {
               e.stopPropagation();
               this.toggleVis = !this.toggleVis;
               console.log(this.toggleVis);
             }}
-            class="Upload-Dots"
           >
             <img src="\assets\icon\3Dots-icon.svg" />
             <div class="Upload-Dots-Content">
@@ -169,13 +198,14 @@ export class AdminUpload {
           <button class="Upload-Button-2 Button"> Select Media</button>
         </div>
       </div>
-      <div class={{ 'Add-Overlay': true, 'Overlay-Vis': this.overlayVis }}>
+      <div class={{ 'Add-Overlay': true, 'Overlay-Vis': this.overlayVis }} onClick={() => (this.overlayVis = false)}>
         <form
           class="Add-Overlay-Content"
           onSubmit={e => {
             this.overlayVis = false;
             this.makeDir(e);
           }}
+          onClick={e => e.stopPropagation()}
         >
           <div class="Add-Overlay-Text"> Name your Collection</div>
 

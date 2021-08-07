@@ -18,25 +18,35 @@ export class AdminUpload {
   @State() toggleVis = false;
   @State() overlayVis = false;
   @State() forceRender = false;
-
-  @State() newDir: { name: string; parent: RecursiveSkeleton };
+  @State() bufferDir: { name: string; parent: RecursiveSkeleton; currentForm: string };
 
   componentWillLoad() {
     return FileSystemService.init().then(() => {
-      this.newDir = { name: '', parent: FileSystemService.skeleton };
+      this.bufferDir = { name: '', parent: FileSystemService.skeleton, currentForm: '' };
     });
   }
-
-  makeDir(e) {
-    console.log(this.newDir);
-    e.preventDefault();
-    FileSystemService.makeDir(this.newDir.name, this.newDir.parent.dir_id)
+  renameDir() {
+    FileSystemService.changeDirName(this.bufferDir.parent.dir_id, this.bufferDir.name)
       .then(() => {
-        return this.refreshFiles(this.newDir.parent);
+        return this.refreshFiles(this.bufferDir.parent);
       })
       .then(() => {
-        this.newDir.name = '';
-        this.newDir.parent = FileSystemService.skeleton;
+        this.bufferDir.name = '';
+        this.bufferDir.parent = FileSystemService.skeleton;
+        this.bufferDir.currentForm = '';
+      });
+  }
+  makeDir(e) {
+    console.log(this.bufferDir);
+    e.preventDefault();
+    FileSystemService.makeDir(this.bufferDir.name, this.bufferDir.parent.dir_id)
+      .then(() => {
+        return this.refreshFiles(this.bufferDir.parent);
+      })
+      .then(() => {
+        this.bufferDir.name = '';
+        this.bufferDir.parent = FileSystemService.skeleton;
+        this.bufferDir.currentForm = '';
       });
   }
   refreshFiles(dir: RecursiveSkeleton) {
@@ -101,10 +111,11 @@ export class AdminUpload {
                     class="Content-Item"
                     onClick={e => {
                       e.stopPropagation();
-                      this.newDir.parent = child;
+                      this.bufferDir.parent = child;
                       this.overlayVis = true;
                       child.showSettings = false;
                       console.log(this.overlayVis);
+                      this.bufferDir.currentForm = 'makeDir';
                     }}
                   >
                     <span>Add Collection</span>
@@ -113,8 +124,11 @@ export class AdminUpload {
                     class="Content-Item"
                     onClick={e => {
                       e.stopPropagation();
+                      this.overlayVis = true;
                       // *HERE*
                       child.showSettings = false;
+                      this.bufferDir.parent = child;
+                      this.bufferDir.currentForm = 'renameDir';
                     }}
                   >
                     <span>Rename Collection</span>
@@ -177,6 +191,7 @@ export class AdminUpload {
                     this.overlayVis = !this.overlayVis;
                     this.toggleVis = !this.toggleVis;
                     console.log(this.overlayVis);
+                    this.bufferDir.currentForm = 'makeDir';
                   }}
                 >
                   <span>Add Collection</span>
@@ -220,19 +235,28 @@ export class AdminUpload {
           class="Add-Overlay-Content"
           onSubmit={e => {
             this.overlayVis = false;
-            this.makeDir(e);
+            switch (this.bufferDir.currentForm) {
+              case 'makeDir':
+                this.makeDir(e);
+                break;
+              case 'renameDir':
+                this.renameDir();
+                break;
+            }
           }}
           onClick={e => e.stopPropagation()}
         >
           <div class="Add-Overlay-Text"> Name your Collection</div>
 
-          <input
-            class="Add-Overlay-Input"
-            onInput={e => (this.newDir.name = (e.target as HTMLInputElement).value)}
-            type="text"
-            value={this.newDir.name}
-            required
-          ></input>
+          {
+            <input
+              class="Add-Overlay-Input"
+              onInput={e => (this.bufferDir.name = (e.target as HTMLInputElement).value)}
+              type="text"
+              value={this.bufferDir.name}
+              required
+            ></input>
+          }
           <div class="Add-Overlay-Buttons">
             <input type="submit" class="Add-Overlay-Button Button-Confirm">
               Confirm

@@ -33,6 +33,16 @@ class FileSystemServiceController {
     const res = await fetch(ROOT_URL + 'filesystem/makedir', fetchData);
     console.log(res);
   }
+  async changeDirName(dir_id: number, name: string) {
+    const fetchData: RequestInit = {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ dir_id: dir_id, name: name }),
+      credentials: 'include',
+    };
+    fetch(ROOT_URL + 'filesystem/changedirname', fetchData);
+  }
+
   async removeDirectory(dir_id: number) {
     const fetchData: RequestInit = {
       method: 'DELETE',

@@ -149,18 +149,30 @@ RATI
 
 .Upload-Dots-Wrapper {
   position: relative;
-  top: 30px;
+  top: 5px;
+  left: 5px;
   z-index: 1;
   width: 0px;
+  height: 0px;
   background: none;
+}
+.Upload-Dots-Content {
+  display: flex;
+  flex-direction: column;
+  width: 160px;
+  height: fit-content;
+
+  overflow: hidden;
+  visibility: hidden;
+
+  border-radius: 3px;
+  box-shadow: 2px 2px 4px 5px darkgray;
 }
 
 .Content-Item {
-  z-index: 1;
-  display: block;
   align-items: center;
   justify-content: center;
-  width: 120px;
+
   height: 30px;
 
   font-weight: 500;
@@ -172,16 +184,7 @@ RATI
 .Toggle-Vis {
   visibility: visible !important;
 }
-.Upload-Dots-Content {
-  display: flex;
-  flex-direction: column;
-  width: fit-content;
-  height: fit-content;
-  overflow: hidden;
-  visibility: hidden;
-  border-radius: 3px;
-  box-shadow: 2px 2px 4px 5px darkgray;
-}
+
 .Content-Item:hover {
   background-color: #f4faff;
   border-left: 5px solid rgba(0, 0, 0, 0.157);
@@ -298,6 +301,7 @@ RATI
   height: 140px;
   background-color: var(--background-color);
   border-radius: 5px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
   transform: translate(-50%, -50%);
 }
 .Add-Overlay-Text {

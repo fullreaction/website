@@ -58,7 +58,7 @@ export class FileSystemController {
 
   @Patch('changedirname')
   async changeDirectoryName(@Body('dir_id') dir_id: number, @Body('name') name: string) {
-    this.fileSystem.changeDirectoryName(dir_id, name);
+    return await this.fileSystem.changeDirectoryName(dir_id, name);
   }
 
   @Delete('removedir')

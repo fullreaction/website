@@ -6,6 +6,8 @@ import { catchClickOut } from '../../../../utils/catchClickOut';
 /*
   Get items alphabetically
   Directories can't have duplicate names, they merge
+
+  Turn overlay into a function
 */
 
 @Component({
@@ -30,26 +32,30 @@ export class AdminUpload {
     e.preventDefault();
     FileSystemService.makeDir(this.newDir.name, this.newDir.parent.dir_id)
       .then(() => {
-        return FileSystemService.getSkeleton(this.newDir.parent);
-      })
-      .then(() => {
-        return FileSystemService.getChildren(this.newDir.parent.dir_id);
+        return this.refreshFiles(this.newDir.parent);
       })
       .then(() => {
         this.newDir.name = '';
         this.newDir.parent = FileSystemService.skeleton;
+      });
+  }
+  refreshFiles(dir: RecursiveSkeleton) {
+    FileSystemService.getSkeleton(dir)
+      .then(() => {
+        return FileSystemService.getChildren(dir.dir_id);
+      })
+      .then(() => {
         this.forceRender = !this.forceRender;
       });
   }
-
   drawSkeleton(skel: RecursiveSkeleton) {
     if (skel.children != null) {
-      return skel.children.map(val => (
+      return skel.children.map(child => (
         <div class="Upload-CollectionWrapper">
           <button
             class="Upload-Collection"
             onClick={() => {
-              FileSystemService.getChildren(val.dir_id).then(() => {
+              FileSystemService.getChildren(child.dir_id).then(() => {
                 this.forceRender = !this.forceRender;
               });
             }}
@@ -58,45 +64,46 @@ export class AdminUpload {
               class="Upload-ArrowWrapper"
               onClick={e => {
                 e.stopPropagation();
-                if (val.children == null)
-                  FileSystemService.getSkeleton(val).then(() => {
-                    val.showSubfolders = true;
+                if (child.children == null)
+                  FileSystemService.getSkeleton(child).then(() => {
+                    child.showSubfolders = true;
 
                     this.forceRender = !this.forceRender;
                   });
                 else {
-                  val.showSubfolders = !val.showSubfolders;
+                  child.showSubfolders = !child.showSubfolders;
                   this.forceRender = !this.forceRender;
                 }
               }}
             >
-              <div class={{ 'Upload-Arrow': true, 'Upload-ArrowDown': val.showSubfolders }}></div>
+              <div class={{ 'Upload-Arrow': true, 'Upload-ArrowDown': child.showSubfolders }}></div>
             </div>
-            <span class="Upload-CollectionName">{val.dir_name}</span>
+            <span class="Upload-CollectionName">{child.dir_name}</span>
             <button
               class="Upload-Dots"
+              //Might be too heavy
               ref={el =>
                 catchClickOut(el, out => {
-                  if (out == true) val.showSettings = false;
+                  if (out == true) child.showSettings = false;
                   this.forceRender = !this.forceRender;
                 })
-              } //Might be too heavy
+              }
               onClick={e => {
                 e.stopPropagation();
-                val.showSettings = !val.showSettings;
+                child.showSettings = !child.showSettings;
                 this.forceRender = !this.forceRender;
               }}
             >
               <img src="\assets\icon\3Dots-icon.svg" />
               <div class="Upload-Dots-Wrapper">
-                <div class={{ 'Upload-Dots-Content': true, 'Toggle-Vis': val.showSettings }}>
+                <div class={{ 'Upload-Dots-Content': true, 'Toggle-Vis': child.showSettings }}>
                   <button
                     class="Content-Item"
                     onClick={e => {
                       e.stopPropagation();
-                      this.newDir.parent = val;
+                      this.newDir.parent = child;
                       this.overlayVis = true;
-                      val.showSettings = false;
+                      child.showSettings = false;
                       console.log(this.overlayVis);
                     }}
                   >
@@ -106,10 +113,22 @@ export class AdminUpload {
                     class="Content-Item"
                     onClick={e => {
                       e.stopPropagation();
-                      FileSystemService.removeDirectory(val.dir_id).then(() => {
-                        this.forceRender = !this.forceRender;
+                      FileSystemService.removeDirectory(child.dir_id).then(() => {
+                        this.refreshFiles(skel);
                       });
-                      val.showSettings = false;
+                      child.showSettings = false;
+                    }}
+                  >
+                    <span>Rename Collection</span>
+                  </button>
+                  <button
+                    class="Content-Item"
+                    onClick={e => {
+                      e.stopPropagation();
+                      FileSystemService.removeDirectory(child.dir_id).then(() => {
+                        this.refreshFiles(skel);
+                      });
+                      child.showSettings = false;
                     }}
                   >
                     <span>Delete Collection</span>
@@ -118,7 +137,7 @@ export class AdminUpload {
               </div>
             </button>
           </button>
-          <div class="Upload-Subcollection">{val.showSubfolders == true ? this.drawSkeleton(val) : ''}</div>
+          <div class="Upload-Subcollection">{child.showSubfolders == true ? this.drawSkeleton(child) : ''}</div>
         </div>
       ));
     }
@@ -176,20 +195,20 @@ export class AdminUpload {
         <input class="Upload-Searchbar" type="text" placeholder="Search" />
         <div class="Upload-Path"> COLLECTIONS &#62;&nbsp;</div>
         <div class="Upload-File-Box">
-          {FileSystemService.dirChildren.directories.map(val => (
+          {FileSystemService.dirChildren.directories.map(child => (
             <div class="Upload-Item">
               <img class="Upload-Outer-Image" src="\assets\icon\blank-image.svg">
                 <img class="Upload-inner-Image" src="\assets\icon\3Dots-icon.svg"></img>
               </img>
-              <span class="Upload-Image-Text">{val.dir_name}</span>
+              <span class="Upload-Image-Text">{child.dir_name}</span>
             </div>
           ))}
-          {FileSystemService.dirChildren.files.map(val => (
+          {FileSystemService.dirChildren.files.map(child => (
             <div class="Upload-Item">
               <img class="Upload-Outer-Image" src="\assets\icon\blank-image.svg">
                 <img class="Upload-inner-Image" src="\assets\icon\3Dots-icon.svg"></img>
               </img>
-              <span class="Upload-Image-Text">{val.file_name}</span>
+              <span class="Upload-Image-Text">{child.file_name}</span>
             </div>
           ))}
         </div>
@@ -207,7 +226,7 @@ export class AdminUpload {
           }}
           onClick={e => e.stopPropagation()}
         >
-          <div class="Add-Overlay-Text"> Name your Collection</div>
+          <span class="Add-Overlay-Text"> Name your Collection</span>
 
           <input
             class="Add-Overlay-Input"

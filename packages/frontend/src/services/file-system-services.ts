@@ -21,26 +21,26 @@ class FileSystemServiceController {
     await this.getChildren(null);
   }
 
-  async makeDir(dir_name: string, parent_id: number) {
+  async makeDir(parent: RecursiveSkeleton, dir_name: string) {
     const user = await AuthService.getUser();
     const fetchData: RequestInit = {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ dir_name: dir_name, owner: user.user_id, parent_id: parent_id }),
+      body: JSON.stringify({ dir_name: dir_name, owner: user.user_id, parent_id: parent.dir_id }),
       credentials: 'include',
     };
 
     const res = await fetch(ROOT_URL + 'filesystem/makedir', fetchData);
     console.log(res);
   }
-  async changeDirName(dir_id: number, name: string) {
+  async changeDirName(directory: RecursiveSkeleton, name: string) {
     const fetchData: RequestInit = {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ dir_id: dir_id, name: name }),
+      body: JSON.stringify({ dir_id: directory.dir_id, name: name }),
       credentials: 'include',
     };
-    fetch(ROOT_URL + 'filesystem/changedirname', fetchData);
+    await fetch(ROOT_URL + 'filesystem/changedirname', fetchData);
   }
 
   async removeDirectory(dir_id: number) {

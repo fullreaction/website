@@ -7,7 +7,7 @@ import { catchClickOut } from '../../../../utils/catchClickOut';
   Get items alphabetically
   Directories can't have duplicate names, they merge
 
-  Turn overlay into a function
+  Turn overlay into a func
 */
 
 @Component({
@@ -19,34 +19,22 @@ export class AdminUpload {
   @State() overlayVis = false;
   @State() forceRender = false;
 
-  @State() newDir: { name: string; parent: RecursiveSkeleton };
+  private fsData: { name: string; dir: RecursiveSkeleton; func: string };
 
   componentWillLoad() {
     return FileSystemService.init().then(() => {
-      this.newDir = { name: '', parent: FileSystemService.skeleton };
+      this.fsData = { name: '', dir: FileSystemService.skeleton, func: '' };
     });
   }
-
-  makeDir(e) {
-    console.log(this.newDir);
+  async runFS(e) {
     e.preventDefault();
-    FileSystemService.makeDir(this.newDir.name, this.newDir.parent.dir_id)
-      .then(() => {
-        return this.refreshFiles(this.newDir.parent);
-      })
-      .then(() => {
-        this.newDir.name = '';
-        this.newDir.parent = FileSystemService.skeleton;
-      });
+    await FileSystemService[this.fsData.func](this.fsData.dir, this.fsData.name);
   }
+
   refreshFiles(dir: RecursiveSkeleton) {
-    FileSystemService.getSkeleton(dir)
-      .then(() => {
-        return FileSystemService.getChildren(dir.dir_id);
-      })
-      .then(() => {
-        this.forceRender = !this.forceRender;
-      });
+    FileSystemService.getSkeleton(dir).then(() => {
+      this.forceRender = !this.forceRender;
+    });
   }
   drawSkeleton(skel: RecursiveSkeleton) {
     if (skel.children != null) {
@@ -101,10 +89,10 @@ export class AdminUpload {
                     class="Content-Item"
                     onClick={e => {
                       e.stopPropagation();
-                      this.newDir.parent = child;
+                      this.fsData.dir = child;
+                      this.fsData.func = 'makeDir';
                       this.overlayVis = true;
                       child.showSettings = false;
-                      console.log(this.overlayVis);
                     }}
                   >
                     <span>Add Collection</span>
@@ -113,7 +101,9 @@ export class AdminUpload {
                     class="Content-Item"
                     onClick={e => {
                       e.stopPropagation();
-                      // *HERE*
+                      this.fsData.dir = child;
+                      this.fsData.func = 'changeDirName';
+                      this.overlayVis = true;
                       child.showSettings = false;
                     }}
                   >
@@ -164,7 +154,6 @@ export class AdminUpload {
             onClick={e => {
               e.stopPropagation();
               this.toggleVis = !this.toggleVis;
-              console.log(this.toggleVis);
             }}
           >
             <img src="\assets\icon\3Dots-icon.svg" />
@@ -176,7 +165,6 @@ export class AdminUpload {
                     e.stopPropagation();
                     this.overlayVis = !this.overlayVis;
                     this.toggleVis = !this.toggleVis;
-                    console.log(this.overlayVis);
                   }}
                 >
                   <span>Add Collection</span>
@@ -215,28 +203,41 @@ export class AdminUpload {
           <button class="Upload-Button-2 Button"> Select Media</button>
         </div>
       </div>
-      <div class={{ 'Add-Overlay': true, 'Overlay-Vis': this.overlayVis }} onClick={() => (this.overlayVis = false)}>
+      <div
+        class={{ 'Add-Overlay': true, 'Overlay-Vis': this.overlayVis }}
+        onClick={() => {
+          this.fsData = { dir: null, name: '', func: '' };
+          this.overlayVis = false;
+        }}
+      >
         <form
           class="Add-Overlay-Content"
           onSubmit={e => {
             this.overlayVis = false;
-            this.makeDir(e);
+            this.runFS(e)
+              .then(() => {
+                return this.refreshFiles(this.fsData.dir);
+              })
+              .then(() => {
+                this.fsData = { dir: null, name: '', func: '' };
+              });
           }}
           onClick={e => e.stopPropagation()}
         >
-          <div class="Add-Overlay-Text"> Name your Collection</div>
+          <div class="Add-Overlay-Text">
+            {' '}
+            {this.fsData.func == 'makeDir' ? 'Name Your Collection' : 'Rename Your Collection'}
+          </div>
 
           <input
             class="Add-Overlay-Input"
-            onInput={e => (this.newDir.name = (e.target as HTMLInputElement).value)}
+            onInput={e => (this.fsData.name = (e.target as HTMLInputElement).value)}
             type="text"
-            value={this.newDir.name}
+            value={this.fsData.name}
             required
           ></input>
           <div class="Add-Overlay-Buttons">
-            <input type="submit" class="Add-Overlay-Button Button-Confirm">
-              Confirm
-            </input>
+            <input type="submit" value="Confirm" class="Add-Overlay-Button Button-Confirm"></input>
             <button
               class="Add-Overlay-Button Button-Cancel"
               onClick={() => {

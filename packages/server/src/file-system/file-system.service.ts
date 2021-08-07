@@ -26,7 +26,7 @@ export class FileSystemService {
     await this.fileSystemDAO.addDirectory(dir_name, owner, parent_id);
   }
   async changeDirectoryName(dir_id: number, name: string) {
-    this.fileSystemDAO.changeDirectoryName(dir_id, name);
+    await this.fileSystemDAO.changeDirectoryName(dir_id, name);
   }
   async removeDirectory(dir_id: number) {
     return await this.fileSystemDAO.removeDirectory(dir_id);

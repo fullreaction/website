@@ -78,7 +78,7 @@ export class FileSystemDAO {
   }
 
   async changeDirectoryName(dir_id: number, name: string) {
-    this.db
+    await this.db
       .database<Directory>('directories')
       .update({ dir_name: name })
       .where({ dir_id: dir_id })

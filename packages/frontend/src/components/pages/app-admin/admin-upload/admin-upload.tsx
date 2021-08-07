@@ -113,9 +113,7 @@ export class AdminUpload {
                     class="Content-Item"
                     onClick={e => {
                       e.stopPropagation();
-                      FileSystemService.removeDirectory(child.dir_id).then(() => {
-                        this.refreshFiles(skel);
-                      });
+                      // *HERE*
                       child.showSettings = false;
                     }}
                   >
@@ -226,7 +224,7 @@ export class AdminUpload {
           }}
           onClick={e => e.stopPropagation()}
         >
-          <span class="Add-Overlay-Text"> Name your Collection</span>
+          <div class="Add-Overlay-Text"> Name your Collection</div>
 
           <input
             class="Add-Overlay-Input"

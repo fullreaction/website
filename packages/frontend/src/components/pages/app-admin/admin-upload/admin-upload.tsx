@@ -106,21 +106,19 @@ export class AdminUpload {
                     class="Content-Item"
                     onClick={e => {
                       e.stopPropagation();
-                      this.newDir.parent = val;
-                      this.overlayVis = true;
+                      FileSystemService.removeDirectory(val.dir_id).then(() => {
+                        this.forceRender = !this.forceRender;
+                      });
                       val.showSettings = false;
-                      console.log(this.overlayVis);
                     }}
                   >
-                    <span>Add Collection</span>
+                    <span>Delete Collection</span>
                   </button>
                 </div>
               </div>
             </button>
           </button>
-          <div class="Upload-Subcollection">
-            {val.showSubfolders == true && this.forceRender != null ? this.drawSkeleton(val) : ''}
-          </div>
+          <div class="Upload-Subcollection">{val.showSubfolders == true ? this.drawSkeleton(val) : ''}</div>
         </div>
       ));
     }
@@ -153,23 +151,25 @@ export class AdminUpload {
             }}
           >
             <img src="\assets\icon\3Dots-icon.svg" />
-            <div class="Upload-Dots-Content">
-              <button
-                class={{ 'Add-Collection': true, 'Toggle-Vis': this.toggleVis }}
-                onClick={e => {
-                  e.stopPropagation();
-                  this.overlayVis = !this.overlayVis;
-                  this.toggleVis = !this.toggleVis;
-                  console.log(this.overlayVis);
-                }}
-              >
-                <span>Add Collection</span>
-              </button>
+            <div class="Upload-Dots-Wrapper">
+              <div class={{ 'Upload-Dots-Content': true, 'Toggle-Vis': this.toggleVis }}>
+                <button
+                  class="Content-Item"
+                  onClick={e => {
+                    e.stopPropagation();
+                    this.overlayVis = !this.overlayVis;
+                    this.toggleVis = !this.toggleVis;
+                    console.log(this.overlayVis);
+                  }}
+                >
+                  <span>Add Collection</span>
+                </button>
+              </div>
             </div>
           </button>
         </div>
 
-        {this.drawSkeleton(FileSystemService.skeleton)}
+        {this.forceRender != null ? this.drawSkeleton(FileSystemService.skeleton) : ''}
       </div>
 
       <div class="Upload-Content">

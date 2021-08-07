@@ -33,7 +33,16 @@ class FileSystemServiceController {
     const res = await fetch(ROOT_URL + 'filesystem/makedir', fetchData);
     console.log(res);
   }
-
+  async removeDirectory(dir_id: number) {
+    const fetchData: RequestInit = {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ dir_id: dir_id }),
+      credentials: 'include',
+    };
+    const res = await fetch(ROOT_URL + 'filesystem/removedir', fetchData);
+    console.log(res);
+  }
   async getChildren(dir_id: number) {
     const user = await AuthService.getUser();
     const fetchData: RequestInit = {

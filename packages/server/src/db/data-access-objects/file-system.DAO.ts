@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, Injectable } from '@nestjs/common';
 import { fromBinaryUUID, toBinaryUUID } from 'binary-uuid';
 import { unlink } from 'fs';
 
@@ -88,8 +88,16 @@ export class FileSystemDAO {
 
   async removeDirectory(dir_id: number) {
     if (dir_id != null) {
-      await this.db.database('directories').delete('*').where({ dir_id: dir_id });
-    }
+      return await this.db.database('directories').delete('*').where({ dir_id: dir_id });
+    } else
+      throw new HttpException(
+        {
+          code: 'BadArgument',
+          message: 'Directory ID is null',
+          target: 'directories',
+        },
+        500,
+      );
   }
 
   async getChildren(dir_id: number, owner: string) {

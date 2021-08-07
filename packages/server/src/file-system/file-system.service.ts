@@ -29,7 +29,7 @@ export class FileSystemService {
     this.fileSystemDAO.changeDirectoryName(dir_id, name);
   }
   async removeDirectory(dir_id: number) {
-    this.fileSystemDAO.removeDirectory(dir_id);
+    return await this.fileSystemDAO.removeDirectory(dir_id);
   }
 
   async getChildren(dir_id: number, owner: string) {

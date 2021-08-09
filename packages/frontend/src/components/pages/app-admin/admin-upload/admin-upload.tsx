@@ -246,17 +246,18 @@ export class AdminUpload {
           }}
           onClick={e => e.stopPropagation()}
         >
-          <div class="Add-Overlay-Text"> Name your Collection</div>
+          <div class="Add-Overlay-Text">
+            {this.bufferDir.currentForm == 'makeDir' ? 'Name your Collection' : 'Rename your Collection'}
+          </div>
 
-          {
-            <input
-              class="Add-Overlay-Input"
-              onInput={e => (this.bufferDir.name = (e.target as HTMLInputElement).value)}
-              type="text"
-              value={this.bufferDir.name}
-              required
-            ></input>
-          }
+          <input
+            class="Add-Overlay-Input"
+            onInput={e => (this.bufferDir.name = (e.target as HTMLInputElement).value)}
+            type="text"
+            value={this.bufferDir.name}
+            required
+          ></input>
+
           <div class="Add-Overlay-Buttons">
             <input type="submit" class="Add-Overlay-Button Button-Confirm">
               Confirm

@@ -1,6 +1,7 @@
 import { AuthService } from './auth-service';
 import { handleFetch, ROOT_URL } from '../utils/httpUtils';
 import { Directory, FileEntry } from '../models/upload.models';
+import FileSaver from 'file-saver';
 
 //not functional at all yet still trying to think it through
 export class RecursiveSkeleton {
@@ -13,12 +14,42 @@ export class RecursiveSkeleton {
 
 class FileSystemServiceController {
   dirChildren: { directories: Directory[]; files: FileEntry[] };
+  currentDir: number;
   skeleton = new RecursiveSkeleton();
   path: { dir_name: string; dir_id: number }[] = [];
 
   async init() {
     await this.getSkeleton(this.skeleton);
     await this.getChildren(null);
+  }
+  async getFile(file: FileEntry) {
+    const fetchData: RequestInit = {
+      method: 'GET',
+      credentials: 'include',
+    };
+
+    FileSaver.saveAs(
+      await (await fetch(ROOT_URL + 'filesystem/getfile/' + file.file_id, fetchData)).blob(),
+      file.file_name,
+    );
+  }
+  async uploadFile(file: File, dir_id: number) {
+    const user = await AuthService.getUser();
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('dir_id', JSON.stringify(dir_id));
+    formData.append('owner', user.user_id as string);
+
+    const fetchData: RequestInit = {
+      method: 'POST',
+      body: formData,
+      credentials: 'include',
+    };
+
+    fetch(ROOT_URL + 'filesystem/uploadfile', fetchData)
+      .then(handleFetch)
+      .then(console.log)
+      .catch(console.log);
   }
 
   async makeDir(parent: RecursiveSkeleton, dir_name: string) {
@@ -63,6 +94,7 @@ class FileSystemServiceController {
 
     this.dirChildren = res;
     await this.getPath(dir_id);
+    this.currentDir = dir_id;
   }
   private async getPath(dir_id: number) {
     const fetchData: RequestInit = {

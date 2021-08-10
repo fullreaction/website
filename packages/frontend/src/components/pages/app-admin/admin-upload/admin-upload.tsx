@@ -21,7 +21,7 @@ export class AdminUpload {
   @State() toggleVis = false;
   @State() overlayVis = false;
   @State() forceRender = false;
-
+  private file: File;
   private fsData: { name: string; dir: RecursiveSkeleton; func: string };
 
   componentWillLoad() {
@@ -32,6 +32,19 @@ export class AdminUpload {
   async runFS(e) {
     e.preventDefault();
     await FileSystemService[this.fsData.func](this.fsData.dir, this.fsData.name);
+  }
+
+  onFileChange(e) {
+    if (e.target.files.length != null) {
+      this.file = e.target.files[0];
+      FileSystemService.uploadFile(this.file, FileSystemService.currentDir)
+        .then(() => {
+          return FileSystemService.getChildren(FileSystemService.currentDir);
+        })
+        .then(() => {
+          this.forceRender = !this.forceRender;
+        });
+    }
   }
 
   refreshFiles(dir: RecursiveSkeleton) {
@@ -138,7 +151,10 @@ export class AdminUpload {
   render = () => (
     <Host class="Upload">
       <div class="Upload-Side">
-        <button class="Upload-Media-Button">Upload Media</button>
+        <label class="Upload-Media-Button">
+          <input type="file" onChange={e => this.onFileChange(e)} />
+          Upload Media
+        </label>
         <div
           class="Upload-Collection Upload-CollectionHeader"
           onClick={() => {
@@ -184,7 +200,6 @@ export class AdminUpload {
       </div>
 
       <div class="Upload-Content">
-        <input class="Upload-Searchbar" type="text" placeholder="Search" />
         <div class="Upload-Path">
           {' '}
           <span
@@ -228,7 +243,13 @@ export class AdminUpload {
           ))}
           {FileSystemService.dirChildren.files.map(child => (
             <div class="Upload-Item">
-              <img class="Upload-Outer-Image" src="\assets\icon\blank-image.svg">
+              <img
+                class="Upload-Outer-Image"
+                src="\assets\icon\blank-image.svg"
+                onClick={() => {
+                  FileSystemService.getFile(child);
+                }}
+              >
                 <img class="Upload-inner-Image" src="\assets\icon\3Dots-icon.svg"></img>
               </img>
               <span class="Upload-Image-Text">{child.file_name}</span>

@@ -21,10 +21,11 @@ export class FileSystemController {
   @UseInterceptors(FileInterceptor('file', { dest: 'uploadedFiles' }))
   async postFile(
     @UploadedFile() file: Express.Multer.File,
-    @Body('dir_id') dir_id: number,
+    @Body('dir_id') dir_id: string,
     @Body('owner') owner: string,
   ) {
-    this.fileSystem.addFile(file, dir_id, owner);
+    console.log(typeof dir_id);
+    await this.fileSystem.addFile(file, JSON.parse(dir_id), owner);
   }
 
   @Patch('changefilename')

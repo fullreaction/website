@@ -27,6 +27,15 @@ export class FileSystemDAO {
 
   //Done
   async addFile(file: Express.Multer.File, dir_id: number, owner: string) {
+    if (dir_id == null) {
+      const res = await this.db
+        .database('directories')
+        .select('dir_id')
+        .where({ owner: toBinaryUUID(owner), parent_id: null });
+      dir_id = res[0].dir_id;
+      console.log(res);
+    }
+    console.log(dir_id);
     this.db
       .database('files')
       .insert({

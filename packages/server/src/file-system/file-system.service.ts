@@ -26,7 +26,7 @@ export class FileSystemService {
     await this.fileSystemDAO.addDirectory(dir_name, owner, parent_id);
   }
   async changeDirectoryName(dir_id: number, name: string) {
-    this.fileSystemDAO.changeDirectoryName(dir_id, name);
+    await this.fileSystemDAO.changeDirectoryName(dir_id, name);
   }
   async removeDirectory(dir_id: number) {
     return await this.fileSystemDAO.removeDirectory(dir_id);
@@ -35,7 +35,9 @@ export class FileSystemService {
   async getChildren(dir_id: number, owner: string) {
     return await this.fileSystemDAO.getChildren(dir_id, owner);
   }
-
+  async getPath(dir_id: number) {
+    return await this.fileSystemDAO.getPath(dir_id);
+  }
   async getSkeleton(dir_id: number, owner: string) {
     return await this.fileSystemDAO.getSkeleton(dir_id, owner);
   }

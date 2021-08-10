@@ -7,7 +7,10 @@ import { catchClickOut } from '../../../../utils/catchClickOut';
   Get items alphabetically
   Directories can't have duplicate names, they merge
 
-  Turn overlay into a function
+
+  Path Stylization
+  Folder icon
+
 */
 
 @Component({
@@ -18,45 +21,23 @@ export class AdminUpload {
   @State() toggleVis = false;
   @State() overlayVis = false;
   @State() forceRender = false;
-  @State() bufferDir: { name: string; parent: RecursiveSkeleton; currentForm: string };
+
+  private fsData: { name: string; dir: RecursiveSkeleton; func: string };
 
   componentWillLoad() {
     return FileSystemService.init().then(() => {
-      this.bufferDir = { name: '', parent: FileSystemService.skeleton, currentForm: '' };
+      this.fsData = { name: '', dir: FileSystemService.skeleton, func: '' };
     });
   }
-  renameDir() {
-    FileSystemService.changeDirName(this.bufferDir.parent.dir_id, this.bufferDir.name)
-      .then(() => {
-        return this.refreshFiles(this.bufferDir.parent);
-      })
-      .then(() => {
-        this.bufferDir.name = '';
-        this.bufferDir.parent = FileSystemService.skeleton;
-        this.bufferDir.currentForm = '';
-      });
-  }
-  makeDir(e) {
-    console.log(this.bufferDir);
+  async runFS(e) {
     e.preventDefault();
-    FileSystemService.makeDir(this.bufferDir.name, this.bufferDir.parent.dir_id)
-      .then(() => {
-        return this.refreshFiles(this.bufferDir.parent);
-      })
-      .then(() => {
-        this.bufferDir.name = '';
-        this.bufferDir.parent = FileSystemService.skeleton;
-        this.bufferDir.currentForm = '';
-      });
+    await FileSystemService[this.fsData.func](this.fsData.dir, this.fsData.name);
   }
+
   refreshFiles(dir: RecursiveSkeleton) {
-    FileSystemService.getSkeleton(dir)
-      .then(() => {
-        return FileSystemService.getChildren(dir.dir_id);
-      })
-      .then(() => {
-        this.forceRender = !this.forceRender;
-      });
+    FileSystemService.getSkeleton(dir).then(res => {
+      this.forceRender = !this.forceRender;
+    });
   }
   drawSkeleton(skel: RecursiveSkeleton) {
     if (skel.children != null) {
@@ -105,50 +86,49 @@ export class AdminUpload {
               }}
             >
               <img src="\assets\icon\3Dots-icon.svg" />
-              <div class="Upload-Dots-Wrapper">
-                <div class={{ 'Upload-Dots-Content': true, 'Toggle-Vis': child.showSettings }}>
-                  <button
-                    class="Content-Item"
-                    onClick={e => {
-                      e.stopPropagation();
-                      this.bufferDir.parent = child;
-                      this.overlayVis = true;
-                      child.showSettings = false;
-                      console.log(this.overlayVis);
-                      this.bufferDir.currentForm = 'makeDir';
-                    }}
-                  >
-                    <span>Add Collection</span>
-                  </button>
-                  <button
-                    class="Content-Item"
-                    onClick={e => {
-                      e.stopPropagation();
-                      this.overlayVis = true;
-                      // *HERE*
-                      child.showSettings = false;
-                      this.bufferDir.parent = child;
-                      this.bufferDir.currentForm = 'renameDir';
-                    }}
-                  >
-                    <span>Rename Collection</span>
-                  </button>
-                  <button
-                    class="Content-Item"
-                    onClick={e => {
-                      e.stopPropagation();
-                      FileSystemService.removeDirectory(child.dir_id).then(() => {
-                        this.refreshFiles(skel);
-                      });
-                      child.showSettings = false;
-                    }}
-                  >
-                    <span>Delete Collection</span>
-                  </button>
-                </div>
-              </div>
             </button>
+            <div class="Upload-Dots-Wrapper">
+              <div class={{ 'Upload-Dots-Content': true, 'Toggle-Vis': child.showSettings }}>
+                <button
+                  class="Content-Item"
+                  onClick={e => {
+                    e.stopPropagation();
+                    this.fsData.dir = child;
+                    this.fsData.func = 'makeDir';
+                    this.overlayVis = true;
+                    child.showSettings = false;
+                  }}
+                >
+                  <span>Add Collection</span>
+                </button>
+                <button
+                  class="Content-Item"
+                  onClick={e => {
+                    e.stopPropagation();
+                    this.fsData.dir = child;
+                    this.fsData.func = 'changeDirName';
+                    this.overlayVis = true;
+                    child.showSettings = false;
+                  }}
+                >
+                  <span>Rename Collection</span>
+                </button>
+                <button
+                  class="Content-Item"
+                  onClick={e => {
+                    e.stopPropagation();
+                    FileSystemService.removeDirectory(child.dir_id).then(() => {
+                      this.refreshFiles(skel);
+                    });
+                    child.showSettings = false;
+                  }}
+                >
+                  <span>Delete Collection</span>
+                </button>
+              </div>
+            </div>
           </button>
+
           <div class="Upload-Subcollection">{child.showSubfolders == true ? this.drawSkeleton(child) : ''}</div>
         </div>
       ));
@@ -178,7 +158,6 @@ export class AdminUpload {
             onClick={e => {
               e.stopPropagation();
               this.toggleVis = !this.toggleVis;
-              console.log(this.toggleVis);
             }}
           >
             <img src="\assets\icon\3Dots-icon.svg" />
@@ -188,10 +167,10 @@ export class AdminUpload {
                   class="Content-Item"
                   onClick={e => {
                     e.stopPropagation();
+                    this.fsData.dir = FileSystemService.skeleton;
+                    this.fsData.func = 'makeDir';
                     this.overlayVis = !this.overlayVis;
                     this.toggleVis = !this.toggleVis;
-                    console.log(this.overlayVis);
-                    this.bufferDir.currentForm = 'makeDir';
                   }}
                 >
                   <span>Add Collection</span>
@@ -206,11 +185,42 @@ export class AdminUpload {
 
       <div class="Upload-Content">
         <input class="Upload-Searchbar" type="text" placeholder="Search" />
-        <div class="Upload-Path"> COLLECTIONS &#62;&nbsp;</div>
+        <div class="Upload-Path">
+          {' '}
+          <span
+            onClick={() => {
+              FileSystemService.getChildren(null).then(() => {
+                this.forceRender = !this.forceRender;
+              });
+            }}
+          >
+            COLLECTIONS {' > '}
+          </span>
+          {FileSystemService.path.map(elem => (
+            <span
+              onClick={() => {
+                FileSystemService.getChildren(elem.dir_id).then(() => {
+                  this.forceRender = !this.forceRender;
+                });
+              }}
+            >
+              {elem.dir_name}
+              {' > '}
+            </span>
+          ))}
+        </div>
         <div class="Upload-File-Box">
           {FileSystemService.dirChildren.directories.map(child => (
             <div class="Upload-Item">
-              <img class="Upload-Outer-Image" src="\assets\icon\blank-image.svg">
+              <img
+                class="Upload-Outer-Image"
+                onClick={() => {
+                  FileSystemService.getChildren(child.dir_id).then(() => {
+                    this.forceRender = !this.forceRender;
+                  });
+                }}
+                src="\assets\icon\blank-image.svg"
+              >
                 <img class="Upload-inner-Image" src="\assets\icon\3Dots-icon.svg"></img>
               </img>
               <span class="Upload-Image-Text">{child.dir_name}</span>
@@ -230,38 +240,38 @@ export class AdminUpload {
           <button class="Upload-Button-2 Button"> Select Media</button>
         </div>
       </div>
-      <div class={{ 'Add-Overlay': true, 'Overlay-Vis': this.overlayVis }} onClick={() => (this.overlayVis = false)}>
+      <div
+        class={{ 'Add-Overlay': true, 'Overlay-Vis': this.overlayVis }}
+        onClick={() => {
+          this.fsData = { dir: null, name: '', func: '' };
+          this.overlayVis = false;
+        }}
+      >
         <form
           class="Add-Overlay-Content"
           onSubmit={e => {
             this.overlayVis = false;
-            switch (this.bufferDir.currentForm) {
-              case 'makeDir':
-                this.makeDir(e);
-                break;
-              case 'renameDir':
-                this.renameDir();
-                break;
-            }
+            this.runFS(e).then(() => {
+              this.refreshFiles(this.fsData.dir);
+              this.fsData = { dir: null, name: '', func: '' };
+            });
           }}
           onClick={e => e.stopPropagation()}
         >
           <div class="Add-Overlay-Text">
-            {this.bufferDir.currentForm == 'makeDir' ? 'Name your Collection' : 'Rename your Collection'}
+            {' '}
+            {this.fsData.func == 'makeDir' ? 'Name Your Collection' : 'Rename Your Collection'}
           </div>
 
           <input
             class="Add-Overlay-Input"
-            onInput={e => (this.bufferDir.name = (e.target as HTMLInputElement).value)}
+            onInput={e => (this.fsData.name = (e.target as HTMLInputElement).value)}
             type="text"
-            value={this.bufferDir.name}
+            value={this.fsData.name}
             required
           ></input>
-
           <div class="Add-Overlay-Buttons">
-            <input type="submit" class="Add-Overlay-Button Button-Confirm">
-              Confirm
-            </input>
+            <input type="submit" value="Confirm" class="Add-Overlay-Button Button-Confirm"></input>
             <button
               class="Add-Overlay-Button Button-Cancel"
               onClick={() => {

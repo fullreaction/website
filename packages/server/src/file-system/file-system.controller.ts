@@ -60,7 +60,10 @@ export class FileSystemController {
   async changeDirectoryName(@Body('dir_id') dir_id: number, @Body('name') name: string) {
     return await this.fileSystem.changeDirectoryName(dir_id, name);
   }
-
+  @Get('getpath/:id')
+  async getPath(@Param('id') dir_id: number) {
+    return await this.fileSystem.getPath(dir_id);
+  }
   @Delete('removedir')
   async removeDirectory(@Body('dir_id') dir_id: number) {
     return await this.fileSystem.removeDirectory(dir_id);

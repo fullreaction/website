@@ -82,7 +82,6 @@ export class FileSystemDAO {
       .database<Directory>('directories')
       .update({ dir_name: name })
       .where({ dir_id: dir_id })
-      .then(console.log)
       .catch(console.log);
   }
 
@@ -126,21 +125,43 @@ export class FileSystemDAO {
     });
     return { files, directories };
   }
+  async getPath(dir_id: number) {
+    const res = await this.db
+      .database('directories')
+      .join('relationships', 'directories.dir_id', 'relationships.parent_id')
+      .select('directories.dir_name', 'directories.dir_id')
+      .where('relationships.child_id', '=', dir_id)
+      .whereNotNull('directories.parent_id')
+      .orderBy('relationships.depth', 'desc');
 
+    return res;
+  }
   async getSkeleton(dir_id: number, owner: string) {
-    let ret: { dir_name: string; dir_id: number }[];
+    const ret: { root: { dir_name: string; dir_id: number }; children: { dir_name: string; dir_id: number }[] } = {
+      root: null,
+      children: [],
+    };
     if (dir_id == null) {
-      const rootDir = await this.db
+      ret.root = await this.db
         .database('directories')
-        .select('dir_id')
-        .where({ parent_id: null, owner: toBinaryUUID(owner as string) });
+        .select('dir_name', 'dir_id')
+        .where({ parent_id: null, owner: toBinaryUUID(owner as string) })
+        .first();
 
-      ret = await this.db
+      ret.children = await this.db
         .database<Directory>('directories')
         .select('dir_name', 'dir_id')
-        .where({ parent_id: rootDir[0].dir_id });
+        .where({ parent_id: ret.root.dir_id });
     } else {
-      ret = await this.db.database<Directory>('directories').select('dir_name', 'dir_id').where({ parent_id: dir_id });
+      ret.children = await this.db
+        .database<Directory>('directories')
+        .select('dir_name', 'dir_id')
+        .where({ parent_id: dir_id });
+      ret.root = await this.db
+        .database<Directory>('directories')
+        .select('dir_name', 'dir_id')
+        .where({ dir_id: dir_id })
+        .first();
     }
 
     return ret;

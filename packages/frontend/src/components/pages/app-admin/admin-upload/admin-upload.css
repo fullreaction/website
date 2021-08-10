@@ -9,10 +9,12 @@ RATI
 */
 
 .Upload-Content {
+  z-index: 0;
   display: flex;
   flex: 1;
   flex-direction: column;
   padding: 16px;
+  background-color: white;
 }
 .Upload-Searchbar {
   width: 78%;
@@ -149,8 +151,7 @@ RATI
 
 .Upload-Dots-Wrapper {
   position: relative;
-  top: 5px;
-  left: 5px;
+  right: 15px;
   z-index: 1;
   width: 0px;
   height: 0px;
@@ -203,8 +204,8 @@ RATI
   align-items: center;
   max-height: 40px;
   padding: 3px;
-  font-size: 14;
 
+  font-size: 14;
   cursor: pointer;
   background-color: var(--background-color);
   border: none;

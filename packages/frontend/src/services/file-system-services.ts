@@ -14,7 +14,7 @@ export class RecursiveSkeleton {
 class FileSystemServiceController {
   dirChildren: { directories: Directory[]; files: FileEntry[] };
   skeleton = new RecursiveSkeleton();
-  path = 'Collections/';
+  path: { dir_name: string; dir_id: number }[] = [];
 
   async init() {
     await this.getSkeleton(this.skeleton);
@@ -31,7 +31,6 @@ class FileSystemServiceController {
     };
 
     const res = await fetch(ROOT_URL + 'filesystem/makedir', fetchData);
-    console.log(res);
   }
   async changeDirName(directory: RecursiveSkeleton, name: string) {
     const fetchData: RequestInit = {
@@ -51,7 +50,6 @@ class FileSystemServiceController {
       credentials: 'include',
     };
     const res = await fetch(ROOT_URL + 'filesystem/removedir', fetchData);
-    console.log(res);
   }
   async getChildren(dir_id: number) {
     const user = await AuthService.getUser();
@@ -62,10 +60,19 @@ class FileSystemServiceController {
       credentials: 'include',
     };
     const res = await fetch(ROOT_URL + 'filesystem/getdir', fetchData).then(handleFetch);
-    console.log(res);
-    this.dirChildren = res;
-  }
 
+    this.dirChildren = res;
+    await this.getPath(dir_id);
+  }
+  private async getPath(dir_id: number) {
+    const fetchData: RequestInit = {
+      method: 'GET',
+      credentials: 'include',
+    };
+
+    this.path = await fetch(ROOT_URL + 'filesystem/getpath/' + dir_id, fetchData).then(handleFetch);
+    console.log(this.path);
+  }
   async getSkeleton(skel: RecursiveSkeleton) {
     const user = await AuthService.getUser();
     const fetchData: RequestInit = {
@@ -74,12 +81,11 @@ class FileSystemServiceController {
       body: JSON.stringify({ dir_id: skel.dir_id, owner: user.user_id }),
       credentials: 'include',
     };
-
     const res = await fetch(ROOT_URL + 'filesystem/getskel', fetchData).then(handleFetch);
-    if (skel.dir_id == null) this.dirChildren = res;
-    console.log(res);
-    skel.children = res.map(val => {
-      return { dir_id: val.dir_id, dir_name: val.dir_name, parent: skel };
+
+    skel.dir_name = res.root.dir_name;
+    skel.children = res.children.map(val => {
+      return { dir_id: val.dir_id, dir_name: val.dir_name };
     });
 
     return res;

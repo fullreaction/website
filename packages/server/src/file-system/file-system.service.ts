@@ -35,7 +35,9 @@ export class FileSystemService {
   async getChildren(dir_id: number, owner: string) {
     return await this.fileSystemDAO.getChildren(dir_id, owner);
   }
-
+  async getPath(dir_id: number) {
+    return await this.fileSystemDAO.getPath(dir_id);
+  }
   async getSkeleton(dir_id: number, owner: string) {
     return await this.fileSystemDAO.getSkeleton(dir_id, owner);
   }

@@ -8,7 +8,6 @@ export class RecursiveSkeleton {
   dir_name: string;
   dir_id: number;
   showSubfolders = false;
-  showSettings = false;
   children: RecursiveSkeleton[] = [];
 }
 
@@ -52,22 +51,22 @@ class FileSystemServiceController {
       .catch(console.log);
   }
 
-  async makeDir(parent: RecursiveSkeleton, dir_name: string) {
+  async makeDir(parent_id: number, dir_name: string) {
     const user = await AuthService.getUser();
     const fetchData: RequestInit = {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ dir_name: dir_name, owner: user.user_id, parent_id: parent.dir_id }),
+      body: JSON.stringify({ dir_name: dir_name, owner: user.user_id, parent_id: parent_id }),
       credentials: 'include',
     };
 
-    const res = await fetch(ROOT_URL + 'filesystem/makedir', fetchData);
+    await fetch(ROOT_URL + 'filesystem/makedir', fetchData);
   }
-  async changeDirName(directory: RecursiveSkeleton, name: string) {
+  async changeDirName(dir_id: number, name: string) {
     const fetchData: RequestInit = {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ dir_id: directory.dir_id, name: name }),
+      body: JSON.stringify({ dir_id: dir_id, name: name }),
       credentials: 'include',
     };
     await fetch(ROOT_URL + 'filesystem/changedirname', fetchData);

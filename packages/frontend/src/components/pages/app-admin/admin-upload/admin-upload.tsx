@@ -184,6 +184,7 @@ export class AdminUpload {
         <div class="Upload-Path">
           {' '}
           <span
+            class="Upload-PathElement"
             onClick={() => {
               FileSystemService.getChildren(null).then(() => {
                 this.forceRender = !this.forceRender;
@@ -193,15 +194,18 @@ export class AdminUpload {
             COLLECTIONS
           </span>
           {FileSystemService.path.map(elem => (
-            <span
-              onClick={() => {
-                FileSystemService.getChildren(elem.dir_id).then(() => {
-                  this.forceRender = !this.forceRender;
-                });
-              }}
-            >
+            <span class="Upload-PathArrow">
               {' > '}
-              {elem.dir_name}
+              <span
+                class="Upload-PathElement"
+                onClick={() => {
+                  FileSystemService.getChildren(elem.dir_id).then(() => {
+                    this.forceRender = !this.forceRender;
+                  });
+                }}
+              >
+                {elem.dir_name}
+              </span>
             </span>
           ))}
         </div>

@@ -34,6 +34,22 @@ RATI
   font-weight: bold;
 }
 
+.Upload-PathElement {
+  padding: 4px;
+  text-decoration: none;
+  cursor: pointer;
+  transition-duration: 0.2s;
+}
+
+.Upload-PathElement:hover {
+  color: var(--primary-color);
+}
+
+.Upload-PathArrow {
+  text-decoration: none;
+  cursor: default;
+}
+
 .Upload-File-Box {
   display: flex;
   flex: 1 1 1;

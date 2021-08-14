@@ -32,7 +32,7 @@ export class AuthController {
   @Post('register')
   async registerUser(@Body('email') email: string, @Body('password') password: string) {
     const user = await this.authService.addUser(email, password);
-    this.fileSystem.initUser(user.user_email);
+    this.fileSystem.initUser(user);
 
     return { id: user.user_id, email: user.user_email };
   }

@@ -4,12 +4,14 @@ import { FileEntry } from '../../../../models/upload.models';
 import { FileSystemService, RecursiveSkeleton } from '../../../../services/file-system-services';
 
 /*
-  Get items alphabetically
-  Directories can't have duplicate names, they merge
+
+  Fix name duplications
   Downloading directories as zip
 
-  Path Stylization
-  Folder icon
+
+
+  Icons by mimetype
+  Refreshing
 
 */
 
@@ -24,23 +26,16 @@ export class AdminUpload {
   @State() fileArray: FileEntry[] = [];
   @Event({
     eventName: 'cancelMedia',
-    composed: true,
-    cancelable: true,
-    bubbles: true,
   })
   cancelMedia: EventEmitter;
+  @Event({
+    eventName: 'selectMedia',
+  })
+  selectMedia: EventEmitter;
 
   cancelMediaHandler() {
     this.cancelMedia.emit();
   }
-
-  @Event({
-    eventName: 'selectMedia',
-    composed: true,
-    cancelable: true,
-    bubbles: true,
-  })
-  selectMedia: EventEmitter;
 
   selectMediaHandler() {
     this.selectMedia.emit();
@@ -93,6 +88,7 @@ export class AdminUpload {
               class="Upload-ArrowWrapper"
               onClick={e => {
                 e.stopPropagation();
+
                 if (child.children == null)
                   FileSystemService.getSkeleton(child).then(() => {
                     child.showSubfolders = true;
@@ -102,6 +98,7 @@ export class AdminUpload {
                 else {
                   child.showSubfolders = !child.showSubfolders;
                   this.forceRender = !this.forceRender;
+                  console.log(child);
                 }
               }}
             >
@@ -141,6 +138,7 @@ export class AdminUpload {
                       e.stopPropagation();
                       FileSystemService.removeDirectory(child.dir_id).then(() => {
                         this.refreshDirectories();
+                        this.forceRender = !this.forceRender;
                       });
                     }}
                   >
@@ -377,7 +375,6 @@ export class AdminUpload {
                   this.refreshDirectories();
                 })
                 .then(() => {
-                  this.forceRender = !this.forceRender;
                   this.fsData = { id: null, name: '', func: '' };
                 });
             }

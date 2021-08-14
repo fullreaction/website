@@ -1,6 +1,7 @@
 import { HttpException, Injectable } from '@nestjs/common';
 import { fromBinaryUUID, toBinaryUUID } from 'binary-uuid';
 import { unlink } from 'fs';
+import { User } from 'src/auth/users/user.model';
 
 import { Directory, FileEntry } from 'src/file-system/file-system.models';
 
@@ -13,14 +14,14 @@ export class FileSystemDAO {
   constructor(private db: DatabaseService) {}
 
   // Done
-  async initUser(email: string) {
-    const owner = await this.db.database('users').select('user_id').where({ user_email: email });
+  async initUser(user: User) {
+    console.log('runs');
     await this.db
       .database('directories')
       .insert({
-        dir_name: email,
+        dir_name: user.user_email,
         parent_id: null,
-        owner: owner,
+        owner: toBinaryUUID(user.user_id as string),
       })
       .catch(console.log);
   }
@@ -116,15 +117,28 @@ export class FileSystemDAO {
         .database('directories')
         .select('dir_id')
         .where({ parent_id: null, owner: toBinaryUUID(owner as string) });
-      directories = await this.db.database<Directory>('directories').where('parent_id', '=', rootDir[0].dir_id);
-      files = await this.db.database<FileEntry>('files').where('parent_id', '=', rootDir[0].dir_id);
+      directories = await this.db
+        .database<Directory>('directories')
+        .select('*')
+        .where('parent_id', '=', rootDir[0].dir_id)
+        .orderBy('dir_name', 'asc');
+      files = await this.db
+        .database<FileEntry>('files')
+        .select('file_id', 'file_name', 'owner', 'parent_id')
+        .where('parent_id', '=', rootDir[0].dir_id)
+        .orderBy('file_name', 'asc');
     } else {
-      directories = await this.db.database<Directory>('directories').where('parent_id', '=', dir_id);
+      directories = await this.db
+        .database<Directory>('directories')
+        .select('*')
+        .where('parent_id', '=', dir_id)
+        .orderBy('dir_name', 'asc');
 
       files = await this.db
         .database<FileEntry>('files')
+        .select('file_id', 'file_name', 'owner', 'parent_id')
         .where('parent_id', '=', dir_id)
-        .select('file_id', 'file_name', 'owner', 'parent_id');
+        .orderBy('file_name', 'asc');
     }
     directories.forEach((item) => {
       item.owner = fromBinaryUUID(item.owner as Buffer);
@@ -134,6 +148,7 @@ export class FileSystemDAO {
     });
     return { files, directories };
   }
+
   async getPath(dir_id: number) {
     const res = await this.db
       .database('directories')
@@ -160,12 +175,14 @@ export class FileSystemDAO {
       ret.children = await this.db
         .database<Directory>('directories')
         .select('dir_name', 'dir_id')
-        .where({ parent_id: ret.root.dir_id });
+        .where({ parent_id: ret.root.dir_id })
+        .orderBy('dir_name', 'asc');
     } else {
       ret.children = await this.db
         .database<Directory>('directories')
         .select('dir_name', 'dir_id')
-        .where({ parent_id: dir_id });
+        .where({ parent_id: dir_id })
+        .orderBy('dir_name', 'asc');
       ret.root = await this.db
         .database<Directory>('directories')
         .select('dir_name', 'dir_id')

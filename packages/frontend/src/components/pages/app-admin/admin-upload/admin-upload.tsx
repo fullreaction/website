@@ -1,4 +1,4 @@
-import { Component, h, Host, State } from '@stencil/core';
+import { Component, h, Host, State, Event, EventEmitter } from '@stencil/core';
 
 import { FileSystemService, RecursiveSkeleton } from '../../../../services/file-system-services';
 
@@ -20,6 +20,29 @@ export class AdminUpload {
   @State() overlayVis = false;
   @State() forceRender = false;
   @State() searchWord = '';
+  @Event({
+    eventName: 'cancelMedia',
+    composed: true,
+    cancelable: true,
+    bubbles: true,
+  })
+  cancelMedia: EventEmitter;
+
+  cancelMediaHandler() {
+    this.cancelMedia.emit();
+  }
+
+  @Event({
+    eventName: 'selectMedia',
+    composed: true,
+    cancelable: true,
+    bubbles: true,
+  })
+  selectMedia: EventEmitter;
+
+  selectMediaHandler() {
+    this.selectMedia.emit();
+  }
 
   private file: File;
   private fsData: { name: string; id: number; func: string };
@@ -312,8 +335,23 @@ export class AdminUpload {
           })}
         </div>
         <div class="Upload-Button-Box">
-          <button class="Upload-Button-1">Cancel</button>
-          <button class="Upload-Button-2 Button"> Select Media</button>
+          <button
+            class="Upload-Button-1"
+            onClick={() => {
+              this.cancelMediaHandler();
+            }}
+          >
+            Cancel
+          </button>
+          <button
+            class="Upload-Button-2 Button"
+            onClick={() => {
+              this.selectMediaHandler();
+            }}
+          >
+            {' '}
+            Select Media
+          </button>
         </div>
       </div>
       <div

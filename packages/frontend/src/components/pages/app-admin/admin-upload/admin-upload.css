@@ -35,10 +35,11 @@ RATI
 }
 
 .Upload-PathElement {
-  padding: 4px;
+  padding: 2px;
+  margin: 2px;
   text-decoration: none;
   cursor: pointer;
-  transition-duration: 0.2s;
+  transition-duration: 0.1s;
 }
 
 .Upload-PathElement:hover {

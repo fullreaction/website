@@ -62,6 +62,10 @@ RATI
   margin-bottom: 8px;
   cursor: pointer;
 }
+.Highlight-File {
+  background-color: #d8d8d85e;
+  border-radius: 5px;
+}
 .Upload-Inner-Image {
   display: flex;
   align-items: center;

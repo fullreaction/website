@@ -29,7 +29,7 @@ export class FileSystemController {
   }
 
   @Patch('changefilename')
-  async changeFileName(file_id: number, name: string) {
+  async changeFileName(@Body('file_id') file_id: number, @Body('name') name: string) {
     this.fileSystem.changeFileName(file_id, name);
   }
 

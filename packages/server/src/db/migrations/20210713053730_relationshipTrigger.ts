@@ -90,6 +90,23 @@ export async function up(knex: Knex): Promise<void> {
       END`,
     )
     .then(console.log);
+
+  knex
+    .raw(
+      `CREATE TRIGGER generate_mimetype AFTER UPDATE ON files
+      FOR EACH ROW
+      BEGIN
+        DECLARE mime_ STRING DEFAULT ' ';
+        DECLARE second_ STRING DEFAULT ' ';
+        SELECT REVERSE(SUBSTRING_INDEX(REVERSE(NEW.file_name), '.', 1)) INTO mime_;
+        SELECT REVERSE(SUBSTRING_INDEX(REVERSE(NEW.file_name), '.', 2)) INTO second_;
+
+        IF second_<>null
+			    SET NEW.file_type=mime_;
+        END IF;
+      END`,
+    )
+    .then(console.log);
 }
 
 export async function down(knex: Knex): Promise<void> {
@@ -102,4 +119,5 @@ export async function down(knex: Knex): Promise<void> {
   knex.raw('DROP TRIGGER IF EXISTS file_upd_name_duplication').catch(console.log);
 
   knex.raw('DROP PROCEDURE IF EXISTS count_name_duplicates').catch(console.log);
+  knex.raw('DROP TRIGGER IF EXISTS generate_mimetype');
 }

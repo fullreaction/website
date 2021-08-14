@@ -50,6 +50,30 @@ class FileSystemServiceController {
       .then(console.log)
       .catch(console.log);
   }
+  async changeFileName(file_id: number, name: string) {
+    const fetchData: RequestInit = {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ file_id, name }),
+      credentials: 'include',
+    };
+
+    fetch(ROOT_URL + 'filesystem/changefilename', fetchData)
+      .then(handleFetch)
+      .then(console.log)
+      .catch(console.log);
+  }
+  async deleteFile(file_id: number) {
+    const fetchData: RequestInit = {
+      method: 'Delete',
+      credentials: 'include',
+    };
+
+    fetch(ROOT_URL + 'filesystem/deletefile/' + file_id, fetchData)
+      .then(handleFetch)
+      .then(console.log)
+      .catch(console.log);
+  }
 
   async makeDir(parent_id: number, dir_name: string) {
     const user = await AuthService.getUser();

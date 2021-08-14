@@ -22,28 +22,24 @@ export class AdminUpload {
   @State() searchWord = '';
 
   private file: File;
-  private fsData: { name: string; dir_id: number; func: string };
+  private fsData: { name: string; id: number; func: string };
 
   componentWillLoad() {
     return FileSystemService.init().then(() => {
-      this.fsData = { name: '', dir_id: FileSystemService.skeleton.dir_id, func: '' };
+      this.fsData = { name: '', id: FileSystemService.skeleton.dir_id, func: '' };
     });
   }
   async runFS(e) {
     e.preventDefault();
-    await FileSystemService[this.fsData.func](this.fsData.dir_id, this.fsData.name);
+    await FileSystemService[this.fsData.func](this.fsData.id, this.fsData.name);
   }
 
   onFileChange(e) {
     if (e.target.files.length != null) {
       this.file = e.target.files[0];
-      FileSystemService.uploadFile(this.file, FileSystemService.currentDir)
-        .then(() => {
-          return FileSystemService.getChildren(FileSystemService.currentDir);
-        })
-        .then(() => {
-          this.forceRender = !this.forceRender;
-        });
+      FileSystemService.uploadFile(this.file, FileSystemService.currentDir).then(() => {
+        this.refreshDirectories();
+      });
     }
   }
 
@@ -95,7 +91,7 @@ export class AdminUpload {
                     class="Content-Item"
                     onClick={e => {
                       e.stopPropagation();
-                      this.fsData.dir_id = child.dir_id;
+                      this.fsData.id = child.dir_id;
 
                       this.fsData.func = 'makeDir';
                       this.overlayVis = true;
@@ -107,7 +103,7 @@ export class AdminUpload {
                     class="Content-Item"
                     onClick={e => {
                       e.stopPropagation();
-                      this.fsData.dir_id = child.dir_id;
+                      this.fsData.id = child.dir_id;
                       this.fsData.func = 'changeDirName';
 
                       this.overlayVis = true;
@@ -161,7 +157,7 @@ export class AdminUpload {
                   class="Content-Item"
                   onClick={e => {
                     e.stopPropagation();
-                    this.fsData.dir_id = FileSystemService.skeleton.dir_id;
+                    this.fsData.id = FileSystemService.skeleton.dir_id;
                     this.fsData.func = 'makeDir';
 
                     this.overlayVis = !this.overlayVis;
@@ -194,7 +190,7 @@ export class AdminUpload {
               });
             }}
           >
-            COLLECTIONS {' > '}
+            COLLECTIONS
           </span>
           {FileSystemService.path.map(elem => (
             <span
@@ -204,8 +200,8 @@ export class AdminUpload {
                 });
               }}
             >
-              {elem.dir_name}
               {' > '}
+              {elem.dir_name}
             </span>
           ))}
         </div>
@@ -236,7 +232,7 @@ export class AdminUpload {
                             class="Content-Item"
                             onClick={e => {
                               e.stopPropagation();
-                              this.fsData.dir_id = child.dir_id;
+                              this.fsData.id = child.dir_id;
                               this.fsData.func = 'changeDirName';
 
                               this.overlayVis = true;
@@ -287,21 +283,12 @@ export class AdminUpload {
                             class="Content-Item"
                             onClick={e => {
                               e.stopPropagation();
-
+                              this.fsData.func = 'changeFileName';
+                              this.fsData.id = child.file_id;
                               this.overlayVis = true;
                             }}
                           >
-                            <span>Add Collection</span>
-                          </button>
-                          <button
-                            class="Content-Item"
-                            onClick={e => {
-                              e.stopPropagation();
-
-                              this.overlayVis = true;
-                            }}
-                          >
-                            <span>Rename Collection</span>
+                            <span>Rename File</span>
                           </button>
                           <button
                             class="Content-Item"
@@ -309,7 +296,7 @@ export class AdminUpload {
                               e.stopPropagation();
                             }}
                           >
-                            <span>Delete Collection</span>
+                            <span>Delete File</span>
                           </button>
                         </div>
                       </div>
@@ -328,7 +315,7 @@ export class AdminUpload {
       <div
         class={{ 'Add-Overlay': true, 'Overlay-Vis': this.overlayVis }}
         onClick={() => {
-          this.fsData = { dir_id: null, name: '', func: '' };
+          this.fsData = { id: null, name: '', func: '' };
           this.overlayVis = false;
         }}
       >
@@ -342,7 +329,7 @@ export class AdminUpload {
               })
               .then(() => {
                 this.forceRender = !this.forceRender;
-                this.fsData = { dir_id: null, name: '', func: '' };
+                this.fsData = { id: null, name: '', func: '' };
               });
           }}
           onClick={e => e.stopPropagation()}

@@ -55,7 +55,7 @@ export class FileSystemDAO {
   }
 
   async changeFileName(file_id: number, name: string) {
-    this.db.database<FileEntry>('files').update({ file_name: name }).where({ file_id: file_id });
+    await this.db.database<FileEntry>('files').where({ file_id: file_id }).update({ file_name: name });
   }
 
   async removeFile(file_id: number) {

@@ -16,6 +16,7 @@ export async function up(knex: Knex): Promise<void> {
       table.increments('file_id').primary().unique().notNullable();
       table.string('file_name').notNullable();
       table.string('file_path').notNullable();
+      table.string('file_type');
       table.integer('parent_id').unsigned().notNullable();
       table.binary('owner', 16);
 

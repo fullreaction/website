@@ -11,7 +11,7 @@ export class FileSystemService {
   }
 
   async addFile(file: Express.Multer.File, dir_id: number, owner: string) {
-    this.fileSystemDAO.addFile(file, dir_id, owner);
+    await this.fileSystemDAO.addFile(file, dir_id, owner);
   }
   async getFile(file_id: number) {
     return await this.fileSystemDAO.getFile(file_id);

@@ -234,7 +234,6 @@ export class AdminUpload {
                               e.stopPropagation();
                               this.fsData.id = child.dir_id;
                               this.fsData.func = 'changeDirName';
-
                               this.overlayVis = true;
                             }}
                           >
@@ -294,6 +293,9 @@ export class AdminUpload {
                             class="Content-Item"
                             onClick={e => {
                               e.stopPropagation();
+                              FileSystemService.deleteFile(child.file_id).then(() => {
+                                this.refreshDirectories();
+                              });
                             }}
                           >
                             <span>Delete File</span>

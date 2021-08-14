@@ -60,7 +60,7 @@ export class FileSystemDAO {
 
   async removeFile(file_id: number) {
     const fPath = await this.db.database<FileEntry>('files').where({ file_id: file_id }).select('file_path');
-    this.db.database<FileEntry>('fies').where({ file_id: file_id }).delete('*');
+    await this.db.database<FileEntry>('files').where({ file_id: file_id }).delete('*');
     unlink(fPath[0].file_path, (err) => {
       if (err) console.log(err);
     });

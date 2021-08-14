@@ -35,7 +35,7 @@ export class FileSystemController {
 
   @Delete('deletefile/:id')
   async removeFile(@Param('id') file_id: number) {
-    this.fileSystem.removeFile(file_id);
+    await this.fileSystem.removeFile(file_id);
   }
 
   @Post('getdir')

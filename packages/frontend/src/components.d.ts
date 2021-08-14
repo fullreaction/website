@@ -212,6 +212,8 @@ declare namespace LocalJSX {
     interface AdminTable {
     }
     interface AdminUpload {
+        "onCancelMedia"?: (event: CustomEvent<any>) => void;
+        "onSelectMedia"?: (event: CustomEvent<any>) => void;
     }
     interface AppAuth {
     }

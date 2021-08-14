@@ -14,7 +14,7 @@ export class FileSystemDAO {
 
   // Done
   async initUser(email: string) {
-    const owner = this.db.database('users').select('user_id').where({ user_email: email });
+    const owner = await this.db.database('users').select('user_id').where({ user_email: email });
     await this.db
       .database('directories')
       .insert({
@@ -36,7 +36,7 @@ export class FileSystemDAO {
       console.log(res);
     }
     console.log(dir_id);
-    this.db
+    await this.db
       .database('files')
       .insert({
         file_name: file.originalname,
@@ -60,7 +60,7 @@ export class FileSystemDAO {
 
   async removeFile(file_id: number) {
     const fPath = await this.db.database<FileEntry>('files').where({ file_id: file_id }).select('file_path');
-    this.db.database<FileEntry>('fies').where({ file_id: file_id }).delete('*');
+    await this.db.database<FileEntry>('files').where({ file_id: file_id }).delete('*');
     unlink(fPath[0].file_path, (err) => {
       if (err) console.log(err);
     });

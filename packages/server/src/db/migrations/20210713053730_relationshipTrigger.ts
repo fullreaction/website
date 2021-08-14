@@ -21,7 +21,7 @@ export async function up(knex: Knex): Promise<void> {
       WHERE p.child_id=NEW.parent_id and c.parent_id=NEW.dir_id;
 	END`,
     )
-    .then(console.log);
+    .catch(console.log);
 
   knex
     .raw(
@@ -37,7 +37,7 @@ export async function up(knex: Knex): Promise<void> {
     ) AS tmp_table;
   END`,
     )
-    .then(console.log);
+    .catch(console.log);
   knex
     .raw(
       `CREATE TRIGGER dir_name_duplication BEFORE INSERT ON directories
@@ -50,7 +50,7 @@ export async function up(knex: Knex): Promise<void> {
         END IF;
       END`,
     )
-    .then(console.log);
+    .catch(console.log);
   knex
     .raw(
       `CREATE TRIGGER dir_upd_name_duplication BEFORE UPDATE ON directories
@@ -63,7 +63,7 @@ export async function up(knex: Knex): Promise<void> {
         END IF;
       END`,
     )
-    .then(console.log);
+    .catch(console.log);
   knex
     .raw(
       `CREATE TRIGGER file_name_duplication BEFORE INSERT ON files
@@ -76,7 +76,7 @@ export async function up(knex: Knex): Promise<void> {
         END IF;
       END`,
     )
-    .then(console.log);
+    .catch(console.log);
   knex
     .raw(
       `CREATE TRIGGER file_upd_name_duplication BEFORE UPDATE ON files
@@ -89,24 +89,18 @@ export async function up(knex: Knex): Promise<void> {
         END IF;
       END`,
     )
-    .then(console.log);
-
+    .catch(console.log);
   knex
     .raw(
-      `CREATE TRIGGER generate_mimetype AFTER UPDATE ON files
+      `CREATE TRIGGER generate_mimetype_ins BEFORE INSERT ON files
       FOR EACH ROW
       BEGIN
-        DECLARE mime_ STRING DEFAULT ' ';
-        DECLARE second_ STRING DEFAULT ' ';
-        SELECT REVERSE(SUBSTRING_INDEX(REVERSE(NEW.file_name), '.', 1)) INTO mime_;
-        SELECT REVERSE(SUBSTRING_INDEX(REVERSE(NEW.file_name), '.', 2)) INTO second_;
-
-        IF second_<>null
-			    SET NEW.file_type=mime_;
-        END IF;
+        IF REVERSE(SUBSTRING_INDEX(REVERSE(NEW.file_name), '.', 1)) <> NEW.file_name THEN
+            SET NEW.file_type = REVERSE(SUBSTRING_INDEX(REVERSE(NEW.file_name), '.', 1));
+          END IF;
       END`,
     )
-    .then(console.log);
+    .catch(console.log);
 }
 
 export async function down(knex: Knex): Promise<void> {
@@ -119,5 +113,5 @@ export async function down(knex: Knex): Promise<void> {
   knex.raw('DROP TRIGGER IF EXISTS file_upd_name_duplication').catch(console.log);
 
   knex.raw('DROP PROCEDURE IF EXISTS count_name_duplicates').catch(console.log);
-  knex.raw('DROP TRIGGER IF EXISTS generate_mimetype');
+  knex.raw('DROP TRIGGER IF EXISTS generate_mimetype_ins');
 }

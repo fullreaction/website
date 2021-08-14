@@ -17,10 +17,10 @@ export class FileSystemService {
     return await this.fileSystemDAO.getFile(file_id);
   }
   async changeFileName(file_id: number, name: string) {
-    this.fileSystemDAO.changeFileName(file_id, name);
+    await this.fileSystemDAO.changeFileName(file_id, name);
   }
   async removeFile(file_id: number) {
-    this.fileSystemDAO.removeFile(file_id);
+    await this.fileSystemDAO.removeFile(file_id);
   }
   async addDirectory(dir_name: string, owner: string, parent_id: number) {
     await this.fileSystemDAO.addDirectory(dir_name, owner, parent_id);

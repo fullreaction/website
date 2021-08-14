@@ -104,10 +104,8 @@ RATI
   background-color: #ffffff;
   border: 1px solid;
   border-color: #ff593d;
-  border-radius: 3px;
 }
 .Upload-Button-1:hover {
-  cursor: pointer;
   background-color: #f8f4f4;
 }
 .Upload-Button-2 {

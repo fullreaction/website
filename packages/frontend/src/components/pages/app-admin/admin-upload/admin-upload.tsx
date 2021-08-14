@@ -322,15 +322,17 @@ export class AdminUpload {
         <form
           class="Add-Overlay-Content"
           onSubmit={e => {
-            this.overlayVis = false;
-            this.runFS(e)
-              .then(() => {
-                this.refreshDirectories();
-              })
-              .then(() => {
-                this.forceRender = !this.forceRender;
-                this.fsData = { id: null, name: '', func: '' };
-              });
+            if (this.overlayVis) {
+              this.overlayVis = false;
+              this.runFS(e)
+                .then(() => {
+                  this.refreshDirectories();
+                })
+                .then(() => {
+                  this.forceRender = !this.forceRender;
+                  this.fsData = { id: null, name: '', func: '' };
+                });
+            }
           }}
           onClick={e => e.stopPropagation()}
         >
@@ -351,7 +353,7 @@ export class AdminUpload {
             <button
               class="Add-Overlay-Button Button-Cancel"
               onClick={() => {
-                this.overlayVis = !this.overlayVis;
+                this.overlayVis = false;
               }}
             >
               Cancel

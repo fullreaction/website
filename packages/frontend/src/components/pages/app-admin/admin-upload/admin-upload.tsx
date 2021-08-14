@@ -1,4 +1,5 @@
 import { Component, h, Host, State } from '@stencil/core';
+import { FileEntry } from '../../../../models/upload.models';
 
 import { FileSystemService, RecursiveSkeleton } from '../../../../services/file-system-services';
 
@@ -20,6 +21,7 @@ export class AdminUpload {
   @State() overlayVis = false;
   @State() forceRender = false;
   @State() searchWord = '';
+  @State() fileArray: FileEntry[] = [];
 
   private file: File;
   private fsData: { name: string; id: number; func: string };
@@ -92,7 +94,6 @@ export class AdminUpload {
                     onClick={e => {
                       e.stopPropagation();
                       this.fsData.id = child.dir_id;
-
                       this.fsData.func = 'makeDir';
                       this.overlayVis = true;
                     }}
@@ -265,12 +266,15 @@ export class AdminUpload {
                 this.forceRender != null)
             )
               return (
-                <div class="Upload-Item">
+                <div class={{ 'Upload-Item': true, 'Highlight-File': this.fileArray.includes(child) ? true : false }}>
                   <div class="Upload-Icon">
                     <img
                       class="Upload-Outer-Image"
                       onClick={() => {
-                        FileSystemService.getFile(child);
+                        if (!this.fileArray.includes(child)) {
+                          this.fileArray.push(child);
+                        } else this.fileArray = [...this.fileArray.filter(value => value.file_id != child.file_id)];
+                        this.forceRender = !this.forceRender;
                       }}
                       src="\assets\icon\blank-image.svg"
                     ></img>

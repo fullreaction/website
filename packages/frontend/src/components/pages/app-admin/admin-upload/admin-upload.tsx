@@ -29,6 +29,7 @@ export class AdminUpload {
   @State() forceRender = false;
   @State() searchWord = '';
   @State() fileArray: FileEntry[] = [];
+  @State() overflowVis = false;
   @Event({
     eventName: 'cancelMedia',
   })
@@ -247,7 +248,7 @@ export class AdminUpload {
                 <div class="Upload-Item">
                   <div class="Upload-Icon">
                     <img
-                      class="Upload-Outer-Image"
+                      class={{ 'Upload-Outer-Image': true }}
                       onClick={() => {
                         FileSystemService.getChildren(child.dir_id).then(() => {
                           this.forceRender = !this.forceRender;

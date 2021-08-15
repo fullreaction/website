@@ -59,11 +59,15 @@ RATI
 
 .Upload-Image-Text {
   width: 100px;
+  height: 20px;
   overflow: hidden;
   font-size: smaller;
   text-align: center;
+  text-decoration: none;
   text-overflow: ellipsis;
   list-style-type: none;
+  -moz-user-select: none;
+  -webkit-user-select: none;
 }
 
 .Upload-Item {
@@ -72,12 +76,17 @@ RATI
   align-items: center;
   justify-content: center;
   padding: 16px;
+  margin-right: 8px;
+  -moz-user-select: none;
+  -webkit-user-select: none;
 }
 
 .Upload-Outer-Image {
   align-self: center;
   margin-bottom: 8px;
   cursor: pointer;
+  -moz-user-select: none;
+  -webkit-user-select: none;
 }
 .Highlight-File {
   background-color: #d8d8d85e;
@@ -88,7 +97,7 @@ RATI
   align-items: center;
   height: 24px;
   margin-top: 2px;
-  margin-left: -28px;
+  margin-left: -30px;
   cursor: default;
   background-color: transparent;
   border: none;
@@ -98,6 +107,9 @@ RATI
 }
 .Upload-Icon {
   display: flex;
+  margin-left: -8px;
+  -moz-user-select: none;
+  -webkit-user-select: none;
 }
 .Upload-Inner-Image:hover {
   cursor: pointer;

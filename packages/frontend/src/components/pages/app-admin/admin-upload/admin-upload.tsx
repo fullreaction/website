@@ -253,7 +253,7 @@ export class AdminUpload {
                           this.forceRender = !this.forceRender;
                         });
                       }}
-                      src="\assets\icon\blank-image.svg"
+                      src="\assets\icon\Folder-Image.svg"
                     ></img>
                     <div class="Upload-Inner-Image">
                       <img src="\assets\icon\3Dots-icon.svg" onClick={e => e.stopPropagation()}></img>

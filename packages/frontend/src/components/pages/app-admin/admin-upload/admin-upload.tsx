@@ -36,14 +36,14 @@ export class AdminUpload {
   @Event({
     eventName: 'selectMedia',
   })
-  selectMedia: EventEmitter;
+  selectMedia: EventEmitter<FileEntry[]>;
 
   cancelMediaHandler() {
     this.cancelMedia.emit();
   }
 
   selectMediaHandler() {
-    this.selectMedia.emit();
+    this.selectMedia.emit(this.fileArray);
   }
 
   private file: File;

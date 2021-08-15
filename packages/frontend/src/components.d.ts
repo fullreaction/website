@@ -5,6 +5,7 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
+import { FileEntry } from "./models/upload.models";
 import { ValidationErrors } from "./utils/form";
 export namespace Components {
     interface AdminTable {
@@ -213,7 +214,7 @@ declare namespace LocalJSX {
     }
     interface AdminUpload {
         "onCancelMedia"?: (event: CustomEvent<any>) => void;
-        "onSelectMedia"?: (event: CustomEvent<any>) => void;
+        "onSelectMedia"?: (event: CustomEvent<FileEntry[]>) => void;
     }
     interface AppAuth {
     }

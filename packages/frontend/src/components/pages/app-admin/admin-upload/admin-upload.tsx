@@ -6,12 +6,17 @@ import { FileSystemService, RecursiveSkeleton } from '../../../../services/file-
 /*
 
   Fix name duplications
-  Downloading directories as zip
 
 
 
   Icons by mimetype
   Refreshing
+  wrap up events
+
+
+
+  Downloading directories as zip
+  Uploading folders
 
 */
 

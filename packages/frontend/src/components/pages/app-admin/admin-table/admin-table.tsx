@@ -184,6 +184,7 @@ export class AdminTable {
           </tr>
         ))}
       </table>
+      <admin-upload onSelectMedia={console.log}></admin-upload>
     </Host>
   );
 }

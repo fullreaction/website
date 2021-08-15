@@ -150,16 +150,15 @@ class FileSystemServiceController {
 
     this.dirChildren = res;
     this.currentDir = dir_id;
-    await this.getPath(dir_id);
+    this.path = await this.getPath(dir_id);
   }
-  private async getPath(dir_id: number) {
+  private async getPath(dir_id: number): Promise<{ dir_name: string; dir_id: number }[]> {
     const fetchData: RequestInit = {
       method: 'GET',
       credentials: 'include',
     };
 
-    this.path = await fetch(ROOT_URL + 'filesystem/getpath/' + dir_id, fetchData).then(handleFetch);
-    console.log(this.path);
+    return await fetch(ROOT_URL + 'filesystem/getpath/' + dir_id, fetchData).then(handleFetch);
   }
   async getSkeleton(skel: RecursiveSkeleton) {
     const user = await AuthService.getUser();
@@ -178,6 +177,20 @@ class FileSystemServiceController {
     });
 
     return res;
+  }
+
+  async findSkeleton(dir_id: number) {
+    console.log('BEGUN');
+
+    const path = await this.getPath(dir_id);
+
+    let skel: RecursiveSkeleton = this.skeleton;
+    for (const elem of path) {
+      console.log(elem);
+      skel = skel.children.find(child => (child.dir_id = elem.dir_id));
+    }
+
+    return skel;
   }
 }
 export const FileSystemService = new FileSystemServiceController();

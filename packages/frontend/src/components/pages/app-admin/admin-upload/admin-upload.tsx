@@ -9,10 +9,8 @@ import { FileSystemService, RecursiveSkeleton } from '../../../../services/file-
   Icons by mimetype
 
   redo popups
-  deleting files from server
 
   Uploading folders (scrapped)
-
 */
 
 @Component({
@@ -59,109 +57,112 @@ export class AdminUpload {
     if (e.target.files.length != null) {
       this.file = e.target.files[0];
       FileSystemService.uploadFile(this.file, FileSystemService.currentDir).then(() => {
-        this.refreshDirectories();
-        this.forceRender = !this.forceRender;
+        FileSystemService.getChildren(FileSystemService.currentDir);
       });
     }
   }
 
-  refreshDirectories() {
-    FileSystemService.getSkeleton(FileSystemService.skeleton)
-      .then(() => {
-        return FileSystemService.getChildren(FileSystemService.currentDir);
-      })
-      .then(() => {
-        this.forceRender = !this.forceRender;
-      });
+  refreshDirectories(skel: RecursiveSkeleton | number) {
+    if (typeof skel == 'number') {
+      FileSystemService.findSkeleton(skel)
+        .then(res => {
+          return FileSystemService.getSkeleton(res);
+        })
+        .then(() => {
+          return FileSystemService.getChildren(FileSystemService.currentDir);
+        })
+        .then(() => {
+          this.forceRender = !this.forceRender;
+        });
+    } else {
+      FileSystemService.getSkeleton(skel)
+        .then(() => {
+          return FileSystemService.getChildren(FileSystemService.currentDir);
+        })
+        .then(() => {
+          this.forceRender = !this.forceRender;
+        });
+    }
   }
   drawSkeleton(skel: RecursiveSkeleton) {
     if (skel.children != null) {
-      return skel.children.map((child, index) => {
-        let count = 0;
-        for (let i = 0; i < index; i++) {
-          if (skel.children[i].dir_name === child.dir_name) count++;
-        }
-        return (
-          <div class="Upload-CollectionWrapper">
-            <button
-              class="Upload-Collection"
-              onClick={() => {
-                FileSystemService.getChildren(child.dir_id).then(() => {
+      return skel.children.map(child => (
+        <div class="Upload-CollectionWrapper">
+          <button
+            class="Upload-Collection"
+            onClick={() => {
+              FileSystemService.getChildren(child.dir_id).then(() => {
+                this.forceRender = !this.forceRender;
+              });
+            }}
+          >
+            <div
+              class="Upload-ArrowWrapper"
+              onClick={e => {
+                e.stopPropagation();
+
+                if (child.children == null)
+                  FileSystemService.getSkeleton(child).then(() => {
+                    child.showSubfolders = true;
+
+                    this.forceRender = !this.forceRender;
+                  });
+                else {
+                  child.showSubfolders = !child.showSubfolders;
                   this.forceRender = !this.forceRender;
-                });
+                  console.log(child);
+                }
               }}
             >
-              <div
-                class="Upload-ArrowWrapper"
-                onClick={e => {
-                  e.stopPropagation();
+              <div class={{ 'Upload-Arrow': true, 'Upload-ArrowDown': child.showSubfolders }}></div>
+            </div>
+            <span class="Upload-CollectionName">{child.dir_name}</span>
+            <button class="Upload-Dots">
+              <img src="\assets\icon\3Dots-icon.svg" onClick={e => e.stopPropagation()} />
+              <div class="Upload-Dots-Wrapper">
+                <div class="Upload-Dots-Content">
+                  <button
+                    class="Content-Item"
+                    onClick={e => {
+                      e.stopPropagation();
+                      this.fsData.id = child.dir_id;
+                      this.fsData.func = 'makeDir';
+                      this.overlayVis = true;
+                    }}
+                  >
+                    <span>Add Collection</span>
+                  </button>
+                  <button
+                    class="Content-Item"
+                    onClick={e => {
+                      e.stopPropagation();
+                      this.fsData.id = child.dir_id;
+                      this.fsData.func = 'changeDirName';
 
-                  if (child.children == null)
-                    FileSystemService.getSkeleton(child).then(() => {
-                      child.showSubfolders = true;
-
-                      this.forceRender = !this.forceRender;
-                    });
-                  else {
-                    child.showSubfolders = !child.showSubfolders;
-                    this.forceRender = !this.forceRender;
-                    console.log(child);
-                  }
-                }}
-              >
-                <div class={{ 'Upload-Arrow': true, 'Upload-ArrowDown': child.showSubfolders }}></div>
-              </div>
-              <span class="Upload-CollectionName">
-                {count === 0 ? child.dir_name : child.dir_name + ' (' + count + ')'}
-              </span>
-              <button class="Upload-Dots">
-                <img src="\assets\icon\3Dots-icon.svg" onClick={e => e.stopPropagation()} />
-                <div class="Upload-Dots-Wrapper">
-                  <div class="Upload-Dots-Content">
-                    <button
-                      class="Content-Item"
-                      onClick={e => {
-                        e.stopPropagation();
-                        this.fsData.id = child.dir_id;
-                        this.fsData.func = 'makeDir';
-                        this.overlayVis = true;
-                      }}
-                    >
-                      <span>Add Collection</span>
-                    </button>
-                    <button
-                      class="Content-Item"
-                      onClick={e => {
-                        e.stopPropagation();
-                        this.fsData.id = child.dir_id;
-                        this.fsData.func = 'changeDirName';
-
-                        this.overlayVis = true;
-                      }}
-                    >
-                      <span>Rename Collection</span>
-                    </button>
-                    <button
-                      class="Content-Item"
-                      onClick={e => {
-                        e.stopPropagation();
-                        FileSystemService.removeDirectory(child.dir_id).then(() => {
-                          this.refreshDirectories();
-                          this.forceRender = !this.forceRender;
-                        });
-                      }}
-                    >
-                      <span>Delete Collection</span>
-                    </button>
-                  </div>
+                      this.overlayVis = true;
+                    }}
+                  >
+                    <span>Rename Collection</span>
+                  </button>
+                  <button
+                    class="Content-Item"
+                    onClick={e => {
+                      e.stopPropagation();
+                      FileSystemService.removeDirectory(child.dir_id).then(() => {
+                        this.refreshDirectories(skel);
+                      });
+                    }}
+                  >
+                    <span>Delete Collection</span>
+                  </button>
                 </div>
-              </button>
+              </div>
             </button>
+          </button>
 
-            <div class="Upload-Subcollection">{child.showSubfolders == true ? this.drawSkeleton(child) : ''}</div>
-          </div>
-        );
-      });
+          <div class="Upload-Subcollection">{child.showSubfolders == true ? this.drawSkeleton(child) : ''}</div>
+        </div>
+      ));
     }
   }
 
@@ -243,15 +244,11 @@ export class AdminUpload {
         </div>
 
         <div class="Upload-File-Box">
-          {FileSystemService.dirChildren.directories.map((child, index) => {
+          {FileSystemService.dirChildren.directories.map(child => {
             if (
               this.searchWord == '' ||
               child.dir_name.toLocaleLowerCase().includes(this.searchWord.toLocaleLowerCase())
-            ) {
-              let count = 0;
-              for (let i = 0; i < index; i++) {
-                if (FileSystemService.dirChildren.directories[i].dir_name === child.dir_name) count++;
-              }
+            )
               return (
                 <div class="Upload-Item">
                   <div class="Upload-Icon">
@@ -272,15 +269,6 @@ export class AdminUpload {
                             class="Content-Item"
                             onClick={e => {
                               e.stopPropagation();
-                              FileSystemService.downloadDir(child);
-                            }}
-                          >
-                            <span>Download Collection</span>
-                          </button>
-                          <button
-                            class="Content-Item"
-                            onClick={e => {
-                              e.stopPropagation();
                               this.fsData.id = child.dir_id;
                               this.fsData.func = 'changeDirName';
                               this.overlayVis = true;
@@ -293,7 +281,7 @@ export class AdminUpload {
                             onClick={e => {
                               e.stopPropagation();
                               FileSystemService.removeDirectory(child.dir_id).then(() => {
-                                this.refreshDirectories();
+                                this.refreshDirectories(child.parent_id);
                               });
                             }}
                           >
@@ -303,22 +291,16 @@ export class AdminUpload {
                       </div>
                     </div>
                   </div>
-                  <span class="Upload-Image-Text">
-                    {count === 0 ? child.dir_name : child.dir_name + ' (' + count + ')'}
-                  </span>
+                  <span class="Upload-Image-Text">{child.dir_name}</span>
                 </div>
               );
-            }
           })}
-          {FileSystemService.dirChildren.files.map((child, index) => {
+          {FileSystemService.dirChildren.files.map(child => {
             if (
               this.searchWord == '' ||
-              child.file_name.toLocaleLowerCase().includes(this.searchWord.toLocaleLowerCase())
-            ) {
-              let count = 0;
-              for (let i = 0; i < index; i++) {
-                if (FileSystemService.dirChildren.files[i].file_name === child.file_name) count++;
-              }
+              (child.file_name.toLocaleLowerCase().includes(this.searchWord.toLocaleLowerCase()) &&
+                this.forceRender != null)
+            )
               return (
                 <div class={{ 'Upload-Item': true, 'Highlight-File': this.fileArray.includes(child) ? true : false }}>
                   <div class="Upload-Icon">
@@ -352,7 +334,7 @@ export class AdminUpload {
                             onClick={e => {
                               e.stopPropagation();
                               FileSystemService.deleteFile(child.file_id).then(() => {
-                                this.refreshDirectories();
+                                FileSystemService.getChildren(FileSystemService.currentDir);
                               });
                             }}
                           >
@@ -362,12 +344,9 @@ export class AdminUpload {
                       </div>
                     </div>
                   </div>
-                  <span class="Upload-Image-Text">
-                    {count === 0 ? child.file_name : child.file_name + ' (' + count + ')'}
-                  </span>
+                  <span class="Upload-Image-Text">{child.file_name}</span>
                 </div>
               );
-            }
           })}
         </div>
         <div class="Upload-Button-Box">
@@ -404,7 +383,7 @@ export class AdminUpload {
               this.overlayVis = false;
               this.runFS(e)
                 .then(() => {
-                  this.refreshDirectories();
+                  this.refreshDirectories(this.fsData.id);
                 })
                 .then(() => {
                   this.fsData = { id: null, name: '', func: '' };

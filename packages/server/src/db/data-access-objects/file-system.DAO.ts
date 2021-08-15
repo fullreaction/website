@@ -97,12 +97,19 @@ export class FileSystemDAO {
 
   async removeDirectory(dir_id: number) {
     if (dir_id != null) {
-      const filepaths = await this.db.database<FileEntry>('files').select('file_path').where({ parent_id: dir_id });
-      for (const file in filepaths) {
-        unlink(file, (err) => {
+      const filepaths = await this.db
+        .database<FileEntry>('directories')
+        .join('files', 'files.parent_id', '=', 'directories.dir_id')
+        .join('relationships', 'directories.dir_id', '=', 'relationships.child_id')
+        .select('files.file_path')
+        .where('relationships.parent_id', '=', dir_id);
+
+      for (const item of filepaths) {
+        unlink(item.file_path, (err) => {
           if (err) console.log(err);
         });
       }
+
       return await this.db.database('directories').delete('*').where({ dir_id: dir_id });
     } else
       throw new HttpException(

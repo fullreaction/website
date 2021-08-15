@@ -79,6 +79,10 @@ RATI
   margin-bottom: 8px;
   cursor: pointer;
 }
+.Highlight-File {
+  background-color: #d8d8d85e;
+  border-radius: 5px;
+}
 .Upload-Inner-Image {
   display: flex;
   align-items: center;
@@ -121,10 +125,8 @@ RATI
   background-color: #ffffff;
   border: 1px solid;
   border-color: #ff593d;
-  border-radius: 3px;
 }
 .Upload-Button-1:hover {
-  cursor: pointer;
   background-color: #f8f4f4;
 }
 .Upload-Button-2 {

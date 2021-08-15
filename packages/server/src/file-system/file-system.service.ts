@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { User } from 'src/auth/users/user.model';
 import { FileSystemDAO } from 'src/db/data-access-objects/file-system.DAO';
 import { Directory, FileEntry } from './file-system.models';
 
@@ -6,8 +7,8 @@ import { Directory, FileEntry } from './file-system.models';
 export class FileSystemService {
   constructor(private readonly fileSystemDAO: FileSystemDAO) {}
 
-  initUser(email: string) {
-    this.fileSystemDAO.initUser(email);
+  initUser(user: User) {
+    this.fileSystemDAO.initUser(user);
   }
 
   async addFile(file: Express.Multer.File, dir_id: number, owner: string) {
@@ -17,10 +18,10 @@ export class FileSystemService {
     return await this.fileSystemDAO.getFile(file_id);
   }
   async changeFileName(file_id: number, name: string) {
-    this.fileSystemDAO.changeFileName(file_id, name);
+    await this.fileSystemDAO.changeFileName(file_id, name);
   }
   async removeFile(file_id: number) {
-    this.fileSystemDAO.removeFile(file_id);
+    await this.fileSystemDAO.removeFile(file_id);
   }
   async addDirectory(dir_name: string, owner: string, parent_id: number) {
     await this.fileSystemDAO.addDirectory(dir_name, owner, parent_id);

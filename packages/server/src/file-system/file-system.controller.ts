@@ -30,12 +30,12 @@ export class FileSystemController {
 
   @Patch('changefilename')
   async changeFileName(@Body('file_id') file_id: number, @Body('name') name: string) {
-    this.fileSystem.changeFileName(file_id, name);
+    await this.fileSystem.changeFileName(file_id, name);
   }
 
   @Delete('deletefile/:id')
   async removeFile(@Param('id') file_id: number) {
-    this.fileSystem.removeFile(file_id);
+    await this.fileSystem.removeFile(file_id);
   }
 
   @Post('getdir')
@@ -45,7 +45,7 @@ export class FileSystemController {
   }
   @Post('getSkel')
   async getSkeleton(@Body('dir_id') dir_id: number, @Body('owner') owner: string) {
-    return this.fileSystem.getSkeleton(dir_id, owner);
+    return await this.fileSystem.getSkeleton(dir_id, owner);
   }
 
   @Post('makedir')

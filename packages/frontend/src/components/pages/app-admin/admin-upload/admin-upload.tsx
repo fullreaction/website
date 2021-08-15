@@ -1,14 +1,22 @@
 import { Component, h, Host, State, Event, EventEmitter } from '@stencil/core';
+import { FileEntry } from '../../../../models/upload.models';
 
 import { FileSystemService, RecursiveSkeleton } from '../../../../services/file-system-services';
 
 /*
-  Get items alphabetically
-  Directories can't have duplicate names, they merge
-  Downloading directories as zip
 
-  Path Stylization
-  Folder icon
+  Fix name duplications
+
+
+
+  Icons by mimetype
+  Refreshing
+  wrap up events
+
+
+
+  Downloading directories as zip
+  Uploading folders
 
 */
 
@@ -20,25 +28,19 @@ export class AdminUpload {
   @State() overlayVis = false;
   @State() forceRender = false;
   @State() searchWord = '';
+  @State() fileArray: FileEntry[] = [];
   @Event({
     eventName: 'cancelMedia',
-    composed: true,
-    cancelable: true,
-    bubbles: true,
   })
   cancelMedia: EventEmitter;
+  @Event({
+    eventName: 'selectMedia',
+  })
+  selectMedia: EventEmitter;
 
   cancelMediaHandler() {
     this.cancelMedia.emit();
   }
-
-  @Event({
-    eventName: 'selectMedia',
-    composed: true,
-    cancelable: true,
-    bubbles: true,
-  })
-  selectMedia: EventEmitter;
 
   selectMediaHandler() {
     this.selectMedia.emit();
@@ -91,6 +93,7 @@ export class AdminUpload {
               class="Upload-ArrowWrapper"
               onClick={e => {
                 e.stopPropagation();
+
                 if (child.children == null)
                   FileSystemService.getSkeleton(child).then(() => {
                     child.showSubfolders = true;
@@ -100,6 +103,7 @@ export class AdminUpload {
                 else {
                   child.showSubfolders = !child.showSubfolders;
                   this.forceRender = !this.forceRender;
+                  console.log(child);
                 }
               }}
             >
@@ -115,7 +119,6 @@ export class AdminUpload {
                     onClick={e => {
                       e.stopPropagation();
                       this.fsData.id = child.dir_id;
-
                       this.fsData.func = 'makeDir';
                       this.overlayVis = true;
                     }}
@@ -140,6 +143,7 @@ export class AdminUpload {
                       e.stopPropagation();
                       FileSystemService.removeDirectory(child.dir_id).then(() => {
                         this.refreshDirectories();
+                        this.forceRender = !this.forceRender;
                       });
                     }}
                   >
@@ -261,7 +265,6 @@ export class AdminUpload {
                               e.stopPropagation();
                               this.fsData.id = child.dir_id;
                               this.fsData.func = 'changeDirName';
-
                               this.overlayVis = true;
                             }}
                           >
@@ -293,12 +296,15 @@ export class AdminUpload {
                 this.forceRender != null)
             )
               return (
-                <div class="Upload-Item">
+                <div class={{ 'Upload-Item': true, 'Highlight-File': this.fileArray.includes(child) ? true : false }}>
                   <div class="Upload-Icon">
                     <img
                       class="Upload-Outer-Image"
                       onClick={() => {
-                        FileSystemService.getFile(child);
+                        if (!this.fileArray.includes(child)) {
+                          this.fileArray.push(child);
+                        } else this.fileArray = [...this.fileArray.filter(value => value.file_id != child.file_id)];
+                        this.forceRender = !this.forceRender;
                       }}
                       src="\assets\icon\blank-image.svg"
                     ></img>
@@ -321,6 +327,9 @@ export class AdminUpload {
                             class="Content-Item"
                             onClick={e => {
                               e.stopPropagation();
+                              FileSystemService.deleteFile(child.file_id).then(() => {
+                                this.refreshDirectories();
+                              });
                             }}
                           >
                             <span>Delete File</span>
@@ -364,15 +373,16 @@ export class AdminUpload {
         <form
           class="Add-Overlay-Content"
           onSubmit={e => {
-            this.overlayVis = false;
-            this.runFS(e)
-              .then(() => {
-                this.refreshDirectories();
-              })
-              .then(() => {
-                this.forceRender = !this.forceRender;
-                this.fsData = { id: null, name: '', func: '' };
-              });
+            if (this.overlayVis) {
+              this.overlayVis = false;
+              this.runFS(e)
+                .then(() => {
+                  this.refreshDirectories();
+                })
+                .then(() => {
+                  this.fsData = { id: null, name: '', func: '' };
+                });
+            }
           }}
           onClick={e => e.stopPropagation()}
         >
@@ -393,7 +403,7 @@ export class AdminUpload {
             <button
               class="Add-Overlay-Button Button-Cancel"
               onClick={() => {
-                this.overlayVis = !this.overlayVis;
+                this.overlayVis = false;
               }}
             >
               Cancel

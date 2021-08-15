@@ -3,7 +3,6 @@ import { handleFetch, ROOT_URL } from '../utils/httpUtils';
 import { Directory, FileEntry } from '../models/upload.models';
 import FileSaver from 'file-saver';
 
-//not functional at all yet still trying to think it through
 export class RecursiveSkeleton {
   dir_name: string;
   dir_id: number;
@@ -116,8 +115,8 @@ class FileSystemServiceController {
     const res = await fetch(ROOT_URL + 'filesystem/getdir', fetchData).then(handleFetch);
 
     this.dirChildren = res;
-    await this.getPath(dir_id);
     this.currentDir = dir_id;
+    await this.getPath(dir_id);
   }
   private async getPath(dir_id: number) {
     const fetchData: RequestInit = {
@@ -139,6 +138,7 @@ class FileSystemServiceController {
     const res = await fetch(ROOT_URL + 'filesystem/getskel', fetchData).then(handleFetch);
 
     skel.dir_name = res.root.dir_name;
+
     skel.children = res.children.map(val => {
       return { dir_id: val.dir_id, dir_name: val.dir_name };
     });

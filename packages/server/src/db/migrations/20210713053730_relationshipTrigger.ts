@@ -21,23 +21,28 @@ export async function up(knex: Knex): Promise<void> {
       WHERE p.child_id=NEW.parent_id and c.parent_id=NEW.dir_id;
 	END`,
     )
-    .then(console.log);
+    .catch(console.log);
 
   knex
     .raw(
       `CREATE PROCEDURE count_name_duplicates (IN newName NVARCHAR(255), IN newParentId INT, OUT count_ INT)
-  BEGIN
-    SELECT SUM(ind_count) INTO count_ from
-    (
-      SELECT COUNT(DISTINCT d.dir_name) AS ind_count FROM directories d
-      WHERE d.dir_name = newName OR d.dir_name LIKE CONCAT(newName,' (%)') AND d.parent_id = newParentId
-      UNION ALL
-      SELECT COUNT(DISTINCT f.file_name) FROM files f
-      WHERE f.file_name = newName OR f.file_name LIKE CONCAT(newName,' (%)')
-    ) AS tmp_table;
-  END`,
+    BEGIN
+      SET count_=0;
+      IF EXISTS (SELECT dir_name, parent_id FROM directories WHERE dir_name=newName AND parent_id=newParentId )
+      OR EXISTS (SELECT file_name, parent_id FROM files WHERE file_name=newName AND parent_id=newParentId)
+      THEN
+        SELECT SUM(ind_count) INTO count_ from
+        (
+          SELECT COUNT(DISTINCT d.dir_name, d.parent_id) AS ind_count FROM directories d
+          WHERE (d.dir_name = newName OR d.dir_name LIKE CONCAT(newName,' (%)')) AND d.parent_id = newParentId
+          UNION ALL
+          SELECT COUNT(DISTINCT f.file_name, f.parent_id) FROM files f
+          WHERE (f.file_name = newName OR f.file_name LIKE CONCAT(newName,' (%)')) AND f.parent_id=newParentId
+        ) AS tmp_table;
+      END IF;
+    END`,
     )
-    .then(console.log);
+    .catch(console.log);
   knex
     .raw(
       `CREATE TRIGGER dir_name_duplication BEFORE INSERT ON directories
@@ -50,7 +55,7 @@ export async function up(knex: Knex): Promise<void> {
         END IF;
       END`,
     )
-    .then(console.log);
+    .catch(console.log);
   knex
     .raw(
       `CREATE TRIGGER dir_upd_name_duplication BEFORE UPDATE ON directories
@@ -63,7 +68,7 @@ export async function up(knex: Knex): Promise<void> {
         END IF;
       END`,
     )
-    .then(console.log);
+    .catch(console.log);
   knex
     .raw(
       `CREATE TRIGGER file_name_duplication BEFORE INSERT ON files
@@ -76,7 +81,7 @@ export async function up(knex: Knex): Promise<void> {
         END IF;
       END`,
     )
-    .then(console.log);
+    .catch(console.log);
   knex
     .raw(
       `CREATE TRIGGER file_upd_name_duplication BEFORE UPDATE ON files
@@ -89,24 +94,18 @@ export async function up(knex: Knex): Promise<void> {
         END IF;
       END`,
     )
-    .then(console.log);
-
+    .catch(console.log);
   knex
     .raw(
-      `CREATE TRIGGER generate_mimetype AFTER UPDATE ON files
+      `CREATE TRIGGER generate_mimetype_ins BEFORE INSERT ON files
       FOR EACH ROW
       BEGIN
-        DECLARE mime_ STRING DEFAULT ' ';
-        DECLARE second_ STRING DEFAULT ' ';
-        SELECT REVERSE(SUBSTRING_INDEX(REVERSE(NEW.file_name), '.', 1)) INTO mime_;
-        SELECT REVERSE(SUBSTRING_INDEX(REVERSE(NEW.file_name), '.', 2)) INTO second_;
-
-        IF second_<>null
-			    SET NEW.file_type=mime_;
-        END IF;
+        IF REVERSE(SUBSTRING_INDEX(REVERSE(NEW.file_name), '.', 1)) <> NEW.file_name THEN
+            SET NEW.file_type = REVERSE(SUBSTRING_INDEX(REVERSE(NEW.file_name), '.', 1));
+          END IF;
       END`,
     )
-    .then(console.log);
+    .catch(console.log);
 }
 
 export async function down(knex: Knex): Promise<void> {
@@ -119,5 +118,5 @@ export async function down(knex: Knex): Promise<void> {
   knex.raw('DROP TRIGGER IF EXISTS file_upd_name_duplication').catch(console.log);
 
   knex.raw('DROP PROCEDURE IF EXISTS count_name_duplicates').catch(console.log);
-  knex.raw('DROP TRIGGER IF EXISTS generate_mimetype');
+  knex.raw('DROP TRIGGER IF EXISTS generate_mimetype_ins');
 }

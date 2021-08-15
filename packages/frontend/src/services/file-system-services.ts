@@ -2,6 +2,7 @@ import { AuthService } from './auth-service';
 import { handleFetch, ROOT_URL } from '../utils/httpUtils';
 import { Directory, FileEntry } from '../models/upload.models';
 import FileSaver from 'file-saver';
+import JSZip from 'jszip';
 
 export class RecursiveSkeleton {
   dir_name: string;
@@ -20,7 +21,7 @@ class FileSystemServiceController {
     await this.getSkeleton(this.skeleton);
     await this.getChildren(null);
   }
-  async getFile(file: FileEntry) {
+  async downloadFile(file: FileEntry) {
     const fetchData: RequestInit = {
       method: 'GET',
       credentials: 'include',
@@ -28,9 +29,10 @@ class FileSystemServiceController {
 
     FileSaver.saveAs(
       await (await fetch(ROOT_URL + 'filesystem/getfile/' + file.file_id, fetchData)).blob(),
-      file.file_name,
+      file.file_type != null ? file.file_name + '.' + file.file_type : file.file_name,
     );
   }
+
   async uploadFile(file: File, dir_id: number) {
     const user = await AuthService.getUser();
     const formData = new FormData();
@@ -44,10 +46,7 @@ class FileSystemServiceController {
       credentials: 'include',
     };
 
-    fetch(ROOT_URL + 'filesystem/uploadfile', fetchData)
-      .then(handleFetch)
-      .then(console.log)
-      .catch(console.log);
+    await fetch(ROOT_URL + 'filesystem/uploadfile', fetchData);
   }
   async changeFileName(file_id: number, name: string) {
     const fetchData: RequestInit = {
@@ -57,10 +56,7 @@ class FileSystemServiceController {
       credentials: 'include',
     };
 
-    fetch(ROOT_URL + 'filesystem/changefilename', fetchData)
-      .then(handleFetch)
-      .then(console.log)
-      .catch(console.log);
+    await fetch(ROOT_URL + 'filesystem/changefilename', fetchData);
   }
   async deleteFile(file_id: number) {
     const fetchData: RequestInit = {
@@ -68,10 +64,48 @@ class FileSystemServiceController {
       credentials: 'include',
     };
 
-    fetch(ROOT_URL + 'filesystem/deletefile/' + file_id, fetchData)
-      .then(handleFetch)
-      .then(console.log)
-      .catch(console.log);
+    await fetch(ROOT_URL + 'filesystem/deletefile/' + file_id, fetchData);
+  }
+
+  async downloadDir(dir: Directory) {
+    const root = new JSZip();
+    this.zipDir(dir, root).then(() => {
+      root.generateAsync({ type: 'blob' }).then(content => {
+        saveAs(content, dir.dir_name);
+      });
+    });
+  }
+  async zipDir(dir: Directory, parent) {
+    const user = await AuthService.getUser();
+    const fetchData: RequestInit = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ dir_id: dir.dir_id, owner: user.user_id }),
+      credentials: 'include',
+    };
+
+    const res: { directories: Directory[]; files: FileEntry[] } = await fetch(
+      ROOT_URL + 'filesystem/getdir',
+      fetchData,
+    ).then(handleFetch);
+
+    for (const file of res.files) {
+      parent.file(
+        file.file_name,
+        await (
+          await fetch(ROOT_URL + 'filesystem/getfile/' + file.file_id, {
+            method: 'GET',
+            credentials: 'include',
+          })
+        ).blob(),
+      );
+    }
+    if (res.directories.length != 0) {
+      for (const folder of res.directories) {
+        const child = parent.folder(folder.dir_name);
+        await this.zipDir(folder, child);
+      }
+    }
   }
 
   async makeDir(parent_id: number, dir_name: string) {

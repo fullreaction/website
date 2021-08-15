@@ -71,11 +71,12 @@ RATI
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 16px;
+  padding: 8px;
+  margin: 0px 8px 8px 0px;
 }
 
 .Upload-Outer-Image {
-  align-self: center;
+  width: 80px;
   margin-bottom: 8px;
   cursor: pointer;
 }
@@ -85,10 +86,10 @@ RATI
 }
 .Upload-Inner-Image {
   display: flex;
-  align-items: center;
+
   height: 24px;
   margin-top: 2px;
-  margin-left: -28px;
+  margin-left: -24px;
   cursor: default;
   background-color: transparent;
   border: none;

@@ -4,19 +4,8 @@ import { FileEntry } from '../../../../models/upload.models';
 import { FileSystemService, RecursiveSkeleton } from '../../../../services/file-system-services';
 
 /*
-
-  Fix name duplications
-
-
-
   Icons by mimetype
-  Refreshing
-  wrap up events
-
-
-
   Downloading directories as zip
-  Uploading folders
 
 */
 

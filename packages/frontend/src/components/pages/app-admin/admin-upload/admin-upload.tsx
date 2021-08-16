@@ -4,8 +4,6 @@ import { FileEntry } from '../../../../models/upload.models';
 import { FileSystemService, RecursiveSkeleton } from '../../../../services/file-system-services';
 
 /*
-  Icons by mimetype
-  redo popups
 
 
   moving files and folders
@@ -49,18 +47,6 @@ export class AdminUpload {
     ['changeDirName', 'Rename directory'],
     ['changeFileName', 'Rename file'],
     ['none', 'spagetimitbols'],
-  ]);
-
-  private fileIcons = new Map<string, string>([
-    ['mp4', 'assets/icon/Video-Image.svg'],
-    ['mpeg', 'assets/icon/Video-Image.svg'],
-    ['mp3', 'assets/icon/Audio-Image.svg'],
-    ['wav', 'assets/icon/Audio-Image.svg'],
-    ['png', 'assets/icon/Image-Image.svg'],
-    ['jpeg', 'assets/icon/Image-Image.svg'],
-    ['svg', 'assets/icon/Image-Image.svg'],
-    ['doc', 'assets/icon/Doc-Image.svg'],
-    ['pdf', 'assets/icon/Doc-Image.svg'],
   ]);
 
   componentWillLoad() {
@@ -298,17 +284,12 @@ export class AdminUpload {
               return (
                 <div class="Upload-Item">
                   <div class="Upload-Icon">
-                    <img
-                      class={{ 'Upload-Outer-Image': true }}
-                      onClick={() => {
-                        FileSystemService.getChildren(child.dir_id).then(() => {
-                          this.forceRender = !this.forceRender;
-                        });
-                      }}
-                      src="\assets\icon\Folder-Image.svg"
-                    ></img>
                     <div class="Upload-Inner-Image">
-                      <img src="\assets\icon\3Dots-icon.svg" onClick={e => e.stopPropagation()}></img>
+                      <img
+                        class="Upload-Icon-Dots"
+                        src="\assets\icon\3Dots-icon.svg"
+                        onClick={e => e.stopPropagation()}
+                      ></img>
                       <div class="Upload-Dots-Wrapper">
                         <div class="Upload-Dots-Content">
                           <button
@@ -345,6 +326,15 @@ export class AdminUpload {
                         </div>
                       </div>
                     </div>
+                    <img
+                      class={{ 'Upload-Outer-Image': true }}
+                      onClick={() => {
+                        FileSystemService.getChildren(child.dir_id).then(() => {
+                          this.forceRender = !this.forceRender;
+                        });
+                      }}
+                      src="\assets\icon\Folder-Image.svg"
+                    ></img>
                   </div>
                   <span class="Upload-Image-Text">
                     {count === 0 ? child.dir_name : child.dir_name + ' (' + count + ')'}
@@ -366,18 +356,12 @@ export class AdminUpload {
               return (
                 <div class={{ 'Upload-Item': true, 'Highlight-File': this.fileArray.includes(child) ? true : false }}>
                   <div class="Upload-Icon">
-                    <img
-                      class="Upload-Outer-Image"
-                      onClick={() => {
-                        if (!this.fileArray.includes(child)) {
-                          this.fileArray.push(child);
-                        } else this.fileArray = [...this.fileArray.filter(value => value.file_id != child.file_id)];
-                        this.forceRender = !this.forceRender;
-                      }}
-                      src="\assets\icon\blank-image.svg"
-                    ></img>
                     <div class="Upload-Inner-Image">
-                      <img src="\assets\icon\3Dots-icon.svg" onClick={e => e.stopPropagation()}></img>
+                      <img
+                        class="Upload-Icon-Dots"
+                        src="\assets\icon\3Dots-icon.svg"
+                        onClick={e => e.stopPropagation()}
+                      ></img>
                       <div class="Upload-Dots-Wrapper">
                         <div class="Upload-Dots-Content">
                           <button
@@ -409,6 +393,16 @@ export class AdminUpload {
                         </div>
                       </div>
                     </div>
+                    <img
+                      class="Upload-Outer-Image"
+                      onClick={() => {
+                        if (!this.fileArray.includes(child)) {
+                          this.fileArray.push(child);
+                        } else this.fileArray = [...this.fileArray.filter(value => value.file_id != child.file_id)];
+                        this.forceRender = !this.forceRender;
+                      }}
+                      src={FileSystemService.getIcon(child.file_type)}
+                    ></img>
                   </div>
                   <span class="Upload-Image-Text">
                     {count === 0 ? child.file_name : child.file_name + ' (' + count + ')'}

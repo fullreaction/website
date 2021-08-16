@@ -86,6 +86,7 @@ RATI
 
 .Upload-Outer-Image {
   width: 90px;
+  margin-top: -10px;
   margin-bottom: 8px;
   cursor: pointer;
   -moz-user-select: none;
@@ -99,9 +100,7 @@ RATI
 .Upload-Inner-Image {
   display: flex;
 
-  height: 24px;
-  margin-top: 2px;
-  margin-left: -30px;
+  margin-left: auto;
   cursor: default;
   background-color: transparent;
   border: none;
@@ -111,9 +110,18 @@ RATI
 }
 .Upload-Icon {
   display: flex;
+  flex-direction: column;
   margin-left: -8px;
   -moz-user-select: none;
   -webkit-user-select: none;
+}
+.Upload-Icon .Upload-Dots-Wrapper {
+  top: 10px;
+}
+.Upload-Icon-Dots {
+  padding: 4px;
+  padding-right: 0px;
+  cursor: default;
 }
 .Upload-Inner-Image:hover {
   cursor: pointer;

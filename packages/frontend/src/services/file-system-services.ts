@@ -17,6 +17,19 @@ class FileSystemServiceController {
   skeleton = new RecursiveSkeleton();
   path: { dir_name: string; dir_id: number }[] = [];
 
+  private fileIcons = new Map<string, string>([
+    ['mp4', '../assets/icon/Video-Image.svg'],
+    ['mpeg', '../assets/icon/Video-Image.svg'],
+    ['mp3', '../assets/icon/Audio-Image.svg'],
+    ['wav', '../assets/icon/Audio-Image.svg'],
+    ['png', '../assets/icon/Image-Image.svg'],
+    ['jpeg', '../assets/icon/Image-Image.svg'],
+    ['svg', '../assets/icon/Image-Image.svg'],
+    ['doc', '../assets/icon/Doc-Image.svg'],
+    ['pdf', '../assets/icon/Doc-Image.svg'],
+    ['default', '../assets/icon/Blank-Image.svg'],
+  ]);
+
   async init() {
     await this.getSkeleton(this.skeleton);
     await this.getChildren(null);
@@ -32,7 +45,10 @@ class FileSystemServiceController {
       file.file_type != null ? file.file_name + '.' + file.file_type : file.file_name,
     );
   }
-
+  getIcon(filetype: string) {
+    console.log(filetype);
+    return this.fileIcons.get(filetype) || this.fileIcons.get('default');
+  }
   async uploadFile(file: File, dir_id: number) {
     const user = await AuthService.getUser();
     const formData = new FormData();

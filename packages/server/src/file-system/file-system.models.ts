@@ -8,6 +8,7 @@ export interface Directory {
 export interface FileEntry {
   file_id: number;
   file_name: string;
+  file_type?: string;
   file_path?: string;
   parent_id: number;
   owner: string | Buffer;

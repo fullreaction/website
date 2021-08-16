@@ -28,6 +28,7 @@
   "license": "MIT",
   "dependencies": {
     "file-saver": "^2.0.5",
+    "jszip": "^3.7.1",
     "mime-types": "^2.1.31"
   }
 }

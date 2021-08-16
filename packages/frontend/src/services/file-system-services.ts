@@ -67,20 +67,20 @@ class FileSystemServiceController {
     await fetch(ROOT_URL + 'filesystem/deletefile/' + file_id, fetchData);
   }
 
-  async downloadDir(dir: Directory) {
+  async downloadDir(dir_id: number, dir_name: string) {
     const root = new JSZip();
-    this.zipDir(dir, root).then(() => {
+    this.zipDir(dir_id, root).then(() => {
       root.generateAsync({ type: 'blob' }).then(content => {
-        saveAs(content, dir.dir_name);
+        saveAs(content, dir_name);
       });
     });
   }
-  async zipDir(dir: Directory, parent) {
+  async zipDir(dir_id: number, parent) {
     const user = await AuthService.getUser();
     const fetchData: RequestInit = {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ dir_id: dir.dir_id, owner: user.user_id }),
+      body: JSON.stringify({ dir_id: dir_id, owner: user.user_id }),
       credentials: 'include',
     };
 
@@ -103,7 +103,7 @@ class FileSystemServiceController {
     if (res.directories.length != 0) {
       for (const folder of res.directories) {
         const child = parent.folder(folder.dir_name);
-        await this.zipDir(folder, child);
+        await this.zipDir(folder.dir_id, child);
       }
     }
   }
@@ -171,7 +171,7 @@ class FileSystemServiceController {
     const res = await fetch(ROOT_URL + 'filesystem/getskel', fetchData).then(handleFetch);
 
     skel.dir_name = res.root.dir_name;
-
+    skel.dir_id = res.root.dir_id;
     skel.children = res.children.map(val => {
       return { dir_id: val.dir_id, dir_name: val.dir_name };
     });
@@ -180,8 +180,6 @@ class FileSystemServiceController {
   }
 
   async findSkeleton(dir_id: number) {
-    console.log('BEGUN');
-
     const path = await this.getPath(dir_id);
 
     let skel: RecursiveSkeleton = this.skeleton;

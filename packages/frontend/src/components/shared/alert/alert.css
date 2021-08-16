@@ -1,0 +1,66 @@
+.Alert-Background {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 1;
+
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.Alert-Content {
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  display: flex;
+  flex-direction: column;
+  width: 300px;
+  height: 140px;
+  background-color: var(--background-color);
+  border-radius: 5px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  transform: translate(-50%, -50%);
+}
+.Alert-Text {
+  margin-top: 20px;
+  font-weight: bold;
+  text-align: center;
+}
+
+.Alert-Buttons {
+  display: flex;
+  flex-direction: row;
+  margin-top: auto;
+}
+
+.Alert-Button {
+  box-sizing: border-box;
+  gap: 8px;
+  align-items: center;
+  justify-content: center;
+  width: 150px;
+  height: 40px;
+  padding: 8px 16px;
+  margin-top: 28px;
+  font-size: 16px;
+  color: white;
+  text-decoration: none;
+  cursor: pointer;
+  background: var(--primary-color);
+  border: none;
+}
+
+.Alert-Button:hover {
+  background-color: var(--primary-dark-color);
+}
+
+.Button-Confirm {
+  border-bottom-left-radius: 5px;
+}
+
+.Button-Cancel {
+  border-bottom-right-radius: 5px;
+}

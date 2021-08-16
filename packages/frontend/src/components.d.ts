@@ -57,6 +57,8 @@ export namespace Components {
     }
     interface AppSupport {
     }
+    interface CompAlert {
+    }
 }
 declare global {
     interface HTMLAdminTableElement extends Components.AdminTable, HTMLStencilElement {
@@ -185,6 +187,12 @@ declare global {
         prototype: HTMLAppSupportElement;
         new (): HTMLAppSupportElement;
     };
+    interface HTMLCompAlertElement extends Components.CompAlert, HTMLStencilElement {
+    }
+    var HTMLCompAlertElement: {
+        prototype: HTMLCompAlertElement;
+        new (): HTMLCompAlertElement;
+    };
     interface HTMLElementTagNameMap {
         "admin-table": HTMLAdminTableElement;
         "admin-upload": HTMLAdminUploadElement;
@@ -207,6 +215,7 @@ declare global {
         "app-section": HTMLAppSectionElement;
         "app-sidenav": HTMLAppSidenavElement;
         "app-support": HTMLAppSupportElement;
+        "comp-alert": HTMLCompAlertElement;
     }
 }
 declare namespace LocalJSX {
@@ -262,6 +271,11 @@ declare namespace LocalJSX {
     }
     interface AppSupport {
     }
+    interface CompAlert {
+        "onCancel"?: (event: CustomEvent<boolean>) => void;
+        "onClose"?: (event: CustomEvent<boolean>) => void;
+        "onConfirm"?: (event: CustomEvent<boolean>) => void;
+    }
     interface IntrinsicElements {
         "admin-table": AdminTable;
         "admin-upload": AdminUpload;
@@ -284,6 +298,7 @@ declare namespace LocalJSX {
         "app-section": AppSection;
         "app-sidenav": AppSidenav;
         "app-support": AppSupport;
+        "comp-alert": CompAlert;
     }
 }
 export { LocalJSX as JSX };
@@ -311,6 +326,7 @@ declare module "@stencil/core" {
             "app-section": LocalJSX.AppSection & JSXBase.HTMLAttributes<HTMLAppSectionElement>;
             "app-sidenav": LocalJSX.AppSidenav & JSXBase.HTMLAttributes<HTMLAppSidenavElement>;
             "app-support": LocalJSX.AppSupport & JSXBase.HTMLAttributes<HTMLAppSupportElement>;
+            "comp-alert": LocalJSX.CompAlert & JSXBase.HTMLAttributes<HTMLCompAlertElement>;
         }
     }
 }

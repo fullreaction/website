@@ -52,8 +52,15 @@ export class AdminUpload {
   ]);
 
   private fileIcons = new Map<string, string>([
-    ['mp4', 'assetsiconVideo-Image.svg'],
-    ['', ''],
+    ['mp4', 'assets/icon/Video-Image.svg'],
+    ['mpeg', 'assets/icon/Video-Image.svg'],
+    ['mp3', 'assets/icon/Audio-Image.svg'],
+    ['wav', 'assets/icon/Audio-Image.svg'],
+    ['png', 'assets/icon/Image-Image.svg'],
+    ['jpeg', 'assets/icon/Image-Image.svg'],
+    ['svg', 'assets/icon/Image-Image.svg'],
+    ['doc', 'assets/icon/Doc-Image.svg'],
+    ['pdf', 'assets/icon/Doc-Image.svg'],
   ]);
 
   componentWillLoad() {

@@ -51,6 +51,11 @@ export class AdminUpload {
     ['none', 'spagetimitbols'],
   ]);
 
+  private fileIcons = new Map<string, string>([
+    ['mp4', 'assetsiconVideo-Image.svg'],
+    ['', ''],
+  ]);
+
   componentWillLoad() {
     return FileSystemService.init().then(() => {
       this.fsData = { name: '', id: FileSystemService.skeleton.dir_id, func: 'none' };

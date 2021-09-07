@@ -27,10 +27,10 @@ export class AppReset {
         ></input>
 
         <input type="submit" class="Auth-Input Button" value="Continue"></input>
+        <a class="Auth-Input Button Auth-Inverted" href="login">
+          Go back
+        </a>
       </form>
-      <a class="Auth-Input Button Auth-Inverted" href="login">
-        Go back
-      </a>
     </Host>
   );
 }

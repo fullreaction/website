@@ -47,6 +47,7 @@ class FileSystemServiceController {
   }
   getIcon(filetype: string) {
     console.log(filetype);
+
     return this.fileIcons.get(filetype) || this.fileIcons.get('default');
   }
   async uploadFile(file: File, dir_id: number) {

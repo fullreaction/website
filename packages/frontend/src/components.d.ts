@@ -5,8 +5,8 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { FileEntry } from "./models/upload.models";
 import { ValidationErrors } from "./utils/form";
+import { FileEntry } from "./models/upload.models";
 export namespace Components {
     interface AdminTable {
     }
@@ -58,6 +58,10 @@ export namespace Components {
     interface AppSupport {
     }
     interface CompAlert {
+    }
+    interface UploadContent {
+    }
+    interface UploadSidebar {
     }
 }
 declare global {
@@ -193,6 +197,18 @@ declare global {
         prototype: HTMLCompAlertElement;
         new (): HTMLCompAlertElement;
     };
+    interface HTMLUploadContentElement extends Components.UploadContent, HTMLStencilElement {
+    }
+    var HTMLUploadContentElement: {
+        prototype: HTMLUploadContentElement;
+        new (): HTMLUploadContentElement;
+    };
+    interface HTMLUploadSidebarElement extends Components.UploadSidebar, HTMLStencilElement {
+    }
+    var HTMLUploadSidebarElement: {
+        prototype: HTMLUploadSidebarElement;
+        new (): HTMLUploadSidebarElement;
+    };
     interface HTMLElementTagNameMap {
         "admin-table": HTMLAdminTableElement;
         "admin-upload": HTMLAdminUploadElement;
@@ -216,14 +232,14 @@ declare global {
         "app-sidenav": HTMLAppSidenavElement;
         "app-support": HTMLAppSupportElement;
         "comp-alert": HTMLCompAlertElement;
+        "upload-content": HTMLUploadContentElement;
+        "upload-sidebar": HTMLUploadSidebarElement;
     }
 }
 declare namespace LocalJSX {
     interface AdminTable {
     }
     interface AdminUpload {
-        "onCancelMedia"?: (event: CustomEvent<any>) => void;
-        "onSelectMedia"?: (event: CustomEvent<FileEntry[]>) => void;
     }
     interface AppAuth {
     }
@@ -276,6 +292,13 @@ declare namespace LocalJSX {
         "onClose"?: (event: CustomEvent<boolean>) => void;
         "onConfirm"?: (event: CustomEvent<boolean>) => void;
     }
+    interface UploadContent {
+        "onCancelMedia"?: (event: CustomEvent<any>) => void;
+        "onSelectMedia"?: (event: CustomEvent<FileEntry[]>) => void;
+    }
+    interface UploadSidebar {
+        "onRefresh"?: (event: CustomEvent<any>) => void;
+    }
     interface IntrinsicElements {
         "admin-table": AdminTable;
         "admin-upload": AdminUpload;
@@ -299,6 +322,8 @@ declare namespace LocalJSX {
         "app-sidenav": AppSidenav;
         "app-support": AppSupport;
         "comp-alert": CompAlert;
+        "upload-content": UploadContent;
+        "upload-sidebar": UploadSidebar;
     }
 }
 export { LocalJSX as JSX };
@@ -327,6 +352,8 @@ declare module "@stencil/core" {
             "app-sidenav": LocalJSX.AppSidenav & JSXBase.HTMLAttributes<HTMLAppSidenavElement>;
             "app-support": LocalJSX.AppSupport & JSXBase.HTMLAttributes<HTMLAppSupportElement>;
             "comp-alert": LocalJSX.CompAlert & JSXBase.HTMLAttributes<HTMLCompAlertElement>;
+            "upload-content": LocalJSX.UploadContent & JSXBase.HTMLAttributes<HTMLUploadContentElement>;
+            "upload-sidebar": LocalJSX.UploadSidebar & JSXBase.HTMLAttributes<HTMLUploadSidebarElement>;
         }
     }
 }

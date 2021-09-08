@@ -26,6 +26,17 @@ export class AdminUpload {
     eventName: 'selectMedia',
   })
   selectMedia: EventEmitter<FileEntry[]>;
+  @Event({
+    eventName: 'overlayRequest',
+  })
+  overlayRequest: EventEmitter;
+  @Event({
+    eventName: 'refresh',
+  })
+  refresh: EventEmitter;
+  refreshHandler() {
+    this.refresh.emit();
+  }
 
   cancelMediaHandler() {
     this.cancelMedia.emit();
@@ -34,8 +45,12 @@ export class AdminUpload {
   selectMediaHandler() {
     this.selectMedia.emit(this.fileArray);
   }
+  overlayRequestHandler() {
+    this.overlayRequest.emit(this.fsData);
+  }
 
   private file: File;
+  private fsData: { id: number; func: 'makeDir' | 'changeDirName' | 'changeFileName' | 'none' };
 
   render = () => (
     <Host class="Upload-Content">
@@ -52,7 +67,7 @@ export class AdminUpload {
           class="Upload-PathElement"
           onClick={() => {
             FileSystemService.getChildren(null).then(() => {
-              //
+              this.refreshHandler();
             });
           }}
         >
@@ -65,7 +80,7 @@ export class AdminUpload {
               class="Upload-PathElement"
               onClick={() => {
                 FileSystemService.getChildren(elem.dir_id).then(() => {
-                  //
+                  this.refreshHandler();
                 });
               }}
             >
@@ -109,7 +124,8 @@ export class AdminUpload {
                           class="Content-Item"
                           onClick={e => {
                             e.stopPropagation();
-                            //
+                            this.fsData = { id: child.dir_id, func: 'changeDirName' };
+                            this.overlayRequestHandler();
                           }}
                         >
                           <span>Rename Collection</span>
@@ -119,7 +135,7 @@ export class AdminUpload {
                           onClick={e => {
                             e.stopPropagation();
                             FileSystemService.removeDirectory(child.dir_id).then(() => {
-                              //
+                              this.refreshHandler();
                             });
                           }}
                         >
@@ -132,7 +148,7 @@ export class AdminUpload {
                     class={{ 'Upload-Outer-Image': true }}
                     onClick={() => {
                       FileSystemService.getChildren(child.dir_id).then(() => {
-                        //
+                        this.refreshHandler();
                       });
                     }}
                     src="\assets\icon\Folder-Image.svg"
@@ -169,7 +185,8 @@ export class AdminUpload {
                           class="Content-Item"
                           onClick={e => {
                             e.stopPropagation();
-                            //
+                            this.fsData = { id: child.file_id, func: 'changeFileName' };
+                            this.overlayRequestHandler();
                           }}
                         >
                           <span>Rename File</span>
@@ -183,7 +200,7 @@ export class AdminUpload {
                                 return FileSystemService.getChildren(FileSystemService.currentDir);
                               })
                               .then(() => {
-                                //
+                                this.refreshHandler();
                               });
                           }}
                         >
@@ -198,7 +215,7 @@ export class AdminUpload {
                       if (!this.fileArray.includes(child)) {
                         this.fileArray.push(child);
                       } else this.fileArray = [...this.fileArray.filter(value => value.file_id != child.file_id)];
-                      //
+                      this.refreshHandler();
                     }}
                     src={FileSystemService.getIcon(child.file_type)}
                   ></img>

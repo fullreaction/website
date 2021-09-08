@@ -294,9 +294,12 @@ declare namespace LocalJSX {
     }
     interface UploadContent {
         "onCancelMedia"?: (event: CustomEvent<any>) => void;
+        "onOverlayRequest"?: (event: CustomEvent<any>) => void;
+        "onRefresh"?: (event: CustomEvent<any>) => void;
         "onSelectMedia"?: (event: CustomEvent<FileEntry[]>) => void;
     }
     interface UploadSidebar {
+        "onOverlayRequest"?: (event: CustomEvent<any>) => void;
         "onRefresh"?: (event: CustomEvent<any>) => void;
     }
     interface IntrinsicElements {

@@ -1,11 +1,15 @@
-import { Component, h, Host, State, Event, EventEmitter } from '@stencil/core';
+import { Component, h, Host, State } from '@stencil/core';
 import { FileEntry } from '../../../../models/upload.models';
 
 import { FileSystemService, RecursiveSkeleton } from '../../../../services/file-system-services';
 
 /*
-  moving files and folders
+   moving files and folders
   right click
+
+  button is clicked -> parent to open overlay(event) -> parent runs runFS
+
+  button is clicked -> overlay opens -> runFS
 
   Uploading folders (scrapped)
 */
@@ -79,12 +83,22 @@ export class AdminUpload {
   render = () => (
     <Host class="Upload">
       <upload-sidebar
-        hidden={this.forceRender == null}
         onRefresh={() => {
           this.forceRender = !this.forceRender;
         }}
+        onOverlayRequest={e => {
+          console.log(e);
+          this.overlayVis = true;
+          this.fsData = e.detail;
+        }}
       ></upload-sidebar>
-      <upload-content hidden={this.forceRender == null}></upload-content>
+      <upload-content
+        onOverlayRequest={e => {
+          console.log(e);
+          this.overlayVis = true;
+          this.fsData = e.detail;
+        }}
+      ></upload-content>
 
       <comp-alert
         hidden={!this.overlayVis}

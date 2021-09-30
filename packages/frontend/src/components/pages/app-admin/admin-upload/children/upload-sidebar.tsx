@@ -1,12 +1,15 @@
-import { Component, h, Host, Event, EventEmitter, State } from '@stencil/core';
+import { Component, h, Host, Event, EventEmitter, Prop, State, Watch } from '@stencil/core';
 
 import { FileSystemService, RecursiveSkeleton } from '../../../../../services/file-system-services';
+import { FSparams } from '../admin-upload';
 
 /*
   moving files and folders
   right click
 
   put filesystemservice.skeleton inside @state var -> onrefresh refresh @state var
+
+  createStore in filesystemservice
 
   Uploading folders (scrapped)
 */
@@ -17,42 +20,45 @@ import { FileSystemService, RecursiveSkeleton } from '../../../../../services/fi
 })
 export class AdminUpload {
   @Event({
-    eventName: 'refresh',
-  })
-  refresh: EventEmitter;
-  refreshHandler() {
-    this.refresh.emit();
-  }
-  @Event({
     eventName: 'overlayRequest',
   })
-  overlayRequest: EventEmitter;
+  overlayRequest: EventEmitter<FSparams>;
   overlayRequestHandler() {
     this.overlayRequest.emit(this.fsData);
   }
+  @Event({
+    eventName: 'refreshRequest',
+  })
+  refreshRequest: EventEmitter<RecursiveSkeleton>;
 
-  @State() skeleton: RecursiveSkeleton;
-
+  globalRefresh(skel: RecursiveSkeleton) {
+    this.refreshRequest.emit(skel);
+  }
+  localRefresh() {
+    this.forceRender = !this.forceRender;
+  }
+  @Prop()
+  @State()
+  forceRender = false;
+  @Watch('forceRender')
+  testing(newValue: boolean, oldValue: boolean) {
+    console.log(newValue);
+  }
   private file: File;
-  private fsData: { id: number; func: 'makeDir' | 'changeDirName' | 'changeFileName' | 'none' };
+  private fsData: FSparams;
 
   componentWillLoad() {
     return FileSystemService.init().then(() => {
-      this.fsData = { id: FileSystemService.skeleton.dir_id, func: 'none' };
-      this.skeleton = FileSystemService.skeleton;
+      if (this.forceRender != null) this.fsData = { id: FileSystemService.skeleton.dir_id, func: 'none' };
     });
   }
 
   onFileChange(e) {
     if (e.target.files.length != null) {
       this.file = e.target.files[0];
-      FileSystemService.uploadFile(this.file, FileSystemService.currentDir)
-        .then(() => {
-          return FileSystemService.getChildren(FileSystemService.currentDir);
-        })
-        .then(() => {
-          this.skeleton = { ...this.skeleton };
-        });
+      FileSystemService.uploadFile(this.file, FileSystemService.dirInfo.currentDir).then(() => {
+        return FileSystemService.getChildren(FileSystemService.dirInfo.currentDir);
+      });
     }
   }
 
@@ -61,16 +67,14 @@ export class AdminUpload {
       return skel.children.map((child, index) => {
         let count = 0;
         for (let i = 0; i < index; i++) {
-          if (FileSystemService.dirChildren.directories[i].dir_name === child.dir_name) count++;
+          if (FileSystemService.dirInfo.directories[i].dir_name === child.dir_name) count++;
         }
         return (
           <div class="Upload-CollectionWrapper">
             <button
               class="Upload-Collection"
               onClick={() => {
-                FileSystemService.getChildren(child.dir_id).then(() => {
-                  this.skeleton = { ...this.skeleton };
-                });
+                this.globalRefresh(child);
               }}
             >
               <div
@@ -81,12 +85,12 @@ export class AdminUpload {
                   if (child.children == null)
                     FileSystemService.getSkeleton(child).then(() => {
                       child.showSubfolders = true;
+                      this.localRefresh();
                     });
                   else {
                     child.showSubfolders = !child.showSubfolders;
-                    this.skeleton = { ...this.skeleton };
-                    console.log(child);
                   }
+                  this.localRefresh();
                 }}
               >
                 <div class={{ 'Upload-Arrow': true, 'Upload-ArrowDown': child.showSubfolders }}></div>
@@ -139,7 +143,7 @@ export class AdminUpload {
                             return FileSystemService.getSkeleton(skeleton);
                           })
                           .then(() => {
-                            this.skeleton = FileSystemService.skeleton;
+                            return FileSystemService.getChildren(skel.dir_id);
                           });
                       }}
                     >
@@ -166,9 +170,7 @@ export class AdminUpload {
       <div
         class="Upload-Collection Upload-CollectionHeader"
         onClick={() => {
-          FileSystemService.getChildren(null).then(() => {
-            this.skeleton = { ...this.skeleton };
-          });
+          this.globalRefresh(null);
         }}
       >
         <span>COLLECTIONS</span>
@@ -192,7 +194,7 @@ export class AdminUpload {
         </button>
       </div>
 
-      {this.drawSkeleton(this.skeleton)}
+      {this.forceRender != null ? this.drawSkeleton(FileSystemService.skeleton) : ''}
     </Host>
   );
 }

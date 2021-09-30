@@ -12,8 +12,7 @@ export class RecursiveSkeleton {
 }
 
 class FileSystemServiceController {
-  dirChildren: { directories: Directory[]; files: FileEntry[] };
-  currentDir: number;
+  dirInfo: { currentDir?: number; directories?: Directory[]; files?: FileEntry[] } = {};
   skeleton = new RecursiveSkeleton();
   path: { dir_name: string; dir_id: number }[] = [];
 
@@ -165,8 +164,9 @@ class FileSystemServiceController {
     };
     const res = await fetch(ROOT_URL + 'filesystem/getdir', fetchData).then(handleFetch);
 
-    this.dirChildren = res;
-    this.currentDir = dir_id;
+    this.dirInfo.files = res.files;
+    this.dirInfo.directories = res.directories;
+    this.dirInfo.currentDir = dir_id;
     this.path = await this.getPath(dir_id);
   }
   private async getPath(dir_id: number): Promise<{ dir_name: string; dir_id: number }[]> {

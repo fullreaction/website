@@ -1,4 +1,4 @@
-import { Component, h, Host, State, Event, EventEmitter } from '@stencil/core';
+import { Component, h, Host, State, Event, EventEmitter, Prop } from '@stencil/core';
 import { FileEntry } from '../../../../../models/upload.models';
 
 import { FileSystemService } from '../../../../../services/file-system-services';
@@ -30,13 +30,6 @@ export class AdminUpload {
     eventName: 'overlayRequest',
   })
   overlayRequest: EventEmitter;
-  @Event({
-    eventName: 'refresh',
-  })
-  refresh: EventEmitter;
-  refreshHandler() {
-    this.refresh.emit();
-  }
 
   cancelMediaHandler() {
     this.cancelMedia.emit();
@@ -48,7 +41,9 @@ export class AdminUpload {
   overlayRequestHandler() {
     this.overlayRequest.emit(this.fsData);
   }
-
+  @Prop()
+  @State()
+  forceRender = false;
   private file: File;
   private fsData: { id: number; func: 'makeDir' | 'changeDirName' | 'changeFileName' | 'none' };
 
@@ -66,9 +61,7 @@ export class AdminUpload {
         <span
           class="Upload-PathElement"
           onClick={() => {
-            FileSystemService.getChildren(null).then(() => {
-              this.refreshHandler();
-            });
+            FileSystemService.getChildren(null);
           }}
         >
           COLLECTIONS
@@ -79,9 +72,7 @@ export class AdminUpload {
             <span
               class="Upload-PathElement"
               onClick={() => {
-                FileSystemService.getChildren(elem.dir_id).then(() => {
-                  this.refreshHandler();
-                });
+                FileSystemService.getChildren(elem.dir_id);
               }}
             >
               {elem.dir_name}
@@ -90,144 +81,142 @@ export class AdminUpload {
         ))}
       </div>
 
-      <div class="Upload-File-Box">
-        {FileSystemService.dirChildren.directories.map((child, index) => {
-          if (
-            this.searchWord == '' ||
-            child.dir_name.toLocaleLowerCase().includes(this.searchWord.toLocaleLowerCase())
-          ) {
-            let count = 0;
-            for (let i = 0; i < index; i++) {
-              if (FileSystemService.dirChildren.directories[i].dir_name === child.dir_name) count++;
-            }
-            return (
-              <div class="Upload-Item">
-                <div class="Upload-Icon">
-                  <div class="Upload-Inner-Image">
-                    <img
-                      class="Upload-Icon-Dots"
-                      src="\assets\icon\3Dots-icon.svg"
-                      onClick={e => e.stopPropagation()}
-                    ></img>
-                    <div class="Upload-Dots-Wrapper">
-                      <div class="Upload-Dots-Content">
-                        <button
-                          class="Content-Item"
-                          onClick={e => {
-                            e.stopPropagation();
-                            FileSystemService.downloadDir(child.dir_id, child.dir_name);
-                          }}
-                        >
-                          <span>Download Collection</span>
-                        </button>
-                        <button
-                          class="Content-Item"
-                          onClick={e => {
-                            e.stopPropagation();
-                            this.fsData = { id: child.dir_id, func: 'changeDirName' };
-                            this.overlayRequestHandler();
-                          }}
-                        >
-                          <span>Rename Collection</span>
-                        </button>
-                        <button
-                          class="Content-Item"
-                          onClick={e => {
-                            e.stopPropagation();
-                            FileSystemService.removeDirectory(child.dir_id).then(() => {
-                              this.refreshHandler();
-                            });
-                          }}
-                        >
-                          <span>Delete Collection</span>
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                  <img
-                    class={{ 'Upload-Outer-Image': true }}
-                    onClick={() => {
-                      FileSystemService.getChildren(child.dir_id).then(() => {
-                        this.refreshHandler();
-                      });
-                    }}
-                    src="\assets\icon\Folder-Image.svg"
-                  ></img>
-                </div>
-                <span class="Upload-Image-Text">
-                  {count === 0 ? child.dir_name : child.dir_name + ' (' + count + ')'}
-                </span>
-              </div>
-            );
-          }
-        })}
-        {FileSystemService.dirChildren.files.map((child, index) => {
-          if (
-            this.searchWord == '' ||
-            child.file_name.toLocaleLowerCase().includes(this.searchWord.toLocaleLowerCase()) //
-          ) {
-            let count = 0;
-            for (let i = 0; i < index; i++) {
-              if (FileSystemService.dirChildren.files[i].file_name === child.file_name) count++;
-            }
-            return (
-              <div class={{ 'Upload-Item': true, 'Highlight-File': this.fileArray.includes(child) ? true : false }}>
-                <div class="Upload-Icon">
-                  <div class="Upload-Inner-Image">
-                    <img
-                      class="Upload-Icon-Dots"
-                      src="\assets\icon\3Dots-icon.svg"
-                      onClick={e => e.stopPropagation()}
-                    ></img>
-                    <div class="Upload-Dots-Wrapper">
-                      <div class="Upload-Dots-Content">
-                        <button
-                          class="Content-Item"
-                          onClick={e => {
-                            e.stopPropagation();
-                            this.fsData = { id: child.file_id, func: 'changeFileName' };
-                            this.overlayRequestHandler();
-                          }}
-                        >
-                          <span>Rename File</span>
-                        </button>
-                        <button
-                          class="Content-Item"
-                          onClick={e => {
-                            e.stopPropagation();
-                            FileSystemService.deleteFile(child.file_id)
-                              .then(() => {
-                                return FileSystemService.getChildren(FileSystemService.currentDir);
-                              })
-                              .then(() => {
-                                this.refreshHandler();
+      {this.forceRender != null ? (
+        <div class="Upload-File-Box">
+          {FileSystemService.dirInfo.directories.map((child, index) => {
+            if (
+              this.searchWord == '' ||
+              child.dir_name.toLocaleLowerCase().includes(this.searchWord.toLocaleLowerCase())
+            ) {
+              let count = 0;
+              for (let i = 0; i < index; i++) {
+                if (FileSystemService.dirInfo.directories[i].dir_name === child.dir_name) count++;
+              }
+              return (
+                <div class="Upload-Item">
+                  <div class="Upload-Icon">
+                    <div class="Upload-Inner-Image">
+                      <img
+                        class="Upload-Icon-Dots"
+                        src="\assets\icon\3Dots-icon.svg"
+                        onClick={e => e.stopPropagation()}
+                      ></img>
+                      <div class="Upload-Dots-Wrapper">
+                        <div class="Upload-Dots-Content">
+                          <button
+                            class="Content-Item"
+                            onClick={e => {
+                              e.stopPropagation();
+                              FileSystemService.downloadDir(child.dir_id, child.dir_name);
+                            }}
+                          >
+                            <span>Download Collection</span>
+                          </button>
+                          <button
+                            class="Content-Item"
+                            onClick={e => {
+                              e.stopPropagation();
+                              this.fsData = { id: child.dir_id, func: 'changeDirName' };
+                              this.overlayRequestHandler();
+                            }}
+                          >
+                            <span>Rename Collection</span>
+                          </button>
+                          <button
+                            class="Content-Item"
+                            onClick={e => {
+                              e.stopPropagation();
+                              FileSystemService.removeDirectory(child.dir_id).then(() => {
+                                FileSystemService.getChildren(FileSystemService.dirInfo.currentDir);
                               });
-                          }}
-                        >
-                          <span>Delete File</span>
-                        </button>
+                            }}
+                          >
+                            <span>Delete Collection</span>
+                          </button>
+                        </div>
                       </div>
                     </div>
+                    <img
+                      class={{ 'Upload-Outer-Image': true }}
+                      onClick={() => {
+                        FileSystemService.getChildren(child.dir_id);
+                      }}
+                      src="\assets\icon\Folder-Image.svg"
+                    ></img>
                   </div>
-                  <img
-                    class="Upload-Outer-Image"
-                    onClick={() => {
-                      if (!this.fileArray.includes(child)) {
-                        this.fileArray.push(child);
-                      } else this.fileArray = [...this.fileArray.filter(value => value.file_id != child.file_id)];
-                      this.refreshHandler();
-                    }}
-                    src={FileSystemService.getIcon(child.file_type)}
-                  ></img>
+                  <span class="Upload-Image-Text">
+                    {count === 0 ? child.dir_name : child.dir_name + ' (' + count + ')'}
+                  </span>
                 </div>
-                <span class="Upload-Image-Text">
-                  {count === 0 ? child.file_name : child.file_name + ' (' + count + ')'}
-                </span>
-              </div>
-            );
-          }
-        })}
-      </div>
+              );
+            }
+          })}
+          {FileSystemService.dirInfo.files.map((child, index) => {
+            if (
+              this.searchWord == '' ||
+              child.file_name.toLocaleLowerCase().includes(this.searchWord.toLocaleLowerCase()) //
+            ) {
+              let count = 0;
+              for (let i = 0; i < index; i++) {
+                if (FileSystemService.dirInfo.files[i].file_name === child.file_name) count++;
+              }
+              return (
+                <div class={{ 'Upload-Item': true, 'Highlight-File': this.fileArray.includes(child) ? true : false }}>
+                  <div class="Upload-Icon">
+                    <div class="Upload-Inner-Image">
+                      <img
+                        class="Upload-Icon-Dots"
+                        src="\assets\icon\3Dots-icon.svg"
+                        onClick={e => e.stopPropagation()}
+                      ></img>
+                      <div class="Upload-Dots-Wrapper">
+                        <div class="Upload-Dots-Content">
+                          <button
+                            class="Content-Item"
+                            onClick={e => {
+                              e.stopPropagation();
+                              this.fsData = { id: child.file_id, func: 'changeFileName' };
+                              this.overlayRequestHandler();
+                            }}
+                          >
+                            <span>Rename File</span>
+                          </button>
+                          <button
+                            class="Content-Item"
+                            onClick={e => {
+                              e.stopPropagation();
+                              FileSystemService.deleteFile(child.file_id).then(() => {
+                                return FileSystemService.getChildren(FileSystemService.dirInfo.currentDir);
+                              });
+                            }}
+                          >
+                            <span>Delete File</span>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                    <img
+                      class="Upload-Outer-Image"
+                      onClick={() => {
+                        if (!this.fileArray.includes(child)) {
+                          this.fileArray.push(child);
+                        } else this.fileArray = [...this.fileArray.filter(value => value.file_id != child.file_id)];
+                      }}
+                      src={FileSystemService.getIcon(child.file_type)}
+                    ></img>
+                  </div>
+                  <span class="Upload-Image-Text">
+                    {count === 0 ? child.file_name : child.file_name + ' (' + count + ')'}
+                  </span>
+                </div>
+              );
+            }
+          })}
+        </div>
+      ) : (
+        ''
+      )}
+
       <div class="Upload-Button-Box">
         <button
           class="Upload-Button-1"

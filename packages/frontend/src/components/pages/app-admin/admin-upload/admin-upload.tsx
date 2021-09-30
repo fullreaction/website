@@ -11,8 +11,17 @@ import { FileSystemService, RecursiveSkeleton } from '../../../../services/file-
 
   button is clicked -> overlay opens -> runFS
 
+  --
+  Watch forceRender prop, rerender state func
+
+
   Uploading folders (scrapped)
 */
+export interface FSparams {
+  name?: string;
+  id: number;
+  func: 'makeDir' | 'changeDirName' | 'changeFileName' | 'none';
+}
 
 @Component({
   tag: 'admin-upload',
@@ -20,12 +29,13 @@ import { FileSystemService, RecursiveSkeleton } from '../../../../services/file-
 })
 export class AdminUpload {
   @State() overlayVis = false;
-  @State() forceRender = false;
 
   @State() fileArray: FileEntry[] = [];
 
+  @State() forceRender = false;
+
   private file: File;
-  private fsData: { name: string; id: number; func: 'makeDir' | 'changeDirName' | 'changeFileName' | 'none' };
+  private fsData: FSparams;
 
   private alertHeader = new Map<string, string>([
     ['makeDir', 'Name your new directory'],
@@ -41,19 +51,17 @@ export class AdminUpload {
   }
   async runFS(e) {
     e.preventDefault();
-    if (this.fsData.func != 'none') await FileSystemService[this.fsData.func](this.fsData.id, this.fsData.name);
+    if (this.fsData.func != 'none') {
+      await FileSystemService[this.fsData.func](this.fsData.id, this.fsData.name);
+    }
   }
 
   onFileChange(e) {
     if (e.target.files.length != null) {
       this.file = e.target.files[0];
-      FileSystemService.uploadFile(this.file, FileSystemService.currentDir)
-        .then(() => {
-          return FileSystemService.getChildren(FileSystemService.currentDir);
-        })
-        .then(() => {
-          this.forceRender = !this.forceRender;
-        });
+      FileSystemService.uploadFile(this.file, FileSystemService.dirInfo.currentDir).then(() => {
+        FileSystemService.getChildren(FileSystemService.dirInfo.currentDir);
+      });
     }
   }
 
@@ -64,7 +72,7 @@ export class AdminUpload {
           return FileSystemService.getSkeleton(res);
         })
         .then(() => {
-          return FileSystemService.getChildren(FileSystemService.currentDir);
+          return FileSystemService.getChildren(FileSystemService.dirInfo.currentDir);
         })
         .then(() => {
           this.forceRender = !this.forceRender;
@@ -72,7 +80,7 @@ export class AdminUpload {
     } else {
       FileSystemService.getSkeleton(skel)
         .then(() => {
-          return FileSystemService.getChildren(FileSystemService.currentDir);
+          return FileSystemService.getChildren(FileSystemService.dirInfo.currentDir);
         })
         .then(() => {
           this.forceRender = !this.forceRender;
@@ -81,25 +89,31 @@ export class AdminUpload {
   }
 
   render = () => (
-    <Host class="Upload">
-      <upload-sidebar
-        onRefresh={() => {
-          this.forceRender = !this.forceRender;
-        }}
-        onOverlayRequest={e => {
-          console.log(e);
-          this.overlayVis = true;
-          this.fsData = e.detail;
-        }}
-      ></upload-sidebar>
-      <upload-content
-        onOverlayRequest={e => {
-          console.log(e);
-          this.overlayVis = true;
-          this.fsData = e.detail;
-        }}
-      ></upload-content>
-
+    <Host>
+      {this.forceRender != null ? (
+        <div class="Upload">
+          <upload-sidebar
+            forceRender={this.forceRender}
+            onOverlayRequest={e => {
+              this.overlayVis = true;
+              this.fsData = e.detail;
+            }}
+            onRefreshRequest={e => {
+              this.refreshDirectories(e.detail);
+            }}
+          ></upload-sidebar>
+          <upload-content
+            forceRender={this.forceRender}
+            onOverlayRequest={e => {
+              console.log(e);
+              this.overlayVis = true;
+              this.fsData = e.detail;
+            }}
+          ></upload-content>
+        </div>
+      ) : (
+        ''
+      )}
       <comp-alert
         hidden={!this.overlayVis}
         onConfirm={e => {
@@ -107,6 +121,7 @@ export class AdminUpload {
             this.overlayVis = false;
             this.runFS(e)
               .then(() => {
+                this.forceRender = !this.forceRender;
                 this.refreshDirectories(this.fsData.id);
               })
               .then(() => {

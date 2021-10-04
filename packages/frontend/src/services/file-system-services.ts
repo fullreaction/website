@@ -1,8 +1,14 @@
 import { AuthService } from './auth-service';
-import { handleFetch, ROOT_URL } from '../utils/httpUtils';
+import { AxiosService, handleFetch, ROOT_URL } from '../utils/httpUtils';
 import { Directory, FileEntry } from '../models/upload.models';
 import FileSaver from 'file-saver';
 import JSZip from 'jszip';
+
+/*
+  * Filetypes mess up if the file isn't in root
+
+
+*/
 
 export class RecursiveSkeleton {
   dir_name: string;
@@ -34,13 +40,8 @@ class FileSystemServiceController {
     await this.getChildren(null);
   }
   async downloadFile(file: FileEntry) {
-    const fetchData: RequestInit = {
-      method: 'GET',
-      credentials: 'include',
-    };
-
     FileSaver.saveAs(
-      await (await fetch(ROOT_URL + 'filesystem/getfile/' + file.file_id, fetchData)).blob(),
+      (await AxiosService.get('filesystem/getfile/' + file.file_id, { responseType: 'blob' })).data,
       file.file_type != null ? file.file_name + '.' + file.file_type : file.file_name,
     );
   }
@@ -75,12 +76,7 @@ class FileSystemServiceController {
     await fetch(ROOT_URL + 'filesystem/changefilename', fetchData);
   }
   async deleteFile(file_id: number) {
-    const fetchData: RequestInit = {
-      method: 'Delete',
-      credentials: 'include',
-    };
-
-    await fetch(ROOT_URL + 'filesystem/deletefile/' + file_id, fetchData);
+    await AxiosService.delete('filesystem/deletefile/' + file_id);
   }
 
   async downloadDir(dir_id: number, dir_name: string) {
@@ -107,13 +103,8 @@ class FileSystemServiceController {
 
     for (const file of res.files) {
       parent.file(
-        file.file_name,
-        await (
-          await fetch(ROOT_URL + 'filesystem/getfile/' + file.file_id, {
-            method: 'GET',
-            credentials: 'include',
-          })
-        ).blob(),
+        file.file_type != null ? file.file_name + '.' + file.file_type : file.file_name,
+        (await AxiosService.get('filesystem/getfile/' + file.file_id, { responseType: 'blob' })).data,
       );
     }
     if (res.directories.length != 0) {
@@ -203,7 +194,6 @@ class FileSystemServiceController {
       const path = await this.getPath(dir_id);
       let skel: RecursiveSkeleton = this.skeleton;
       for (const elem of path) {
-        console.log(elem);
         skel = skel.children.find(child => (child.dir_id = elem.dir_id));
       }
 

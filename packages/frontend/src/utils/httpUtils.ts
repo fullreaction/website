@@ -1,3 +1,13 @@
+import { Axios } from 'axios';
+
+class AxiosServiceController extends Axios {
+  constructor() {
+    super({ baseURL: 'http://localhost:3000/' });
+    //initInterceptors();
+  }
+  //add interceptor functions and initInterceptors()
+}
+
 export const ROOT_URL = 'http://localhost:3000/';
 
 export const handleFetch = async response => {
@@ -26,3 +36,5 @@ type gvmError = {
 export class gvmHttpErrorResponse {
   constructor(public error: gvmError, public code: number, public message: string, public url: string) {}
 }
+
+export const AxiosService = new AxiosServiceController();

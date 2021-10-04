@@ -35,6 +35,7 @@ export class FileSystemController {
 
   @Delete('deletefile/:id')
   async removeFile(@Param('id') file_id: number) {
+    console.log(file_id + 'HERE');
     await this.fileSystem.removeFile(file_id);
   }
 

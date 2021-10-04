@@ -87,47 +87,49 @@ export class AdminUpload {
         });
     }
   }
-
+  compAlertConfirm(e: CustomEvent) {
+    if (this.overlayVis) {
+      this.overlayVis = false;
+      this.runFS(e)
+        .then(() => {
+          this.forceRender = !this.forceRender;
+          this.refreshDirectories(this.fsData.id);
+        })
+        .then(() => {
+          this.fsData = { id: null, name: '', func: 'none' };
+        });
+    }
+  }
   render = () => (
     <Host>
-      {this.forceRender != null ? (
-        <div class="Upload">
-          <upload-sidebar
-            forceRender={this.forceRender}
-            onOverlayRequest={e => {
-              this.overlayVis = true;
-              this.fsData = e.detail;
-            }}
-            onRefreshRequest={e => {
-              this.refreshDirectories(e.detail);
-            }}
-          ></upload-sidebar>
-          <upload-content
-            forceRender={this.forceRender}
-            onOverlayRequest={e => {
-              console.log(e);
-              this.overlayVis = true;
-              this.fsData = e.detail;
-            }}
-          ></upload-content>
-        </div>
-      ) : (
-        ''
-      )}
+      <div class="Upload">
+        <upload-sidebar
+          forceRender={this.forceRender}
+          onRefreshRequest={e => {
+            this.refreshDirectories(e.detail);
+          }}
+          onOverlayRequest={e => {
+            this.overlayVis = true;
+            this.fsData = e.detail;
+          }}
+        ></upload-sidebar>
+        <upload-content
+          forceRender={this.forceRender}
+          onRefreshRequest={e => {
+            this.refreshDirectories(e.detail);
+          }}
+          onOverlayRequest={e => {
+            console.log(e);
+            this.overlayVis = true;
+            this.fsData = e.detail;
+          }}
+        ></upload-content>
+      </div>
+
       <comp-alert
         hidden={!this.overlayVis}
         onConfirm={e => {
-          if (this.overlayVis) {
-            this.overlayVis = false;
-            this.runFS(e)
-              .then(() => {
-                this.forceRender = !this.forceRender;
-                this.refreshDirectories(this.fsData.id);
-              })
-              .then(() => {
-                this.fsData = { id: null, name: '', func: 'none' };
-              });
-          }
+          this.compAlertConfirm(e);
         }}
         onCancel={e => {
           this.overlayVis = false;

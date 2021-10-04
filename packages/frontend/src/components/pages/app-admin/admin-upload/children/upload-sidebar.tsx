@@ -29,21 +29,17 @@ export class AdminUpload {
   @Event({
     eventName: 'refreshRequest',
   })
-  refreshRequest: EventEmitter<RecursiveSkeleton>;
+  refreshRequest: EventEmitter<RecursiveSkeleton | number>;
 
-  globalRefresh(skel: RecursiveSkeleton) {
+  globalRefresh(skel: RecursiveSkeleton | number) {
     this.refreshRequest.emit(skel);
   }
   localRefresh() {
     this.forceRender = !this.forceRender;
   }
   @Prop()
-  @State()
   forceRender = false;
-  @Watch('forceRender')
-  testing(newValue: boolean, oldValue: boolean) {
-    console.log(newValue);
-  }
+
   private file: File;
   private fsData: FSparams;
 
@@ -57,7 +53,7 @@ export class AdminUpload {
     if (e.target.files.length != null) {
       this.file = e.target.files[0];
       FileSystemService.uploadFile(this.file, FileSystemService.dirInfo.currentDir).then(() => {
-        return FileSystemService.getChildren(FileSystemService.dirInfo.currentDir);
+        this.globalRefresh(FileSystemService.dirInfo.currentDir);
       });
     }
   }
@@ -74,7 +70,9 @@ export class AdminUpload {
             <button
               class="Upload-Collection"
               onClick={() => {
-                this.globalRefresh(child);
+                FileSystemService.getChildren(child.dir_id).then(() => {
+                  this.globalRefresh(child);
+                });
               }}
             >
               <div
@@ -135,16 +133,9 @@ export class AdminUpload {
                       class="Content-Item"
                       onClick={e => {
                         e.stopPropagation();
-                        FileSystemService.removeDirectory(child.dir_id)
-                          .then(() => {
-                            return FileSystemService.findSkeleton(child.dir_id);
-                          })
-                          .then(skeleton => {
-                            return FileSystemService.getSkeleton(skeleton);
-                          })
-                          .then(() => {
-                            return FileSystemService.getChildren(skel.dir_id);
-                          });
+                        FileSystemService.removeDirectory(child.dir_id).then(() => {
+                          this.globalRefresh(child.dir_id);
+                        });
                       }}
                     >
                       <span>Delete Collection</span>
@@ -170,7 +161,9 @@ export class AdminUpload {
       <div
         class="Upload-Collection Upload-CollectionHeader"
         onClick={() => {
-          this.globalRefresh(null);
+          FileSystemService.getChildren(null).then(() => {
+            this.globalRefresh(FileSystemService.skeleton);
+          });
         }}
       >
         <span>COLLECTIONS</span>
@@ -194,7 +187,7 @@ export class AdminUpload {
         </button>
       </div>
 
-      {this.forceRender != null ? this.drawSkeleton(FileSystemService.skeleton) : ''}
+      {this.drawSkeleton(FileSystemService.skeleton)}
     </Host>
   );
 }

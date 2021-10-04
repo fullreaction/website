@@ -178,6 +178,7 @@ class FileSystemServiceController {
     return await fetch(ROOT_URL + 'filesystem/getpath/' + dir_id, fetchData).then(handleFetch);
   }
   async getSkeleton(skel: RecursiveSkeleton) {
+    if (skel == null) skel = this.skeleton;
     const user = await AuthService.getUser();
     const fetchData: RequestInit = {
       method: 'POST',
@@ -197,15 +198,17 @@ class FileSystemServiceController {
   }
 
   async findSkeleton(dir_id: number) {
-    const path = await this.getPath(dir_id);
+    if (dir_id == null) return this.skeleton;
+    else {
+      const path = await this.getPath(dir_id);
+      let skel: RecursiveSkeleton = this.skeleton;
+      for (const elem of path) {
+        console.log(elem);
+        skel = skel.children.find(child => (child.dir_id = elem.dir_id));
+      }
 
-    let skel: RecursiveSkeleton = this.skeleton;
-    for (const elem of path) {
-      console.log(elem);
-      skel = skel.children.find(child => (child.dir_id = elem.dir_id));
+      return skel;
     }
-
-    return skel;
   }
 }
 export const FileSystemService = new FileSystemServiceController();

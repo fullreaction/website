@@ -7,8 +7,8 @@
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { ValidationErrors } from "./utils/form";
 import { FileEntry } from "./models/upload.models";
-import { FSparams } from "./components/pages/app-admin/admin-upload/admin-upload";
 import { RecursiveSkeleton } from "./services/file-system-services";
+import { FSparams } from "./components/pages/app-admin/admin-upload/admin-upload";
 export namespace Components {
     interface AdminTable {
     }
@@ -300,12 +300,13 @@ declare namespace LocalJSX {
         "forceRender"?: boolean;
         "onCancelMedia"?: (event: CustomEvent<any>) => void;
         "onOverlayRequest"?: (event: CustomEvent<any>) => void;
+        "onRefreshRequest"?: (event: CustomEvent<RecursiveSkeleton | number>) => void;
         "onSelectMedia"?: (event: CustomEvent<FileEntry[]>) => void;
     }
     interface UploadSidebar {
         "forceRender"?: boolean;
         "onOverlayRequest"?: (event: CustomEvent<FSparams>) => void;
-        "onRefreshRequest"?: (event: CustomEvent<RecursiveSkeleton>) => void;
+        "onRefreshRequest"?: (event: CustomEvent<RecursiveSkeleton | number>) => void;
     }
     interface IntrinsicElements {
         "admin-table": AdminTable;

@@ -6,7 +6,7 @@ import JSZip from 'jszip';
 
 /*
   * Filetypes mess up if the file isn't in root
-
+  * Sending formdata doesn't work
 
 */
 
@@ -57,23 +57,11 @@ class FileSystemServiceController {
     formData.append('dir_id', JSON.stringify(dir_id));
     formData.append('owner', user.user_id as string);
 
-    const fetchData: RequestInit = {
-      method: 'POST',
-      body: formData,
-      credentials: 'include',
-    };
-
-    await fetch(ROOT_URL + 'filesystem/uploadfile', fetchData);
+    await AxiosService.post('filesystem/uploadFile', formData);
   }
   async changeFileName(file_id: number, name: string) {
-    const fetchData: RequestInit = {
-      method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ file_id, name }),
-      credentials: 'include',
-    };
-
-    await fetch(ROOT_URL + 'filesystem/changefilename', fetchData);
+    console.log(file_id, name);
+    await AxiosService.patch('filesystem/changefilename', JSON.stringify({ file_id: file_id, name: name }));
   }
   async deleteFile(file_id: number) {
     await AxiosService.delete('filesystem/deletefile/' + file_id);
@@ -95,7 +83,7 @@ class FileSystemServiceController {
       body: JSON.stringify({ dir_id: dir_id, owner: user.user_id }),
       credentials: 'include',
     };
-
+    await AxiosService.post('filesystem/getdir', JSON.stringify({ dir_id: dir_id, owner: user.user_id }));
     const res: { directories: Directory[]; files: FileEntry[] } = await fetch(
       ROOT_URL + 'filesystem/getdir',
       fetchData,
@@ -153,7 +141,10 @@ class FileSystemServiceController {
       body: JSON.stringify({ dir_id: dir_id, owner: user.user_id }),
       credentials: 'include',
     };
-    const res = await fetch(ROOT_URL + 'filesystem/getdir', fetchData).then(handleFetch);
+    const res = await AxiosService.post(
+      'filesystem/getdir',
+      JSON.stringify({ dir_id: dir_id, owner: user.user_id }),
+    ).then(AxiosService.handleFetch);
 
     this.dirInfo.files = res.files;
     this.dirInfo.directories = res.directories;

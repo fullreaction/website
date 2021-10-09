@@ -13,7 +13,6 @@ import { DatabaseService } from '../dbService';
 export class FileSystemDAO {
   constructor(private db: DatabaseService) {}
 
-  // Done
   async initUser(user: User) {
     console.log('runs');
     await this.db
@@ -26,7 +25,6 @@ export class FileSystemDAO {
       .catch(console.log);
   }
 
-  //Done
   async addFile(file: Express.Multer.File, dir_id: number, owner: string) {
     if (dir_id == null) {
       const res = await this.db
@@ -34,21 +32,14 @@ export class FileSystemDAO {
         .select('dir_id')
         .where({ owner: toBinaryUUID(owner), parent_id: null });
       dir_id = res[0].dir_id;
-      console.log(res);
     }
-    console.log(dir_id);
-    await this.db
-      .database('files')
-      .insert({
-        file_name: file.originalname,
-        owner: toBinaryUUID(owner as string),
-        parent_id: dir_id,
-        file_path: file.destination + '/' + file.filename,
-      })
-      .then((id) => {
-        console.log(id[0] + file.filename);
-        file.filename = id[0] + file.filename;
-      });
+
+    await this.db.database('files').insert({
+      file_name: file.originalname,
+      owner: toBinaryUUID(owner as string),
+      parent_id: dir_id,
+      file_path: file.destination + '/' + file.filename,
+    });
   }
   async getFile(file_id: number) {
     const fPath = await this.db.database<FileEntry>('files').where({ file_id: file_id }).select('file_path');
@@ -124,12 +115,13 @@ export class FileSystemDAO {
 
   async getChildren(dir_id: number, owner: string) {
     let directories: Directory[], files: FileEntry[];
-
+    let parent_id = dir_id;
     if (dir_id == null) {
       const rootDir = await this.db
         .database('directories')
         .select('dir_id')
         .where({ parent_id: null, owner: toBinaryUUID(owner as string) });
+      parent_id = rootDir[0].dir_id;
       directories = await this.db
         .database<Directory>('directories')
         .select('*')
@@ -159,7 +151,8 @@ export class FileSystemDAO {
     files.forEach((item) => {
       item.owner = fromBinaryUUID(item.owner as Buffer);
     });
-    return { files, directories };
+
+    return { files, directories, parent_id };
   }
 
   async getPath(dir_id: number) {

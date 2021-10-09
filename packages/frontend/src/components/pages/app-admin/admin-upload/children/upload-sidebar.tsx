@@ -54,6 +54,7 @@ export class AdminUpload {
       this.file = e.target.files[0];
       FileSystemService.uploadFile(this.file, FileSystemService.dirInfo.currentDir).then(() => {
         this.globalRefresh(FileSystemService.dirInfo.currentDir);
+        e.target.value = null;
       });
     }
   }

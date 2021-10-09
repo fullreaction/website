@@ -56,15 +56,6 @@ export class AdminUpload {
     }
   }
 
-  onFileChange(e) {
-    if (e.target.files.length != null) {
-      this.file = e.target.files[0];
-      FileSystemService.uploadFile(this.file, FileSystemService.dirInfo.currentDir).then(() => {
-        FileSystemService.getChildren(FileSystemService.dirInfo.currentDir);
-      });
-    }
-  }
-
   refreshDirectories(skel: RecursiveSkeleton | number) {
     if (typeof skel == 'number') {
       FileSystemService.findSkeleton(skel)

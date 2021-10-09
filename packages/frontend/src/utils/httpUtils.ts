@@ -13,7 +13,7 @@ class AxiosServiceController extends Axios {
 
   private contentTypeInterceptor(config: AxiosRequestConfig) {
     if (typeof config.data == 'string') config.headers = { 'content-type': 'application/json' };
-    else if (config.data instanceof FormData) config.headers = { 'content-type': 'multipart/form-data' };
+
     // Add more as needed, might change the ifs with a switch
 
     return config;

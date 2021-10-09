@@ -24,8 +24,7 @@ export class FileSystemController {
     @Body('dir_id') dir_id: string,
     @Body('owner') owner: string,
   ) {
-    console.log(typeof dir_id);
-    await this.fileSystem.addFile(file, JSON.parse(dir_id), owner);
+    await this.fileSystem.addFile(file, parseInt(dir_id), owner);
   }
 
   @Patch('changefilename')
@@ -35,7 +34,6 @@ export class FileSystemController {
 
   @Delete('deletefile/:id')
   async removeFile(@Param('id') file_id: number) {
-    console.log(file_id + 'HERE');
     await this.fileSystem.removeFile(file_id);
   }
 

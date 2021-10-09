@@ -2,11 +2,10 @@ import { AuthService } from './auth-service';
 import { AxiosService, handleFetch, ROOT_URL } from '../utils/httpUtils';
 import { Directory, FileEntry } from '../models/upload.models';
 import FileSaver from 'file-saver';
-import JSZip from 'jszip';
+import JSZip, { files } from 'jszip';
 
 /*
   * Filetypes mess up if the file isn't in root
-  * Sending formdata doesn't work
 
 */
 
@@ -53,8 +52,9 @@ class FileSystemServiceController {
   async uploadFile(file: File, dir_id: number) {
     const user = await AuthService.getUser();
     const formData = new FormData();
+
     formData.append('file', file);
-    formData.append('dir_id', JSON.stringify(dir_id));
+    formData.append('dir_id', dir_id.toString());
     formData.append('owner', user.user_id as string);
 
     await AxiosService.post('filesystem/uploadFile', formData);
@@ -135,20 +135,16 @@ class FileSystemServiceController {
   }
   async getChildren(dir_id: number) {
     const user = await AuthService.getUser();
-    const fetchData: RequestInit = {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ dir_id: dir_id, owner: user.user_id }),
-      credentials: 'include',
-    };
+
     const res = await AxiosService.post(
       'filesystem/getdir',
       JSON.stringify({ dir_id: dir_id, owner: user.user_id }),
     ).then(AxiosService.handleFetch);
 
     this.dirInfo.files = res.files;
+
     this.dirInfo.directories = res.directories;
-    this.dirInfo.currentDir = dir_id;
+    this.dirInfo.currentDir = res.parent_id;
     this.path = await this.getPath(dir_id);
   }
   private async getPath(dir_id: number): Promise<{ dir_name: string; dir_id: number }[]> {

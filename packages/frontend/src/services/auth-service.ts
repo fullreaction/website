@@ -1,4 +1,4 @@
-import { AxiosService, gvmHttpErrorResponse, handleFetch, ROOT_URL } from '../utils/httpUtils';
+import { AxiosService, gvmHttpErrorResponse, handleFetch } from '../utils/httpUtils';
 import { User } from '../models/user.model';
 import authStore from '../components/pages/app-auth/authStore';
 
@@ -49,10 +49,6 @@ class AuthServiceController {
   async checkStatus() {
     this.clearErrors();
     if (!this.user.loggedIn) {
-      const fetchData: RequestInit = {
-        method: 'GET',
-        credentials: 'include',
-      };
       const data = await AxiosService.get('auth/status')
         .then(AxiosService.handleFetch)
         .then(handleFetch)

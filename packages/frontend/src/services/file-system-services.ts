@@ -1,13 +1,8 @@
 import { AuthService } from './auth-service';
-import { AxiosService, handleFetch, ROOT_URL } from '../utils/httpUtils';
+import { AxiosService } from '../utils/httpUtils';
 import { Directory, FileEntry } from '../models/upload.models';
 import FileSaver from 'file-saver';
 import JSZip from 'jszip';
-
-/*
-
-
-*/
 
 export class RecursiveSkeleton {
   dir_name: string;
@@ -75,17 +70,11 @@ class FileSystemServiceController {
   }
   async zipDir(dir_id: number, parent) {
     const user = await AuthService.getUser();
-    const fetchData: RequestInit = {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ dir_id: dir_id, owner: user.user_id }),
-      credentials: 'include',
-    };
-    await AxiosService.post('filesystem/getdir', JSON.stringify({ dir_id: dir_id, owner: user.user_id }));
-    const res: { directories: Directory[]; files: FileEntry[] } = await fetch(
-      ROOT_URL + 'filesystem/getdir',
-      fetchData,
-    ).then(handleFetch);
+
+    const res: { directories: Directory[]; files: FileEntry[] } = await AxiosService.post(
+      'filesystem/getdir',
+      JSON.stringify({ dir_id: dir_id, owner: user.user_id }),
+    ).then(AxiosService.handleFetch);
 
     for (const file of res.files) {
       parent.file(
@@ -103,33 +92,18 @@ class FileSystemServiceController {
 
   async makeDir(parent_id: number, dir_name: string) {
     const user = await AuthService.getUser();
-    const fetchData: RequestInit = {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ dir_name: dir_name, owner: user.user_id, parent_id: parent_id }),
-      credentials: 'include',
-    };
 
-    await fetch(ROOT_URL + 'filesystem/makedir', fetchData);
+    await AxiosService.post(
+      'filesystem/makedir',
+      JSON.stringify({ dir_name: dir_name, owner: user.user_id, parent_id: parent_id }),
+    );
   }
   async changeDirName(dir_id: number, name: string) {
-    const fetchData: RequestInit = {
-      method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ dir_id: dir_id, name: name }),
-      credentials: 'include',
-    };
-    await fetch(ROOT_URL + 'filesystem/changedirname', fetchData);
+    await AxiosService.patch('filesystem/changedirname', JSON.stringify({ dir_id: dir_id, name: name }));
   }
 
   async removeDirectory(dir_id: number) {
-    const fetchData: RequestInit = {
-      method: 'DELETE',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ dir_id: dir_id }),
-      credentials: 'include',
-    };
-    await fetch(ROOT_URL + 'filesystem/removedir', fetchData);
+    await AxiosService.delete('filesystem/removedir', { data: JSON.stringify({ dir_id: dir_id }) });
   }
   async getChildren(dir_id: number) {
     const user = await AuthService.getUser();
@@ -146,23 +120,16 @@ class FileSystemServiceController {
     this.path = await this.getPath(dir_id);
   }
   private async getPath(dir_id: number): Promise<{ dir_name: string; dir_id: number }[]> {
-    const fetchData: RequestInit = {
-      method: 'GET',
-      credentials: 'include',
-    };
-
-    return await fetch(ROOT_URL + 'filesystem/getpath/' + dir_id, fetchData).then(handleFetch);
+    return await AxiosService.get('filesystem/getpath/' + dir_id).then(AxiosService.handleFetch);
   }
   async getSkeleton(skel: RecursiveSkeleton) {
     if (skel == null) skel = this.skeleton;
     const user = await AuthService.getUser();
-    const fetchData: RequestInit = {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ dir_id: skel.dir_id, owner: user.user_id }),
-      credentials: 'include',
-    };
-    const res = await fetch(ROOT_URL + 'filesystem/getskel', fetchData).then(handleFetch);
+
+    const res = await AxiosService.post(
+      'filesystem/getskel',
+      JSON.stringify({ dir_id: skel.dir_id, owner: user.user_id }),
+    ).then(AxiosService.handleFetch);
 
     skel.dir_name = res.root.dir_name;
     skel.dir_id = res.root.dir_id;

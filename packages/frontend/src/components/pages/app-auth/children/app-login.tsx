@@ -13,15 +13,11 @@ export class AppLogin {
 
   login(e) {
     e.preventDefault();
-    AuthService.login(this.email, this.password)
-      .then(() => {
-        //
-      })
-      .catch((e: gvmHttpErrorResponse) => {
-        console.log(e);
-        authStore.isError = true;
-        authStore.errorText = e.message;
-      });
+    AuthService.login(this.email, this.password).catch((e: gvmHttpErrorResponse) => {
+      console.log(e);
+      authStore.isError = true;
+      authStore.errorText = e.message;
+    });
   }
   render = () => (
     <form class="Auth-Form" onSubmit={e => this.login(e)}>

@@ -32,7 +32,6 @@ class AdminServiceController {
   }
 
   commitList(newList: User[]) {
-    console.log(newList);
     const editedItems: { user: User; deleted: boolean }[] = [];
     this.users.forEach(item => {
       const i = newList.findIndex(u => u.user_id == item.user_id);
@@ -53,7 +52,7 @@ class AdminServiceController {
         })
         .catch((e: gvmHttpErrorResponse) => {
           this.fetchList();
-          console.log(e);
+          throw e;
         });
     }
   }

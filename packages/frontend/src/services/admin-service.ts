@@ -1,4 +1,4 @@
-import { gvmHttpErrorResponse, handleFetch, ROOT_URL } from '../utils/httpUtils';
+import { AxiosService, gvmHttpErrorResponse, handleFetch, ROOT_URL } from '../utils/httpUtils';
 import { User } from '../models/user.model';
 
 class AdminServiceController {
@@ -8,8 +8,8 @@ class AdminServiceController {
   async fetchList(done: (users: User[]) => void): Promise<void>;
   async fetchList(done?: (users: User[]) => void): Promise<void> {
     this.users = [];
-    fetch(ROOT_URL + 'api/user/list', { method: 'GET' })
-      .then(handleFetch)
+    AxiosService.get('api/user/list')
+      .then(AxiosService.handleFetch)
       .then(data => {
         data.map(val => {
           this.users.push({
@@ -44,14 +44,8 @@ class AdminServiceController {
     });
     this.users = newList;
     if (editedItems != []) {
-      const fetchData: RequestInit = {
-        method: 'PATCH',
-        body: JSON.stringify({ editedItems: editedItems }),
-        headers: { 'Content-Type': 'application/json' },
-        credentials: 'include',
-      };
-      fetch(ROOT_URL + 'api/user/update', fetchData)
-        .then(e => e.json())
+      AxiosService.patch('api/user/update', JSON.stringify({ editedItems: editedItems }))
+        .then(AxiosService.handleFetch)
         .then(data => {
           data.forEach(item => {
             this.users[this.users.findIndex(u => u.user_id == item.user_id)].errors.set('user_email', item.error);

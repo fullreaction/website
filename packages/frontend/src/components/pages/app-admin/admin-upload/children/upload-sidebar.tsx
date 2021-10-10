@@ -66,7 +66,19 @@ export class AdminUpload {
       });
     }
   }
+  arrowClick(e, child) {
+    e.stopPropagation();
 
+    if (child.children == null)
+      FileSystemService.getSkeleton(child).then(() => {
+        child.showSubfolders = true;
+        this.localRefresh();
+      });
+    else {
+      child.showSubfolders = !child.showSubfolders;
+    }
+    this.localRefresh();
+  }
   drawSkeleton(skel: RecursiveSkeleton) {
     if (skel.children != null) {
       return skel.children.map((child, index) => {
@@ -87,18 +99,7 @@ export class AdminUpload {
               <div
                 class="Upload-ArrowWrapper"
                 onClick={e => {
-                  // Take outside
-                  e.stopPropagation();
-
-                  if (child.children == null)
-                    FileSystemService.getSkeleton(child).then(() => {
-                      child.showSubfolders = true;
-                      this.localRefresh();
-                    });
-                  else {
-                    child.showSubfolders = !child.showSubfolders;
-                  }
-                  this.localRefresh();
+                  this.arrowClick(e, child);
                 }}
               >
                 <div class={{ 'Upload-Arrow': true, 'Upload-ArrowDown': child.showSubfolders }}></div>
@@ -113,7 +114,6 @@ export class AdminUpload {
                     <button
                       class="Content-Item"
                       onClick={e => {
-                        // Take outside
                         e.stopPropagation();
                         this.fsData = { id: child.dir_id, func: 'makeDir' };
                         this.overlayRequestHandler();

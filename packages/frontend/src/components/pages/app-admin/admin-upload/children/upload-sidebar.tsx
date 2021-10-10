@@ -1,25 +1,17 @@
-import { Component, h, Host, Event, EventEmitter, Prop } from '@stencil/core';
+import { Component, h, Host, Event, EventEmitter, Prop, State, Watch } from '@stencil/core';
 
 import { FileSystemService, RecursiveSkeleton } from '../../../../../services/file-system-services';
 import { FSparams } from '../admin-upload';
 
 /*
-  * moving files and folders
-    {
-      * SQL trigger for changing folder parents
-      * making folders highlightable
-      * making both folders and files tabbable
-      * dragging
-      * dropping on folder puts it in folder
-    }
+  moving files and folders
+  right click
 
+  put filesystemservice.skeleton inside @state var -> onrefresh refresh @state var
 
+  createStore in filesystemservice
 
-  * right click
-
-
-
-  * Uploading folders (scrapped)
+  Uploading folders (scrapped)
 */
 
 @Component({
@@ -66,7 +58,19 @@ export class AdminUpload {
       });
     }
   }
+  ArrowWrapperOnClick(e, child) {
+    e.stopPropagation();
 
+                  if (child.children == null)
+                    FileSystemService.getSkeleton(child).then(() => {
+                      child.showSubfolders = true;
+                      this.localRefresh();
+                    });
+                  else {
+                    child.showSubfolders = !child.showSubfolders;
+                  }
+                  this.localRefresh();
+  }
   drawSkeleton(skel: RecursiveSkeleton) {
     if (skel.children != null) {
       return skel.children.map((child, index) => {
@@ -84,21 +88,11 @@ export class AdminUpload {
                 });
               }}
             >
+              
               <div
                 class="Upload-ArrowWrapper"
                 onClick={e => {
-                  // Take outside
-                  e.stopPropagation();
-
-                  if (child.children == null)
-                    FileSystemService.getSkeleton(child).then(() => {
-                      child.showSubfolders = true;
-                      this.localRefresh();
-                    });
-                  else {
-                    child.showSubfolders = !child.showSubfolders;
-                  }
-                  this.localRefresh();
+                  this.ArrowWrapperOnClick(e, child)
                 }}
               >
                 <div class={{ 'Upload-Arrow': true, 'Upload-ArrowDown': child.showSubfolders }}></div>
@@ -113,7 +107,6 @@ export class AdminUpload {
                     <button
                       class="Content-Item"
                       onClick={e => {
-                        // Take outside
                         e.stopPropagation();
                         this.fsData = { id: child.dir_id, func: 'makeDir' };
                         this.overlayRequestHandler();
@@ -187,6 +180,7 @@ export class AdminUpload {
                 onClick={e => {
                   e.stopPropagation();
                   this.fsData = { id: FileSystemService.skeleton.dir_id, func: 'makeDir' };
+
                   this.overlayRequestHandler();
                 }}
               >

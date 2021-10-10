@@ -141,7 +141,7 @@ export class FileSystemDAO {
 
       files = await this.db
         .database<FileEntry>('files')
-        .select('file_id', 'file_name', 'owner', 'parent_id')
+        .select('file_id', 'file_name', 'file_type', 'owner', 'parent_id')
         .where('parent_id', '=', dir_id)
         .orderBy('file_name', 'asc');
     }

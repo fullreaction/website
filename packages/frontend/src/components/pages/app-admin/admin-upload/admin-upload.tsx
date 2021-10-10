@@ -34,7 +34,6 @@ export class AdminUpload {
 
   @State() forceRender = false;
 
-  private file: File;
   private fsData: FSparams;
 
   private alertHeader = new Map<string, string>([
@@ -122,7 +121,7 @@ export class AdminUpload {
         onConfirm={e => {
           this.compAlertConfirm(e);
         }}
-        onCancel={e => {
+        onCancel={() => {
           this.overlayVis = false;
         }}
       >

@@ -2,10 +2,10 @@ import { AuthService } from './auth-service';
 import { AxiosService, handleFetch, ROOT_URL } from '../utils/httpUtils';
 import { Directory, FileEntry } from '../models/upload.models';
 import FileSaver from 'file-saver';
-import JSZip, { files } from 'jszip';
+import JSZip from 'jszip';
 
 /*
-  * Filetypes mess up if the file isn't in root
+
 
 */
 
@@ -27,6 +27,7 @@ class FileSystemServiceController {
     ['mp3', '../assets/icon/Audio-Image.svg'],
     ['wav', '../assets/icon/Audio-Image.svg'],
     ['png', '../assets/icon/Image-Image.svg'],
+    ['jpg', '../assets/icon/Image-Image.svg'],
     ['jpeg', '../assets/icon/Image-Image.svg'],
     ['svg', '../assets/icon/Image-Image.svg'],
     ['doc', '../assets/icon/Doc-Image.svg'],
@@ -45,8 +46,6 @@ class FileSystemServiceController {
     );
   }
   getIcon(filetype: string) {
-    console.log(filetype);
-
     return this.fileIcons.get(filetype) || this.fileIcons.get('default');
   }
   async uploadFile(file: File, dir_id: number) {
@@ -60,7 +59,6 @@ class FileSystemServiceController {
     await AxiosService.post('filesystem/uploadFile', formData);
   }
   async changeFileName(file_id: number, name: string) {
-    console.log(file_id, name);
     await AxiosService.patch('filesystem/changefilename', JSON.stringify({ file_id: file_id, name: name }));
   }
   async deleteFile(file_id: number) {
@@ -131,7 +129,7 @@ class FileSystemServiceController {
       body: JSON.stringify({ dir_id: dir_id }),
       credentials: 'include',
     };
-    const res = await fetch(ROOT_URL + 'filesystem/removedir', fetchData);
+    await fetch(ROOT_URL + 'filesystem/removedir', fetchData);
   }
   async getChildren(dir_id: number) {
     const user = await AuthService.getUser();

@@ -1,4 +1,5 @@
 import { Component, h, Host, State } from '@stencil/core';
+import { AxiosService } from '../../../../utils/httpUtils';
 
 @Component({
   tag: 'app-hero',
@@ -10,13 +11,8 @@ export class AppFooter {
   @State() isErrorResponse: boolean;
   submit(e) {
     e.preventDefault();
-    const fetchData = {
-      method: 'POST',
-      body: JSON.stringify({ email: this.email }),
-      headers: { 'Content-Type': 'application/json' },
-    };
 
-    fetch('http://localhost:3000/mailing/signup', fetchData)
+    AxiosService.post('mailing/signup', JSON.stringify({ email: this.email }))
       .then(res => {
         console.log(res);
         this.submitResponse = 'A confirmation email has been sent.';

@@ -1,17 +1,25 @@
-import { Component, h, Host, Event, EventEmitter, Prop, State, Watch } from '@stencil/core';
+import { Component, h, Host, Event, EventEmitter, Prop } from '@stencil/core';
 
 import { FileSystemService, RecursiveSkeleton } from '../../../../../services/file-system-services';
 import { FSparams } from '../admin-upload';
 
 /*
-  moving files and folders
-  right click
+  * moving files and folders
+    {
+      * SQL trigger for changing folder parents
+      * making folders highlightable
+      * making both folders and files tabbable
+      * dragging
+      * dropping on folder puts it in folder
+    }
 
-  put filesystemservice.skeleton inside @state var -> onrefresh refresh @state var
 
-  createStore in filesystemservice
 
-  Uploading folders (scrapped)
+  * right click
+
+
+
+  * Uploading folders (scrapped)
 */
 
 @Component({
@@ -79,6 +87,7 @@ export class AdminUpload {
               <div
                 class="Upload-ArrowWrapper"
                 onClick={e => {
+                  // Take outside
                   e.stopPropagation();
 
                   if (child.children == null)
@@ -104,6 +113,7 @@ export class AdminUpload {
                     <button
                       class="Content-Item"
                       onClick={e => {
+                        // Take outside
                         e.stopPropagation();
                         this.fsData = { id: child.dir_id, func: 'makeDir' };
                         this.overlayRequestHandler();
@@ -177,7 +187,6 @@ export class AdminUpload {
                 onClick={e => {
                   e.stopPropagation();
                   this.fsData = { id: FileSystemService.skeleton.dir_id, func: 'makeDir' };
-
                   this.overlayRequestHandler();
                 }}
               >

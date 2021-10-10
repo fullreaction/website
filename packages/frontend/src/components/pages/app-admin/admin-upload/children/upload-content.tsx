@@ -1,4 +1,4 @@
-import { Component, h, Host, State, Event, EventEmitter, Prop, Watch } from '@stencil/core';
+import { Component, h, Host, State, Event, EventEmitter, Prop } from '@stencil/core';
 import { FileEntry } from '../../../../../models/upload.models';
 
 import { FileSystemService, RecursiveSkeleton } from '../../../../../services/file-system-services';
@@ -54,7 +54,6 @@ export class AdminUpload {
   @Prop()
   forceRender = false;
 
-  private file: File;
   private fsData: { id: number; func: 'makeDir' | 'changeDirName' | 'changeFileName' | 'none' };
 
   render = () => (

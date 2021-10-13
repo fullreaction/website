@@ -7,9 +7,6 @@ import { FSparams } from '../admin-upload';
   moving files and folders
   right click
 
-  put filesystemservice.skeleton inside @state var -> onrefresh refresh @state var
-
-  createStore in filesystemservice
 
   Uploading folders (scrapped)
 */

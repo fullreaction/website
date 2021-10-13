@@ -8,7 +8,7 @@ class AuthServiceController {
   async login(email: string, password: string) {
     this.clearErrors();
 
-    const data = await AxiosService.post('auth/login', JSON.stringify({ email, password }))
+    const data = await AxiosService.post('auth/login', JSON.stringify({ email, password }), { withCredentials: true })
       .then(AxiosService.handleFetch)
       .catch((e: gvmHttpErrorResponse) => {
         throw e;

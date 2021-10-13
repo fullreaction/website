@@ -40,6 +40,12 @@ class FileSystemServiceController {
       file.file_type != null ? file.file_name + '.' + file.file_type : file.file_name,
     );
   }
+  async getFile(file: FileEntry) {
+    const blobFile: Blob = (await AxiosService.get('filesystem/getfile/' + file.file_id, { responseType: 'blob' }))
+      .data;
+
+    return blobFile;
+  }
   getIcon(filetype: string) {
     return this.fileIcons.get(filetype) || this.fileIcons.get('default');
   }

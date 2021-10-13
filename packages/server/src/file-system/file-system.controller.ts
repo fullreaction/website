@@ -5,6 +5,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { createReadStream } from 'fs';
 import { join } from 'path';
 import { FileSystemService } from './file-system.service';
+import { ModuleTokenFactory } from '@nestjs/core/injector/module-token-factory';
 
 @Controller('filesystem')
 export class FileSystemController {
@@ -14,6 +15,7 @@ export class FileSystemController {
   async getFile(@Res() res: Response, @Param('id') file_id: number) {
     const filePath = await this.fileSystem.getFile(file_id);
     const f = createReadStream(join(process.cwd(), filePath));
+
     f.pipe(res); // There is no StreamableFile in nestjs/common
   }
 

@@ -300,6 +300,7 @@ declare namespace LocalJSX {
         "forceRender"?: boolean;
         "onCancelMedia"?: (event: CustomEvent<any>) => void;
         "onOverlayRequest"?: (event: CustomEvent<any>) => void;
+        "onPreviewRequest"?: (event: CustomEvent<Blob>) => void;
         "onRefreshRequest"?: (event: CustomEvent<RecursiveSkeleton | number>) => void;
         "onSelectMedia"?: (event: CustomEvent<FileEntry[]>) => void;
     }

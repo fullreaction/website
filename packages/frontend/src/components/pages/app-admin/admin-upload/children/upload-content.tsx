@@ -34,6 +34,10 @@ export class AdminUpload {
     eventName: 'refreshRequest',
   })
   refreshRequest: EventEmitter<RecursiveSkeleton | number>;
+  @Event({
+    eventName: 'previewRequest',
+  })
+  previewRequest: EventEmitter<Blob>;
   cancelMediaHandler() {
     this.cancelMedia.emit();
   }
@@ -43,6 +47,11 @@ export class AdminUpload {
   }
   overlayRequestHandler() {
     this.overlayRequest.emit(this.fsData);
+  }
+  previewRequestHandler(file: FileEntry) {
+    FileSystemService.getFile(file).then(blob => {
+      this.previewRequest.emit(blob);
+    });
   }
 
   globalRefresh(skel: RecursiveSkeleton | number) {
@@ -187,6 +196,15 @@ export class AdminUpload {
                           class="Content-Item"
                           onClick={e => {
                             e.stopPropagation();
+                            FileSystemService.downloadFile(child);
+                          }}
+                        >
+                          <span>Download File</span>
+                        </button>
+                        <button
+                          class="Content-Item"
+                          onClick={e => {
+                            e.stopPropagation();
                             this.fsData = { id: child.file_id, func: 'changeFileName' };
                             this.overlayRequestHandler();
                           }}
@@ -213,7 +231,11 @@ export class AdminUpload {
                       if (!this.fileArray.includes(child)) {
                         this.fileArray.push(child);
                       } else this.fileArray = [...this.fileArray.filter(value => value.file_id != child.file_id)];
+
                       this.localRefresh();
+                    }}
+                    onDblClick={() => {
+                      this.previewRequestHandler(child);
                     }}
                     src={FileSystemService.getIcon(child.file_type)}
                   ></img>

@@ -34,6 +34,8 @@ export class AdminUpload {
 
   @State() forceRender = false;
 
+  @State() previewSrc = null;
+
   private fsData: FSparams;
 
   private alertHeader = new Map<string, string>([
@@ -113,6 +115,18 @@ export class AdminUpload {
             this.overlayVis = true;
             this.fsData = e.detail;
           }}
+          onPreviewRequest={e => {
+            const file = e.detail as Blob;
+            console.log(e.detail);
+
+            //if (file.type.includes('image')) {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onloadend = () => {
+              this.previewSrc = reader.result;
+            };
+            //}
+          }}
         ></upload-content>
       </div>
 
@@ -135,6 +149,16 @@ export class AdminUpload {
           required
         ></input>
       </comp-alert>
+
+      <div class="Upload-Preview" hidden={this.previewSrc == null} onClick={() => (this.previewSrc = null)}>
+        <img
+          class="Upload-PreviewImage"
+          onClick={e => {
+            e.stopPropagation();
+          }}
+          src={this.previewSrc}
+        />
+      </div>
     </Host>
   );
 }

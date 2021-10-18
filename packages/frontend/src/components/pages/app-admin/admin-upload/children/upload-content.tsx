@@ -37,7 +37,7 @@ export class AdminUpload {
   @Event({
     eventName: 'previewRequest',
   })
-  previewRequest: EventEmitter<Blob>;
+  previewRequest: EventEmitter<FileEntry>;
   cancelMediaHandler() {
     this.cancelMedia.emit();
   }
@@ -49,9 +49,7 @@ export class AdminUpload {
     this.overlayRequest.emit(this.fsData);
   }
   previewRequestHandler(file: FileEntry) {
-    FileSystemService.getFile(file).then(blob => {
-      this.previewRequest.emit(blob);
-    });
+    this.previewRequest.emit(file);
   }
 
   globalRefresh(skel: RecursiveSkeleton | number) {

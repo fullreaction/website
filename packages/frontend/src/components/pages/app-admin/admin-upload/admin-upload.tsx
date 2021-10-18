@@ -34,7 +34,8 @@ export class AdminUpload {
 
   @State() forceRender = false;
 
-  @State() previewSrc = null;
+  @State() previewFile: FileEntry;
+  @State() previewSrc: string;
 
   private fsData: FSparams;
 
@@ -92,8 +93,59 @@ export class AdminUpload {
         });
     }
   }
+  async getImageBlobSrc(file: FileEntry) {
+    if (file.file_type == 'jpg' || file.file_type == 'png' || file.file_type == 'jpeg') {
+      const blob = await FileSystemService.getFile(file);
+      const reader = new FileReader();
+      reader.readAsDataURL(blob);
+      reader.onloadend = () => {
+        this.previewFile = file;
+        this.previewSrc = reader.result as string;
+      };
+      return true;
+    } else return false;
+  }
+
   render = () => (
     <Host>
+      <div class="Preview-Wrapper">
+        <div class="Preview-Background" hidden={this.previewFile == null} onClick={() => (this.previewFile = null)}>
+          <button class="Preview-Button Preview-ButtonClose">X</button>
+          <button
+            class="Preview-Button Preview-ButtonLeft"
+            onClick={e => {
+              e.stopPropagation();
+              const fileIndex = FileSystemService.dirInfo.files.indexOf(this.previewFile);
+              for (let index = fileIndex - 1; index >= 0; index--) {
+                if (this.getImageBlobSrc(FileSystemService.dirInfo.files[index])) break;
+              }
+            }}
+          >
+            {'<'}
+          </button>
+          <button
+            class="Preview-Button Preview-ButtonRight"
+            onClick={e => {
+              e.stopPropagation();
+              const fileIndex = FileSystemService.dirInfo.files.indexOf(this.previewFile);
+              for (let index = fileIndex + 1; index < FileSystemService.dirInfo.files.length; index++) {
+                if (this.getImageBlobSrc(FileSystemService.dirInfo.files[index])) break;
+              }
+            }}
+          >
+            {'>'}
+          </button>
+          <div class="Preview-ImageWrapper">
+            <img
+              class="Preview-Image"
+              onClick={e => {
+                e.stopPropagation();
+              }}
+              src={this.previewSrc}
+            />
+          </div>
+        </div>
+      </div>
       <div class="Upload">
         <upload-sidebar
           forceRender={this.forceRender}
@@ -116,16 +168,9 @@ export class AdminUpload {
             this.fsData = e.detail;
           }}
           onPreviewRequest={e => {
-            const file = e.detail as Blob;
-            console.log(e.detail);
-
-            //if (file.type.includes('image')) {
-            const reader = new FileReader();
-            reader.readAsDataURL(file);
-            reader.onloadend = () => {
-              this.previewSrc = reader.result;
-            };
-            //}
+            e.stopPropagation();
+            this.previewFile = e.detail;
+            this.getImageBlobSrc(this.previewFile);
           }}
         ></upload-content>
       </div>
@@ -149,16 +194,6 @@ export class AdminUpload {
           required
         ></input>
       </comp-alert>
-
-      <div class="Upload-Preview" hidden={this.previewSrc == null} onClick={() => (this.previewSrc = null)}>
-        <img
-          class="Upload-PreviewImage"
-          onClick={e => {
-            e.stopPropagation();
-          }}
-          src={this.previewSrc}
-        />
-      </div>
     </Host>
   );
 }

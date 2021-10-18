@@ -7,7 +7,7 @@ import { Component, h, Host } from '@stencil/core';
 export class AppRoot {
   render = () => (
     <Host class="Root">
-      <app-section background noMargin>
+      <app-section elevate background noMargin>
         <app-header />
       </app-section>
       <stencil-router class="Separator">
@@ -20,7 +20,7 @@ export class AppRoot {
           <stencil-route url="/admin/upload" component="admin-upload" />
         </stencil-route-switch>
       </stencil-router>
-      <app-section background>
+      <app-section elevate background>
         <app-footer />
       </app-section>
     </Host>

@@ -53,6 +53,7 @@ export namespace Components {
     }
     interface AppSection {
         "background": boolean;
+        "elevate": boolean;
         "noMargin": boolean;
     }
     interface AppSidenav {
@@ -285,6 +286,7 @@ declare namespace LocalJSX {
     }
     interface AppSection {
         "background"?: boolean;
+        "elevate"?: boolean;
         "noMargin"?: boolean;
     }
     interface AppSidenav {
@@ -300,7 +302,7 @@ declare namespace LocalJSX {
         "forceRender"?: boolean;
         "onCancelMedia"?: (event: CustomEvent<any>) => void;
         "onOverlayRequest"?: (event: CustomEvent<any>) => void;
-        "onPreviewRequest"?: (event: CustomEvent<Blob>) => void;
+        "onPreviewRequest"?: (event: CustomEvent<FileEntry>) => void;
         "onRefreshRequest"?: (event: CustomEvent<RecursiveSkeleton | number>) => void;
         "onSelectMedia"?: (event: CustomEvent<FileEntry[]>) => void;
     }

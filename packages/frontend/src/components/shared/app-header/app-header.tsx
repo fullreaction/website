@@ -18,7 +18,13 @@ export class AppHeader {
           Documentation
         </a>
         <div class="Header-Separator" />
-        <a class="Github-Button" href="https://github.com/fullreaction/fullreaction" title="Star fullreaction/fullreaction on GitHub" target="_blank" rel="noreferrer">
+        <a
+          class="Github-Button"
+          href="https://github.com/fullreaction/fullreaction"
+          title="Star fullreaction/fullreaction on GitHub"
+          target="_blank"
+          rel="noreferrer"
+        >
           <img width="16" height="16" src="/assets/social-icons/Github.svg" />
           Star
         </a>

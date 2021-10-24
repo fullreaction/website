@@ -11,6 +11,10 @@ import { DatabaseService } from '../dbService';
 
 // Catch notfound errors
 
+// Get file_id and parent_id
+// Change files parent_id
+// knex.js docs
+
 @Injectable()
 export class FileSystemDAO {
   constructor(private db: DatabaseService) {}
@@ -164,5 +168,13 @@ export class FileSystemDAO {
       .orderBy('relationships.depth', 'desc');
 
     return res;
+  }
+
+  async changeFileParent(file_id: number, parent_id: number) {
+    return await this.db
+      .database<FileEntry>('files')
+      .update({ parent_id: parent_id })
+      .where({ file_id: file_id })
+      .catch(console.log);
   }
 }

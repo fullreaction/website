@@ -3,6 +3,9 @@ import { User } from 'src/auth/users/user.model';
 import { FileSystemDAO } from 'src/db/data-access-objects/file-system.DAO';
 import { Directory, FileEntry } from './file-system.models';
 
+// Make a patch function called changefileparent
+// Get file_id, new parent_id
+
 @Injectable()
 export class FileSystemService {
   constructor(private readonly fileSystemDAO: FileSystemDAO) {}
@@ -38,5 +41,9 @@ export class FileSystemService {
   }
   async getPath(dir_id: number) {
     return await this.fileSystemDAO.getPath(dir_id);
+  }
+  
+  async changeFileParent(file_id: number, parent_id: number) {
+    return await this.fileSystemDAO.changeFileParent(file_id, parent_id)
   }
 }

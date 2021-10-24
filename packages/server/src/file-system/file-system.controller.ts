@@ -5,7 +5,9 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { createReadStream } from 'fs';
 import { join } from 'path';
 import { FileSystemService } from './file-system.service';
-import { ModuleTokenFactory } from '@nestjs/core/injector/module-token-factory';
+
+// Make a patch function called changefileparent
+// Get file_id, new parent_id
 
 @Controller('filesystem')
 export class FileSystemController {
@@ -65,5 +67,10 @@ export class FileSystemController {
   @Delete('removedir')
   async removeDirectory(@Body('dir_id') dir_id: number) {
     return await this.fileSystem.removeDirectory(dir_id);
+  }
+
+  @Patch('changefileparent')
+  async changeFileParent(@Body('file_id') file_id: number, @Body('parent_id') parent_id: number){
+    return await this.fileSystem.changeFileParent(file_id, parent_id)
   }
 }

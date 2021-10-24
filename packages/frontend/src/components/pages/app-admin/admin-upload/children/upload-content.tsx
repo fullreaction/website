@@ -77,7 +77,7 @@ export class AdminUpload {
         <span
           class="Upload-PathElement"
           onClick={() => {
-            FileSystemService.getChildren(null).then(() => {
+            FileSystemService.getChildren(null, true).then(() => {
               this.globalRefresh(FileSystemService.skeleton);
             });
           }}
@@ -91,6 +91,9 @@ export class AdminUpload {
               class="Upload-PathElement"
               onClick={() => {
                 this.globalRefresh(elem.dir_id);
+                FileSystemService.getChildren(elem.dir_id, true).then(() => {
+                  this.globalRefresh(elem.dir_id);
+                });
               }}
             >
               {elem.dir_name}
@@ -144,7 +147,7 @@ export class AdminUpload {
                           onClick={e => {
                             e.stopPropagation();
                             FileSystemService.removeDirectory(child.dir_id).then(() => {
-                              this.globalRefresh(FileSystemService.dirInfo.currentDir);
+                              this.globalRefresh(FileSystemService.dirInfo.currentDir.dir_id);
                             });
                           }}
                         >
@@ -156,7 +159,7 @@ export class AdminUpload {
                   <img
                     class={{ 'Upload-Outer-Image': true }}
                     onClick={() => {
-                      FileSystemService.getChildren(child.dir_id).then(() => {
+                      FileSystemService.getChildren(child.dir_id, true).then(() => {
                         this.globalRefresh(child.dir_id);
                       });
                     }}
@@ -214,7 +217,7 @@ export class AdminUpload {
                           onClick={e => {
                             e.stopPropagation();
                             FileSystemService.deleteFile(child.file_id).then(() => {
-                              this.globalRefresh(FileSystemService.dirInfo.currentDir);
+                              this.globalRefresh(FileSystemService.dirInfo.currentDir.dir_id);
                             });
                           }}
                         >

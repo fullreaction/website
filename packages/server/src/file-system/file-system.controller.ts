@@ -44,10 +44,6 @@ export class FileSystemController {
     const res = await this.fileSystem.getChildren(dir_id, owner);
     return res;
   }
-  @Post('getSkel')
-  async getSkeleton(@Body('dir_id') dir_id: number, @Body('owner') owner: string) {
-    return await this.fileSystem.getSkeleton(dir_id, owner);
-  }
 
   @Post('makedir')
   async makeDirectory(

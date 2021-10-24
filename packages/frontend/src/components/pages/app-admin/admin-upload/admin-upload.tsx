@@ -65,7 +65,7 @@ export class AdminUpload {
           return FileSystemService.getSkeleton(res);
         })
         .then(() => {
-          return FileSystemService.getChildren(FileSystemService.dirInfo.currentDir);
+          return FileSystemService.getChildren(FileSystemService.dirInfo.currentDir.dir_id, true);
         })
         .then(() => {
           this.forceRender = !this.forceRender;
@@ -73,7 +73,7 @@ export class AdminUpload {
     } else {
       FileSystemService.getSkeleton(skel)
         .then(() => {
-          return FileSystemService.getChildren(FileSystemService.dirInfo.currentDir);
+          return FileSystemService.getChildren(FileSystemService.dirInfo.currentDir.dir_id, true);
         })
         .then(() => {
           this.forceRender = !this.forceRender;

@@ -275,9 +275,15 @@ input[type='file'] {
 .Upload-Subcollection {
   padding-left: 25px;
 }
+.Upload-CollectionIcon {
+  width: 20px;
+  margin-right: 2px;
+}
 .Upload-CollectionName {
   overflow: hidden;
+  text-align: left;
   text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .Upload-CollectionWrapper {
   display: flex;
@@ -297,6 +303,8 @@ input[type='file'] {
 }
 .Upload-ArrowWrapper {
   padding: 2px;
+
+  margin-left: 2px;
   cursor: default;
 }
 .Upload-Arrow {
@@ -380,9 +388,7 @@ input[type='file'] {
   position: relative;
   display: inline-block;
   width: fit-content;
-  height: 80%;
-  margin-top: 50px;
-  text-align: center;
+  padding: 80px;
 }
 .Preview-Image {
   height: 100%;

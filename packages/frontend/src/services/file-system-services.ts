@@ -9,10 +9,11 @@ export class RecursiveSkeleton {
   dir_id: number;
   showSubfolders = false;
   children: RecursiveSkeleton[] = [];
+  files: FileEntry[] = [];
 }
 
 class FileSystemServiceController {
-  dirInfo: { currentDir?: number; directories?: Directory[]; files?: FileEntry[] } = {};
+  dirInfo: { currentDir?: Directory; directories?: Directory[]; files?: FileEntry[] } = {};
   skeleton = new RecursiveSkeleton();
   path: { dir_name: string; dir_id: number }[] = [];
 
@@ -32,7 +33,7 @@ class FileSystemServiceController {
 
   async init() {
     await this.getSkeleton(this.skeleton);
-    await this.getChildren(null);
+    await this.getChildren(null, true);
   }
   async downloadFile(file: FileEntry) {
     FileSaver.saveAs(
@@ -111,7 +112,7 @@ class FileSystemServiceController {
   async removeDirectory(dir_id: number) {
     await AxiosService.delete('filesystem/removedir', { data: JSON.stringify({ dir_id: dir_id }) });
   }
-  async getChildren(dir_id: number) {
+  async getChildren(dir_id: number, moveTo: boolean) {
     const user = await AuthService.getUser();
 
     const res = await AxiosService.post(
@@ -119,11 +120,15 @@ class FileSystemServiceController {
       JSON.stringify({ dir_id: dir_id, owner: user.user_id }),
     ).then(AxiosService.handleFetch);
 
-    this.dirInfo.files = res.files;
+    if (moveTo) {
+      this.dirInfo.files = res.files;
 
-    this.dirInfo.directories = res.directories;
-    this.dirInfo.currentDir = res.parent_id;
-    this.path = await this.getPath(dir_id);
+      this.dirInfo.directories = res.directories;
+      this.dirInfo.currentDir = res.parent;
+      this.path = await this.getPath(dir_id);
+    }
+
+    return res;
   }
   private async getPath(dir_id: number): Promise<{ dir_name: string; dir_id: number }[]> {
     return await AxiosService.get('filesystem/getpath/' + dir_id).then(AxiosService.handleFetch);
@@ -132,16 +137,14 @@ class FileSystemServiceController {
     if (skel == null) skel = this.skeleton;
     const user = await AuthService.getUser();
 
-    const res = await AxiosService.post(
-      'filesystem/getskel',
-      JSON.stringify({ dir_id: skel.dir_id, owner: user.user_id }),
-    ).then(AxiosService.handleFetch);
+    const res = await this.getChildren(skel.dir_id, false);
 
-    skel.dir_name = res.root.dir_name;
-    skel.dir_id = res.root.dir_id;
-    skel.children = res.children.map(val => {
+    skel.dir_name = res.parent.dir_name;
+    skel.dir_id = res.parent.dir_id;
+    skel.children = res.directories.map(val => {
       return { dir_id: val.dir_id, dir_name: val.dir_name };
     });
+    skel.files = res.files;
 
     return res;
   }

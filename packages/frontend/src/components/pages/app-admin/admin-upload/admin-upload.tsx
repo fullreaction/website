@@ -94,22 +94,27 @@ export class AdminUpload {
     }
   }
   async getImageBlobSrc(file: FileEntry) {
-    if (file.file_type == 'jpg' || file.file_type == 'png' || file.file_type == 'jpeg') {
-      const blob = await FileSystemService.getFile(file);
-      const reader = new FileReader();
-      reader.readAsDataURL(blob);
-      reader.onloadend = () => {
-        this.previewFile = file;
-        this.previewSrc = reader.result as string;
-      };
-      return true;
-    } else return false;
+    const blob = await FileSystemService.getFile(file);
+    const reader = new FileReader();
+    reader.readAsDataURL(blob);
+    reader.onloadend = () => {
+      this.previewFile = file;
+      this.previewSrc = reader.result as string;
+    };
+    return true;
   }
 
   render = () => (
     <Host>
       <div class="Preview-Wrapper">
-        <div class="Preview-Background" hidden={this.previewFile == null} onClick={() => (this.previewFile = null)}>
+        <div
+          class="Preview-Background"
+          hidden={this.previewFile == null}
+          onClick={() => {
+            this.previewFile = null;
+            this.previewSrc = null;
+          }}
+        >
           <button class="Preview-Button Preview-ButtonClose">X</button>
           <button
             class="Preview-Button Preview-ButtonLeft"

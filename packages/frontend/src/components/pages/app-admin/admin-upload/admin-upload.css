@@ -102,11 +102,11 @@ input[type='file'] {
 .Highlight-File {
   background-color: #d8d8d85e;
   border-radius: 5px;
+  transition-duration: 0.1s;
 }
 
 .Upload-Inner-Image {
   display: flex;
-
   margin-left: auto;
   cursor: default;
   background-color: transparent;

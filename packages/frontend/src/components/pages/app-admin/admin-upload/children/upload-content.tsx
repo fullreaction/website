@@ -198,8 +198,20 @@ export class AdminUpload {
                 onDragStart={() => {
                   console.log('Dragged');
                   this.draggedFileId = child.file_id;
+                  if (!this.fileArray.includes(child)) {
+                    this.fileArray.push(child);
+                  } else this.fileArray = [...this.fileArray.filter(value => value.file_id != child.file_id)];
+
+                  this.localRefresh();
+                }}
+                onDrag={() => {
+                  if (!this.fileArray.includes(child)) {
+                    this.fileArray.push(child);
+                  } 
+                  this.localRefresh();
                 }}
                 draggable
+                
               >
                 <div class="Upload-Icon">
                   <div class="Upload-Inner-Image">
@@ -256,6 +268,7 @@ export class AdminUpload {
                       this.previewRequestHandler(child);
                     }}
                     src={FileSystemService.getIcon(child.file_type)}
+                    draggable={false}
                   ></img>
                 </div>
                 <span class="Upload-Image-Text">

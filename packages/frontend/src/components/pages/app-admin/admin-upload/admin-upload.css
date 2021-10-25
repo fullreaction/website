@@ -87,6 +87,10 @@ input[type='file'] {
   -webkit-user-select: none;
 }
 
+.Upload-Item:active {
+  cursor: grabbing;
+}
+
 .Upload-Outer-Image {
   width: 90px;
   margin-top: -10px;
@@ -431,3 +435,5 @@ input[type='file'] {
   top: 40%;
   right: 35px;
 }
+
+

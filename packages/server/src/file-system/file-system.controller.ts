@@ -70,7 +70,7 @@ export class FileSystemController {
   }
 
   @Patch('changefileparent')
-  async changeFileParent(@Body('file_id') file_id: number, @Body('parent_id') parent_id: number){
-    return await this.fileSystem.changeFileParent(file_id, parent_id)
+  async changeFileParent(@Body('file_id') file_id: number, @Body('parent_id') parent_id: number) {
+    return await this.fileSystem.changeFileParent(file_id, parent_id);
   }
 }

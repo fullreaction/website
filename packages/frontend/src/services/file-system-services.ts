@@ -161,5 +161,11 @@ class FileSystemServiceController {
       return skel;
     }
   }
+  async changeFileParent(file_id: number, parent_id: number) {
+    return await AxiosService.patch(
+      'filesystem/changefileparent',
+      JSON.stringify({ file_id: file_id, parent_id: parent_id }),
+    ).then(AxiosService.handleFetch);
+  }
 }
 export const FileSystemService = new FileSystemServiceController();

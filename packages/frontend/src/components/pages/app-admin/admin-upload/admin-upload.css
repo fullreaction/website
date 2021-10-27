@@ -87,6 +87,10 @@ input[type='file'] {
   -webkit-user-select: none;
 }
 
+.Upload-Item:active {
+  cursor: grabbing;
+}
+
 .Upload-Outer-Image {
   width: 90px;
   margin-top: -10px;
@@ -98,11 +102,11 @@ input[type='file'] {
 .Highlight-File {
   background-color: #d8d8d85e;
   border-radius: 5px;
+  transition-duration: 0.1s;
 }
 
 .Upload-Inner-Image {
   display: flex;
-
   margin-left: auto;
   cursor: default;
   background-color: transparent;
@@ -436,3 +440,5 @@ input[type='file'] {
   top: 40%;
   right: 35px;
 }
+
+

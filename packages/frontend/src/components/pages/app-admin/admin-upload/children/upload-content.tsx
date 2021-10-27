@@ -62,6 +62,7 @@ export class AdminUpload {
   forceRender = false;
 
   private fsData: { id: number; func: 'makeDir' | 'changeDirName' | 'changeFileName' | 'none' };
+  private draggedFileId: number;
 
   render = () => (
     <Host class="Upload-Content">
@@ -113,7 +114,16 @@ export class AdminUpload {
               if (FileSystemService.dirInfo.directories[i].dir_name === child.dir_name) count++;
             }
             return (
-              <div class="Upload-Item">
+              <div
+                class="Upload-Item"
+                onDrop={() => {
+                  console.log('Dropped');
+                  FileSystemService.changeFileParent(this.draggedFileId, child.dir_id).then(() => {
+                    this.globalRefresh(FileSystemService.dirInfo.currentDir.dir_id);
+                  });
+                }}
+                onDragOver={e => e.preventDefault()}
+              >
                 <div class="Upload-Icon">
                   <div class="Upload-Inner-Image">
                     <img
@@ -183,7 +193,26 @@ export class AdminUpload {
               if (FileSystemService.dirInfo.files[i].file_name === child.file_name) count++;
             }
             return (
-              <div class={{ 'Upload-Item': true, 'Highlight-File': this.fileArray.includes(child) ? true : false }}>
+              <div
+                class={{ 'Upload-Item': true, 'Highlight-File': this.fileArray.includes(child) ? true : false }}
+                onDragStart={() => {
+                  console.log('Dragged');
+                  this.draggedFileId = child.file_id;
+                  if (!this.fileArray.includes(child)) {
+                    this.fileArray.push(child);
+                  } else this.fileArray = [...this.fileArray.filter(value => value.file_id != child.file_id)];
+
+                  this.localRefresh();
+                }}
+                onDrag={() => {
+                  if (!this.fileArray.includes(child)) {
+                    this.fileArray.push(child);
+                  } 
+                  this.localRefresh();
+                }}
+                draggable
+                
+              >
                 <div class="Upload-Icon">
                   <div class="Upload-Inner-Image">
                     <img
@@ -240,6 +269,7 @@ export class AdminUpload {
                         this.previewRequestHandler(child);
                     }}
                     src={FileSystemService.getIcon(child.file_type)}
+                    draggable={false}
                   ></img>
                 </div>
                 <span class="Upload-Image-Text">

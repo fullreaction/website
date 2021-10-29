@@ -30,6 +30,7 @@ class FileSystemServiceController {
     ['pdf', '../assets/icon/Doc-Image.svg'],
     ['default', '../assets/icon/Blank-Image.svg'],
   ]);
+  public draggedFileId: number;
 
   async init() {
     await this.getChildren(null, true);

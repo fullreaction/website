@@ -79,6 +79,13 @@ export class AdminUpload {
           <div class="Upload-CollectionWrapper">
             <button
               class="Upload-Collection"
+              onDrop={() => {
+                console.log('Dropped');
+                FileSystemService.changeFileParent(FileSystemService.draggedFileId, child.dir_id).then(() => {
+                  this.globalRefresh(FileSystemService.dirInfo.currentDir.dir_id);
+                });
+              }}
+              onDragOver={e => e.preventDefault()}
               onClick={() => {
                 FileSystemService.getChildren(child.dir_id, true).then(() => {
                   this.globalRefresh(child);
@@ -168,6 +175,12 @@ export class AdminUpload {
               onClick={() => {
                 //
               }}
+              onDragStart={() => {
+                console.log('Dragged');
+                FileSystemService.draggedFileId = child.file_id;
+                this.localRefresh();
+              }}
+              draggable
             >
               <img class="Upload-CollectionIcon" src={FileSystemService.getIcon(child.file_type)}></img>
 

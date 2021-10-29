@@ -62,7 +62,6 @@ export class AdminUpload {
   forceRender = false;
 
   private fsData: { id: number; func: 'makeDir' | 'changeDirName' | 'changeFileName' | 'none' };
-  private draggedFileId: number;
 
   render = () => (
     <Host class="Upload-Content">
@@ -118,7 +117,7 @@ export class AdminUpload {
                 class="Upload-Item"
                 onDrop={() => {
                   console.log('Dropped');
-                  FileSystemService.changeFileParent(this.draggedFileId, child.dir_id).then(() => {
+                  FileSystemService.changeFileParent(FileSystemService.draggedFileId, child.dir_id).then(() => {
                     this.globalRefresh(FileSystemService.dirInfo.currentDir.dir_id);
                   });
                 }}
@@ -197,7 +196,7 @@ export class AdminUpload {
                 class={{ 'Upload-Item': true, 'Highlight-File': this.fileArray.includes(child) ? true : false }}
                 onDragStart={() => {
                   console.log('Dragged');
-                  this.draggedFileId = child.file_id;
+                  FileSystemService.draggedFileId = child.file_id;
                   if (!this.fileArray.includes(child)) {
                     this.fileArray.push(child);
                   } else this.fileArray = [...this.fileArray.filter(value => value.file_id != child.file_id)];
@@ -207,11 +206,10 @@ export class AdminUpload {
                 onDrag={() => {
                   if (!this.fileArray.includes(child)) {
                     this.fileArray.push(child);
-                  } 
+                  }
                   this.localRefresh();
                 }}
                 draggable
-                
               >
                 <div class="Upload-Icon">
                   <div class="Upload-Inner-Image">

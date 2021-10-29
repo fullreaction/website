@@ -263,8 +263,7 @@ export class AdminUpload {
                       this.localRefresh();
                     }}
                     onDblClick={() => {
-                      if (child.file_type == 'jpg' || child.file_type == 'png' || child.file_type == 'jpeg')
-                        this.previewRequestHandler(child);
+                      this.previewRequestHandler(child);
                     }}
                     src={FileSystemService.getIcon(child.file_type)}
                     draggable={false}

@@ -73,7 +73,7 @@ export class AdminUpload {
       return skel.children.map((child, index) => {
         let count = 0;
         for (let i = 0; i < index; i++) {
-          if (FileSystemService.dirInfo.directories[i].dir_name === child.dir_name) count++;
+          if (skel.children[i].dir_name === child.dir_name) count++;
         }
         return (
           <div class="Upload-CollectionWrapper">
@@ -159,7 +159,7 @@ export class AdminUpload {
       return skel.files.map((child, index) => {
         let count = 0;
         for (let i = 0; i < index; i++) {
-          if (FileSystemService.dirInfo.files[i].file_name === child.file_name) count++;
+          if (skel.files[i].file_name === child.file_name) count++;
         }
         return (
           <div class="Upload-CollectionWrapper">

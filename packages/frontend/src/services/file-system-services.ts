@@ -32,8 +32,8 @@ class FileSystemServiceController {
   ]);
 
   async init() {
-    await this.getSkeleton(this.skeleton);
     await this.getChildren(null, true);
+    await this.getSkeleton(this.skeleton);
   }
   async downloadFile(file: FileEntry) {
     FileSaver.saveAs(
@@ -129,6 +129,7 @@ class FileSystemServiceController {
 
       this.dirInfo.directories = res.directories;
       this.dirInfo.currentDir = res.parent;
+      console.log(this.dirInfo);
       this.path = await this.getPath(dir_id);
     }
 

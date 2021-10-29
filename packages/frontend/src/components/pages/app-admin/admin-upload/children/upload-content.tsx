@@ -207,11 +207,10 @@ export class AdminUpload {
                 onDrag={() => {
                   if (!this.fileArray.includes(child)) {
                     this.fileArray.push(child);
-                  } 
+                  }
                   this.localRefresh();
                 }}
                 draggable
-                
               >
                 <div class="Upload-Icon">
                   <div class="Upload-Inner-Image">

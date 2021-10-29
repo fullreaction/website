@@ -103,14 +103,14 @@ export class FileSystemDAO {
       .where({ file_id: file_id })
       .update({ file_name: name })
       .catch(() => {
-        throw new HttpException(
-          {
+        throw {
+          response: {
             code: 'FieldEmpty',
             message: 'File does not exist',
             target: 'files',
           },
-          500,
-        );
+          status: 500,
+        };
       });
   }
 

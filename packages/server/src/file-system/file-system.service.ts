@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, Injectable } from '@nestjs/common';
 import { User } from 'src/auth/users/user.model';
 import { FileSystemDAO } from 'src/db/data-access-objects/file-system.DAO';
 
@@ -27,7 +27,7 @@ export class FileSystemService {
   }
   async changeFileName(file_id: number, name: string) {
     await this.fileSystemDAO.changeFileName(file_id, name).catch((e) => {
-      throw e;
+      throw new HttpException(e.response, e.status);
     });
   }
   async removeFile(file_id: number) {

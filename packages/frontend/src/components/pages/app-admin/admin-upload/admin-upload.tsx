@@ -95,13 +95,13 @@ export class AdminUpload {
   }
   async getImageBlobSrc(file: FileEntry) {
     const blob = await FileSystemService.getFile(file);
+
     const reader = new FileReader();
     reader.readAsDataURL(blob);
     reader.onloadend = () => {
       this.previewFile = file;
       this.previewSrc = reader.result as string;
     };
-    return true;
   }
 
   render = () => (

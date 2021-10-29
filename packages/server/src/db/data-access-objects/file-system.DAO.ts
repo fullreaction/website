@@ -28,7 +28,17 @@ export class FileSystemDAO {
         parent_id: null,
         owner: toBinaryUUID(user.user_id as string),
       })
-      .catch(console.log);
+      .catch((e) => {
+        console.log(e);
+        throw new HttpException(
+          {
+            code: 'FieldEmpty',
+            message: 'User does not exist',
+            target: 'user',
+          },
+          500,
+        );
+      });
   }
 
   async addFile(file: Express.Multer.File, dir_id: number, owner: string) {
@@ -36,29 +46,90 @@ export class FileSystemDAO {
       const res = await this.db
         .database('directories')
         .select('dir_id')
-        .where({ owner: toBinaryUUID(owner), parent_id: null });
+        .where({ owner: toBinaryUUID(owner), parent_id: null })
+        .catch(() => {
+          throw new HttpException(
+            {
+              code: 'FieldEmpty',
+              message: 'Directory does not exist',
+              target: 'directories',
+            },
+            500,
+          );
+        });
       dir_id = res[0].dir_id;
     }
 
-    await this.db.database('files').insert({
-      file_name: file.originalname,
-      owner: toBinaryUUID(owner as string),
-      parent_id: dir_id,
-      file_path: file.destination + '/' + file.filename,
-    });
+    await this.db
+      .database('files')
+      .insert({
+        file_name: file.originalname,
+        owner: toBinaryUUID(owner as string),
+        parent_id: dir_id,
+        file_path: file.destination + '/' + file.filename,
+      })
+      .catch(() => {
+        throw new HttpException(
+          {
+            code: 'InsertError',
+            message: 'File could not be saved',
+            target: 'files',
+          },
+          500,
+        );
+      });
   }
   async getFile(file_id: number) {
-    const fPath = await this.db.database<FileEntry>('files').where({ file_id: file_id }).select('file_path');
+    const fPath = await this.db
+      .database<FileEntry>('files')
+      .where({ file_id: file_id })
+      .select('file_path')
+      .catch(() => {
+        throw new HttpException(
+          {
+            code: 'FieldEmpty',
+            message: 'File does not exist',
+            target: 'files',
+          },
+          500,
+        );
+      });
     return fPath[0].file_path;
   }
 
   async changeFileName(file_id: number, name: string) {
-    await this.db.database<FileEntry>('files').where({ file_id: file_id }).update({ file_name: name });
+    await this.db
+      .database<FileEntry>('files')
+      .where({ file_id: file_id })
+      .update({ file_name: name })
+      .catch(() => {
+        throw new HttpException(
+          {
+            code: 'FieldEmpty',
+            message: 'File does not exist',
+            target: 'files',
+          },
+          500,
+        );
+      });
   }
 
   async removeFile(file_id: number) {
     const fPath = await this.db.database<FileEntry>('files').where({ file_id: file_id }).select('file_path');
-    await this.db.database<FileEntry>('files').where({ file_id: file_id }).delete('*');
+    await this.db
+      .database<FileEntry>('files')
+      .where({ file_id: file_id })
+      .delete('*')
+      .catch(() => {
+        throw new HttpException(
+          {
+            code: 'FieldEmpty',
+            message: 'File does not exist',
+            target: 'files',
+          },
+          500,
+        );
+      });
     unlink(fPath[0].file_path, (err) => {
       if (err) console.log(err);
     });
@@ -69,7 +140,17 @@ export class FileSystemDAO {
       const res = await this.db
         .database('directories')
         .select('dir_id')
-        .where({ owner: toBinaryUUID(owner), parent_id: null });
+        .where({ owner: toBinaryUUID(owner), parent_id: null })
+        .catch(() => {
+          throw new HttpException(
+            {
+              code: 'FieldEmpty',
+              message: 'Parent directory does not exist',
+              target: 'directories',
+            },
+            500,
+          );
+        });
       parent_id = res[0].dir_id;
     }
     await this.db
@@ -79,8 +160,15 @@ export class FileSystemDAO {
         owner: toBinaryUUID(owner),
         parent_id: parent_id,
       })
-      .catch((e) => {
-        throw new Error(e);
+      .catch(() => {
+        throw new HttpException(
+          {
+            code: 'InnerError',
+            message: 'Directory was not able to be created',
+            target: 'directories',
+          },
+          500,
+        );
       });
   }
 
@@ -89,7 +177,16 @@ export class FileSystemDAO {
       .database<Directory>('directories')
       .update({ dir_name: name })
       .where({ dir_id: dir_id })
-      .catch(console.log);
+      .catch((e) => {
+        throw new HttpException(
+          {
+            code: 'FieldEmpty',
+            message: 'Directory does not exist',
+            target: 'directories',
+          },
+          500,
+        );
+      });
   }
 
   async removeDirectory(dir_id: number) {
@@ -99,7 +196,17 @@ export class FileSystemDAO {
         .join('files', 'files.parent_id', '=', 'directories.dir_id')
         .join('relationships', 'directories.dir_id', '=', 'relationships.child_id')
         .select('files.file_path')
-        .where('relationships.parent_id', '=', dir_id);
+        .where('relationships.parent_id', '=', dir_id)
+        .catch((e) => {
+          throw new HttpException(
+            {
+              code: 'FieldEmpty',
+              message: 'Directory does not exist',
+              target: 'directories',
+            },
+            500,
+          );
+        });
 
       for (const item of filepaths) {
         unlink(item.file_path, (err) => {
@@ -107,12 +214,18 @@ export class FileSystemDAO {
         });
       }
 
-      return await this.db.database('directories').delete('*').where({ dir_id: dir_id });
+      return await this.db
+        .database('directories')
+        .delete('*')
+        .where({ dir_id: dir_id })
+        .catch((e) => {
+          console.log(e);
+        });
     } else
       throw new HttpException(
         {
-          code: 'BadArgument',
-          message: 'Directory ID is null',
+          code: 'FieldEmpty',
+          message: 'Directory does not exist',
           target: 'directories',
         },
         500,
@@ -127,12 +240,33 @@ export class FileSystemDAO {
       rootDir = await this.db
         .database('directories')
         .select('*')
-        .where({ dir_id: dir_id, owner: toBinaryUUID(owner as string) });
+        .where({ dir_id: dir_id, owner: toBinaryUUID(owner as string) })
+        .catch((e) => {
+          throw new HttpException(
+            {
+              code: 'FieldEmpty',
+              message: 'Directory does not exist',
+              target: 'directories',
+            },
+            500,
+          );
+        });
     else
       rootDir = await this.db
         .database('directories')
         .select('*')
-        .where({ parent_id: null, owner: toBinaryUUID(owner as string) });
+        .where({ parent_id: null, owner: toBinaryUUID(owner as string) })
+        .catch((e) => {
+          console.log(e);
+          throw new HttpException(
+            {
+              code: 'FieldEmpty',
+              message: 'Directory does not exist',
+              target: 'directories',
+            },
+            500,
+          );
+        });
 
     parent.dir_id = rootDir[0].dir_id;
     parent.dir_name = rootDir[0].dir_name;
@@ -141,12 +275,33 @@ export class FileSystemDAO {
       .database<Directory>('directories')
       .select('*')
       .where('parent_id', '=', rootDir[0].dir_id)
-      .orderBy('dir_name', 'asc');
+      .orderBy('dir_name', 'asc')
+      .catch((e) => {
+        console.log(e);
+        throw new HttpException(
+          {
+            code: 'InnerError',
+            message: 'Children could not be received',
+            target: 'directories',
+          },
+          500,
+        );
+      });
     const files: FileEntry[] = await this.db
       .database<FileEntry>('files')
       .select('file_id', 'file_name', 'file_type', 'owner', 'parent_id')
       .where('parent_id', '=', rootDir[0].dir_id)
-      .orderBy('file_name', 'asc');
+      .orderBy('file_name', 'asc')
+      .catch((e) => {
+        throw new HttpException(
+          {
+            code: 'InnerError',
+            message: 'Children could not be received',
+            target: 'files',
+          },
+          500,
+        );
+      });
 
     directories.forEach((item) => {
       item.owner = fromBinaryUUID(item.owner as Buffer);
@@ -165,7 +320,17 @@ export class FileSystemDAO {
       .select('directories.dir_name', 'directories.dir_id')
       .where('relationships.child_id', '=', dir_id)
       .whereNotNull('directories.parent_id')
-      .orderBy('relationships.depth', 'desc');
+      .orderBy('relationships.depth', 'desc')
+      .catch((e) => {
+        throw new HttpException(
+          {
+            code: 'InnerError',
+            message: 'Path could not be received',
+            target: 'directories',
+          },
+          500,
+        );
+      });
 
     return res;
   }
@@ -175,6 +340,15 @@ export class FileSystemDAO {
       .database<FileEntry>('files')
       .update({ parent_id: parent_id })
       .where({ file_id: file_id })
-      .catch(console.log);
+      .catch((e) => {
+        throw new HttpException(
+          {
+            code: 'InnerError',
+            message: 'File could not be moved',
+            target: 'directories',
+          },
+          500,
+        );
+      });
   }
 }

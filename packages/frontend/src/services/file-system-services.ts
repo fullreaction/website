@@ -114,13 +114,17 @@ class FileSystemServiceController {
     await AxiosService.delete('filesystem/removedir', { data: JSON.stringify({ dir_id: dir_id }) });
   }
   async getChildren(dir_id: number, moveTo: boolean) {
+    let wasError = false;
     const user = await AuthService.getUser();
 
-    const res = await AxiosService.post(
-      'filesystem/getdir',
-      JSON.stringify({ dir_id: dir_id, owner: user.user_id }),
-    ).then(AxiosService.handleFetch);
+    const res = await AxiosService.post('filesystem/getdir', JSON.stringify({ dir_id: dir_id, owner: user.user_id }))
+      .then(AxiosService.handleFetch)
+      .catch(() => {
+        this.getChildren(null, true);
 
+        wasError = true;
+      });
+    if (wasError) return [];
     if (moveTo) {
       this.dirInfo.files = res.files;
 
@@ -136,7 +140,6 @@ class FileSystemServiceController {
   }
   async getSkeleton(skel: RecursiveSkeleton) {
     if (skel == null) skel = this.skeleton;
-    const user = await AuthService.getUser();
 
     const res = await this.getChildren(skel.dir_id, false);
 

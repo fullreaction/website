@@ -59,7 +59,7 @@ export class AdminUpload {
     e.stopPropagation();
 
     if (child.children == null)
-      FileSystemService.getSkeleton(child).then(() => {
+      FileSystemService.getSkeleton(child, false).then(() => {
         child.showSubfolders = true;
         this.localRefresh();
       });
@@ -87,9 +87,7 @@ export class AdminUpload {
               }}
               onDragOver={e => e.preventDefault()}
               onClick={() => {
-                FileSystemService.getChildren(child.dir_id, true).then(() => {
-                  this.globalRefresh(child);
-                });
+                this.globalRefresh(child);
               }}
             >
               <div
@@ -240,9 +238,7 @@ export class AdminUpload {
       <div
         class="Upload-Collection Upload-CollectionHeader"
         onClick={() => {
-          FileSystemService.getChildren(null, true).then(() => {
-            this.globalRefresh(FileSystemService.skeleton);
-          });
+          this.globalRefresh(FileSystemService.skeleton);
         }}
       >
         <span>COLLECTIONS</span>

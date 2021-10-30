@@ -77,9 +77,7 @@ export class AdminUpload {
         <span
           class="Upload-PathElement"
           onClick={() => {
-            FileSystemService.getChildren(null, true).then(() => {
-              this.globalRefresh(FileSystemService.skeleton);
-            });
+            this.globalRefresh(FileSystemService.skeleton);
           }}
         >
           COLLECTIONS
@@ -91,9 +89,6 @@ export class AdminUpload {
               class="Upload-PathElement"
               onClick={() => {
                 this.globalRefresh(elem.dir_id);
-                FileSystemService.getChildren(elem.dir_id, true).then(() => {
-                  this.globalRefresh(elem.dir_id);
-                });
               }}
             >
               {elem.dir_name}
@@ -168,9 +163,7 @@ export class AdminUpload {
                   <img
                     class={{ 'Upload-Outer-Image': true }}
                     onClick={() => {
-                      FileSystemService.getChildren(child.dir_id, true).then(() => {
-                        this.globalRefresh(child.dir_id);
-                      });
+                      this.globalRefresh(child.dir_id);
                     }}
                     src="\assets\icon\Folder-Image.svg"
                   ></img>
@@ -194,8 +187,8 @@ export class AdminUpload {
             return (
               <div
                 class={{ 'Upload-Item': true, 'Highlight-File': this.fileArray.includes(child) ? true : false }}
-                onDragStart={() => {
-                  console.log('Dragged');
+                onDragStart={e => {
+                  console.log(e.target);
                   FileSystemService.draggedFileId = child.file_id;
                   if (!this.fileArray.includes(child)) {
                     this.fileArray.push(child);

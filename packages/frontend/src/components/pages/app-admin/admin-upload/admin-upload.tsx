@@ -62,22 +62,15 @@ export class AdminUpload {
     if (typeof skel == 'number') {
       FileSystemService.findSkeleton(skel)
         .then(res => {
-          return FileSystemService.getSkeleton(res);
-        })
-        .then(() => {
-          return FileSystemService.getChildren(FileSystemService.dirInfo.currentDir.dir_id, true);
+          return FileSystemService.getSkeleton(res, true);
         })
         .then(() => {
           this.forceRender = !this.forceRender;
         });
     } else {
-      FileSystemService.getSkeleton(skel)
-        .then(() => {
-          return FileSystemService.getChildren(FileSystemService.dirInfo.currentDir.dir_id, true);
-        })
-        .then(() => {
-          this.forceRender = !this.forceRender;
-        });
+      FileSystemService.getSkeleton(skel, true).then(() => {
+        this.forceRender = !this.forceRender;
+      });
     }
   }
   compAlertConfirm(e: CustomEvent) {

@@ -33,8 +33,7 @@ class FileSystemServiceController {
   public draggedFileId: number;
 
   async init() {
-    await this.getChildren(null, true);
-    await this.getSkeleton(this.skeleton);
+    await this.getSkeleton(this.skeleton, true);
   }
   async downloadFile(file: FileEntry) {
     FileSaver.saveAs(
@@ -139,10 +138,10 @@ class FileSystemServiceController {
   private async getPath(dir_id: number): Promise<{ dir_name: string; dir_id: number }[]> {
     return await AxiosService.get('filesystem/getpath/' + dir_id).then(AxiosService.handleFetch);
   }
-  async getSkeleton(skel: RecursiveSkeleton) {
+  async getSkeleton(skel: RecursiveSkeleton, moveTo: boolean) {
     if (skel == null) skel = this.skeleton;
 
-    const res = await this.getChildren(skel.dir_id, false);
+    const res = await this.getChildren(skel.dir_id, moveTo);
 
     skel.dir_name = res.parent.dir_name;
     skel.dir_id = res.parent.dir_id;

@@ -58,18 +58,21 @@ export class AdminUpload {
     }
   }
 
-  refreshDirectories(skel: RecursiveSkeleton | number) {
+  refresh() {
+    this.forceRender = !this.forceRender;
+  }
+  updateData(skel: RecursiveSkeleton | number) {
     if (typeof skel == 'number') {
       FileSystemService.findSkeleton(skel)
         .then(res => {
           return FileSystemService.getSkeleton(res, true);
         })
         .then(() => {
-          this.forceRender = !this.forceRender;
+          this.refresh();
         });
     } else {
       FileSystemService.getSkeleton(skel, true).then(() => {
-        this.forceRender = !this.forceRender;
+        this.refresh();
       });
     }
   }
@@ -78,8 +81,7 @@ export class AdminUpload {
       this.overlayVis = false;
       this.runFS(e)
         .then(() => {
-          this.forceRender = !this.forceRender;
-          this.refreshDirectories(this.fsData.id);
+          this.updateData(this.fsData.id);
         })
         .then(() => {
           this.fsData = { id: null, name: '', func: 'none' };
@@ -87,14 +89,18 @@ export class AdminUpload {
     }
   }
   async getImageBlobSrc(file: FileEntry) {
-    const blob = await FileSystemService.getFile(file);
+    const allowedTypes = ['png', 'jpg', 'jpeg', 'svg'];
+    if (allowedTypes.indexOf(file.file_type) != -1) {
+      const blob = await FileSystemService.getFile(file);
 
-    const reader = new FileReader();
-    reader.readAsDataURL(blob);
-    reader.onloadend = () => {
-      this.previewFile = file;
-      this.previewSrc = reader.result as string;
-    };
+      const reader = new FileReader();
+      reader.readAsDataURL(blob);
+      reader.onloadend = () => {
+        this.previewFile = file;
+        this.previewSrc = reader.result as string;
+      };
+      return true;
+    } else return false;
   }
 
   render = () => (
@@ -111,11 +117,11 @@ export class AdminUpload {
           <button class="Preview-Button Preview-ButtonClose">X</button>
           <button
             class="Preview-Button Preview-ButtonLeft"
-            onClick={e => {
+            onClick={async e => {
               e.stopPropagation();
               const fileIndex = FileSystemService.dirInfo.files.indexOf(this.previewFile);
               for (let index = fileIndex - 1; index >= 0; index--) {
-                if (this.getImageBlobSrc(FileSystemService.dirInfo.files[index])) break;
+                if (await this.getImageBlobSrc(FileSystemService.dirInfo.files[index])) break;
               }
             }}
           >
@@ -123,11 +129,11 @@ export class AdminUpload {
           </button>
           <button
             class="Preview-Button Preview-ButtonRight"
-            onClick={e => {
+            onClick={async e => {
               e.stopPropagation();
               const fileIndex = FileSystemService.dirInfo.files.indexOf(this.previewFile);
               for (let index = fileIndex + 1; index < FileSystemService.dirInfo.files.length; index++) {
-                if (this.getImageBlobSrc(FileSystemService.dirInfo.files[index])) break;
+                if (await this.getImageBlobSrc(FileSystemService.dirInfo.files[index])) break;
               }
             }}
           >
@@ -147,8 +153,9 @@ export class AdminUpload {
       <div class="Upload">
         <upload-sidebar
           forceRender={this.forceRender}
-          onRefreshRequest={e => {
-            this.refreshDirectories(e.detail);
+          onRefreshRequest={() => this.refresh()}
+          onUpdateRequest={e => {
+            this.updateData(e.detail);
           }}
           onOverlayRequest={e => {
             this.overlayVis = true;
@@ -157,18 +164,18 @@ export class AdminUpload {
         ></upload-sidebar>
         <upload-content
           forceRender={this.forceRender}
-          onRefreshRequest={e => {
-            this.refreshDirectories(e.detail);
+          onRefreshRequest={() => this.refresh()}
+          onUpdateRequest={e => {
+            this.updateData(e.detail);
           }}
           onOverlayRequest={e => {
-            console.log(e);
             this.overlayVis = true;
             this.fsData = e.detail;
           }}
           onPreviewRequest={e => {
             e.stopPropagation();
-            this.previewFile = e.detail;
-            this.getImageBlobSrc(this.previewFile);
+
+            this.getImageBlobSrc(e.detail);
           }}
         ></upload-content>
       </div>

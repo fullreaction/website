@@ -303,13 +303,15 @@ declare namespace LocalJSX {
         "onCancelMedia"?: (event: CustomEvent<any>) => void;
         "onOverlayRequest"?: (event: CustomEvent<any>) => void;
         "onPreviewRequest"?: (event: CustomEvent<FileEntry>) => void;
-        "onRefreshRequest"?: (event: CustomEvent<RecursiveSkeleton | number>) => void;
+        "onRefreshRequest"?: (event: CustomEvent<any>) => void;
         "onSelectMedia"?: (event: CustomEvent<FileEntry[]>) => void;
+        "onUpdateRequest"?: (event: CustomEvent<RecursiveSkeleton | number>) => void;
     }
     interface UploadSidebar {
         "forceRender"?: boolean;
         "onOverlayRequest"?: (event: CustomEvent<FSparams>) => void;
-        "onRefreshRequest"?: (event: CustomEvent<RecursiveSkeleton | number>) => void;
+        "onRefreshRequest"?: (event: CustomEvent<any>) => void;
+        "onUpdateRequest"?: (event: CustomEvent<RecursiveSkeleton | number>) => void;
     }
     interface IntrinsicElements {
         "admin-table": AdminTable;

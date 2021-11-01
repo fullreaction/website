@@ -26,25 +26,23 @@ export class AdminUpload {
   @Event({
     eventName: 'refreshRequest',
   })
-  refreshRequest: EventEmitter<RecursiveSkeleton | number>;
+  refreshRequest: EventEmitter;
+  @Event({
+    eventName: 'updateRequest',
+  })
+  updateRequest: EventEmitter<RecursiveSkeleton | number>;
 
   globalRefresh(skel: RecursiveSkeleton | number) {
-    this.refreshRequest.emit(skel);
+    this.updateRequest.emit(skel);
   }
   localRefresh() {
-    this.forceRender = !this.forceRender;
+    this.refreshRequest.emit();
   }
   @Prop()
   forceRender = false;
 
   private file: File;
   private fsData: FSparams;
-
-  componentWillLoad() {
-    return FileSystemService.init().then(() => {
-      if (this.forceRender != null) this.fsData = { id: FileSystemService.skeleton.dir_id, func: 'none' };
-    });
-  }
 
   onFileChange(e) {
     if (e.target.files.length != null) {
@@ -80,10 +78,10 @@ export class AdminUpload {
             <button
               class="Upload-Collection"
               onDrop={() => {
-                console.log('Dropped');
                 FileSystemService.changeFileParent(FileSystemService.draggedFileId, child.dir_id).then(() => {
                   this.globalRefresh(FileSystemService.dirInfo.currentDir.dir_id);
                 });
+                FileSystemService.draggedFileId = null;
               }}
               onDragOver={e => e.preventDefault()}
               onClick={() => {
@@ -174,7 +172,6 @@ export class AdminUpload {
                 //
               }}
               onDragStart={() => {
-                console.log('Dragged');
                 FileSystemService.draggedFileId = child.file_id;
                 this.localRefresh();
               }}

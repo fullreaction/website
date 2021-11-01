@@ -124,7 +124,7 @@ export class AdminUpload {
                       class="Upload-Icon-Dots"
                       src="\assets\icon\3Dots-icon.svg"
                       onClick={e => e.stopPropagation()}
-                    ></img>
+                    />
                     <div class="Upload-Dots-Wrapper">
                       <div class="Upload-Dots-Content">
                         <button
@@ -166,7 +166,7 @@ export class AdminUpload {
                       this.globalRefresh(child.dir_id);
                     }}
                     src="\assets\icon\Folder-Image.svg"
-                  ></img>
+                  />
                 </div>
                 <span class="Upload-Image-Text">
                   {count === 0 ? child.dir_name : child.dir_name + ' (' + count + ')'}
@@ -185,32 +185,53 @@ export class AdminUpload {
               if (FileSystemService.dirInfo.files[i].file_name === child.file_name) count++;
             }
             return (
-              <div
-                class={{ 'Upload-Item': true, 'Highlight-File': this.fileArray.includes(child) ? true : false }}
-                onDragStart={e => {
-                  console.log(e.target);
-                  FileSystemService.draggedFileId = child.file_id;
-                  if (!this.fileArray.includes(child)) {
-                    this.fileArray.push(child);
-                  } else this.fileArray = [...this.fileArray.filter(value => value.file_id != child.file_id)];
+              <div class="Upload-ItemWrap">
+                <div
+                  class={{ 'Upload-Item': true, 'Highlight-File': this.fileArray.includes(child) }}
+                  onDragStart={e => {
+                    //e.preventDefault();
+                    console.log('Dragged', e);
+                    FileSystemService.draggedFileId = child.file_id;
+                    if (!this.fileArray.includes(child)) {
+                      this.fileArray.push(child);
+                    } else this.fileArray = [...this.fileArray.filter(value => value.file_id != child.file_id)];
 
-                  this.localRefresh();
-                }}
-                onDrag={() => {
-                  if (!this.fileArray.includes(child)) {
-                    this.fileArray.push(child);
-                  }
-                  this.localRefresh();
-                }}
-                draggable
-              >
-                <div class="Upload-Icon">
+                    this.localRefresh();
+                  }}
+                  onDrag={() => {
+                    if (!this.fileArray.includes(child)) {
+                      this.fileArray.push(child);
+                    }
+                    this.localRefresh();
+                  }}
+                  draggable
+                >
+                  <img
+                    class="Upload-Outer-Image"
+                    onClick={() => {
+                      if (!this.fileArray.includes(child)) {
+                        this.fileArray.push(child);
+                      } else this.fileArray = [...this.fileArray.filter(value => value.file_id != child.file_id)];
+
+                      this.localRefresh();
+                    }}
+                    onDblClick={() => {
+                      this.previewRequestHandler(child);
+                    }}
+                    src={FileSystemService.getIcon(child.file_type)}
+                  />
+                  <span class="Upload-Image-Text">
+                    {count === 0 ? child.file_name : child.file_name + ' (' + count + ')'}
+                  </span>
+                </div>
+                <div class="Upload-Icon" draggable={false}>
                   <div class="Upload-Inner-Image">
                     <img
                       class="Upload-Icon-Dots"
                       src="\assets\icon\3Dots-icon.svg"
                       onClick={e => e.stopPropagation()}
-                    ></img>
+                      draggable={false}
+                    />
                     <div class="Upload-Dots-Wrapper">
                       <div class="Upload-Dots-Content">
                         <button
@@ -246,26 +267,7 @@ export class AdminUpload {
                       </div>
                     </div>
                   </div>
-                  <img
-                    class="Upload-Outer-Image"
-                    onClick={() => {
-                      if (!this.fileArray.includes(child)) {
-                        this.fileArray.push(child);
-                      } else this.fileArray = [...this.fileArray.filter(value => value.file_id != child.file_id)];
-
-                      this.localRefresh();
-                    }}
-                    onDblClick={() => {
-                      if (child.file_type == 'jpg' || child.file_type == 'png' || child.file_type == 'jpeg')
-                        this.previewRequestHandler(child);
-                    }}
-                    src={FileSystemService.getIcon(child.file_type)}
-                    draggable={false}
-                  ></img>
                 </div>
-                <span class="Upload-Image-Text">
-                  {count === 0 ? child.file_name : child.file_name + ' (' + count + ')'}
-                </span>
               </div>
             );
           }

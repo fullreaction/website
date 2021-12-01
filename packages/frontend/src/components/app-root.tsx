@@ -18,6 +18,7 @@ export class AppRoot {
           <stencil-route url="/test/form" component="app-form" />
           <stencil-route url="/admin/panel" component="admin-table" />
           <stencil-route url="/admin/upload" component="admin-upload" />
+          <stencil-route url="/admin/testground" component="admin-upload" />
         </stencil-route-switch>
       </stencil-router>
       <app-section elevate background>

@@ -197,7 +197,7 @@ export class AdminUpload {
               <div class="Upload-ItemWrap">
                 <div
                   class={{ 'Upload-Item': true, 'Highlight-File': this.fileArray.includes(child) }}
-                  onDragStart={e => {
+                  onDragStart={() => {
                     //e.preventDefault();
                     FileSystemService.draggedFileId = child.file_id;
                     if (!this.fileArray.includes(child)) {
@@ -232,50 +232,35 @@ export class AdminUpload {
                     {count === 0 ? child.file_name : child.file_name + ' (' + count + ')'}
                   </span>
                 </div>
-                <div class="Upload-Icon" draggable={false}>
-                  <div class="Upload-Inner-Image">
-                    <img
-                      class="Upload-Icon-Dots"
-                      src="\assets\icon\3Dots-icon.svg"
-                      onClick={e => e.stopPropagation()}
-                      draggable={false}
-                    />
-                    <div class="Upload-Dots-Wrapper">
-                      <div class="Upload-Dots-Content">
-                        <button
-                          class="Content-Item"
-                          onClick={e => {
-                            e.stopPropagation();
-                            FileSystemService.downloadFile(child);
-                          }}
-                        >
-                          <span>Download File</span>
-                        </button>
-                        <button
-                          class="Content-Item"
-                          onClick={e => {
-                            e.stopPropagation();
-                            this.fsData = { id: child.file_id, func: 'changeFileName' };
-                            this.overlayRequestHandler();
-                          }}
-                        >
-                          <span>Rename File</span>
-                        </button>
-                        <button
-                          class="Content-Item"
-                          onClick={e => {
-                            e.stopPropagation();
-                            FileSystemService.deleteFile(child.file_id).then(() => {
-                              this.globalRefresh(FileSystemService.dirInfo.currentDir.dir_id);
-                            });
-                          }}
-                        >
-                          <span>Delete File</span>
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+                <dropdown-shell>
+                  <dropdown-btn
+                    onClick={e => {
+                      e.stopPropagation();
+                      FileSystemService.downloadFile(child);
+                    }}
+                  >
+                    Download File
+                  </dropdown-btn>
+                  <dropdown-btn
+                    onClick={e => {
+                      e.stopPropagation();
+                      this.fsData = { id: child.file_id, func: 'changeFileName' };
+                      this.overlayRequestHandler();
+                    }}
+                  >
+                    Rename File
+                  </dropdown-btn>
+                  <dropdown-btn
+                    onClick={e => {
+                      e.stopPropagation();
+                      FileSystemService.deleteFile(child.file_id).then(() => {
+                        this.globalRefresh(FileSystemService.dirInfo.currentDir.dir_id);
+                      });
+                    }}
+                  >
+                    Delete File
+                  </dropdown-btn>
+                </dropdown-shell>
               </div>
             );
           }

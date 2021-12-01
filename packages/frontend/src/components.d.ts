@@ -62,6 +62,10 @@ export namespace Components {
     }
     interface CompAlert {
     }
+    interface DropdownBtn {
+    }
+    interface DropdownShell {
+    }
     interface UploadContent {
         "forceRender": boolean;
     }
@@ -202,6 +206,18 @@ declare global {
         prototype: HTMLCompAlertElement;
         new (): HTMLCompAlertElement;
     };
+    interface HTMLDropdownBtnElement extends Components.DropdownBtn, HTMLStencilElement {
+    }
+    var HTMLDropdownBtnElement: {
+        prototype: HTMLDropdownBtnElement;
+        new (): HTMLDropdownBtnElement;
+    };
+    interface HTMLDropdownShellElement extends Components.DropdownShell, HTMLStencilElement {
+    }
+    var HTMLDropdownShellElement: {
+        prototype: HTMLDropdownShellElement;
+        new (): HTMLDropdownShellElement;
+    };
     interface HTMLUploadContentElement extends Components.UploadContent, HTMLStencilElement {
     }
     var HTMLUploadContentElement: {
@@ -237,6 +253,8 @@ declare global {
         "app-sidenav": HTMLAppSidenavElement;
         "app-support": HTMLAppSupportElement;
         "comp-alert": HTMLCompAlertElement;
+        "dropdown-btn": HTMLDropdownBtnElement;
+        "dropdown-shell": HTMLDropdownShellElement;
         "upload-content": HTMLUploadContentElement;
         "upload-sidebar": HTMLUploadSidebarElement;
     }
@@ -298,6 +316,10 @@ declare namespace LocalJSX {
         "onClose"?: (event: CustomEvent<boolean>) => void;
         "onConfirm"?: (event: CustomEvent<boolean>) => void;
     }
+    interface DropdownBtn {
+    }
+    interface DropdownShell {
+    }
     interface UploadContent {
         "forceRender"?: boolean;
         "onCancelMedia"?: (event: CustomEvent<any>) => void;
@@ -336,6 +358,8 @@ declare namespace LocalJSX {
         "app-sidenav": AppSidenav;
         "app-support": AppSupport;
         "comp-alert": CompAlert;
+        "dropdown-btn": DropdownBtn;
+        "dropdown-shell": DropdownShell;
         "upload-content": UploadContent;
         "upload-sidebar": UploadSidebar;
     }
@@ -366,6 +390,8 @@ declare module "@stencil/core" {
             "app-sidenav": LocalJSX.AppSidenav & JSXBase.HTMLAttributes<HTMLAppSidenavElement>;
             "app-support": LocalJSX.AppSupport & JSXBase.HTMLAttributes<HTMLAppSupportElement>;
             "comp-alert": LocalJSX.CompAlert & JSXBase.HTMLAttributes<HTMLCompAlertElement>;
+            "dropdown-btn": LocalJSX.DropdownBtn & JSXBase.HTMLAttributes<HTMLDropdownBtnElement>;
+            "dropdown-shell": LocalJSX.DropdownShell & JSXBase.HTMLAttributes<HTMLDropdownShellElement>;
             "upload-content": LocalJSX.UploadContent & JSXBase.HTMLAttributes<HTMLUploadContentElement>;
             "upload-sidebar": LocalJSX.UploadSidebar & JSXBase.HTMLAttributes<HTMLUploadSidebarElement>;
         }

@@ -62,6 +62,8 @@ export namespace Components {
     }
     interface CompAlert {
     }
+    interface CompSearchbar {
+    }
     interface UploadContent {
         "forceRender": boolean;
     }
@@ -202,6 +204,12 @@ declare global {
         prototype: HTMLCompAlertElement;
         new (): HTMLCompAlertElement;
     };
+    interface HTMLCompSearchbarElement extends Components.CompSearchbar, HTMLStencilElement {
+    }
+    var HTMLCompSearchbarElement: {
+        prototype: HTMLCompSearchbarElement;
+        new (): HTMLCompSearchbarElement;
+    };
     interface HTMLUploadContentElement extends Components.UploadContent, HTMLStencilElement {
     }
     var HTMLUploadContentElement: {
@@ -237,6 +245,7 @@ declare global {
         "app-sidenav": HTMLAppSidenavElement;
         "app-support": HTMLAppSupportElement;
         "comp-alert": HTMLCompAlertElement;
+        "comp-searchbar": HTMLCompSearchbarElement;
         "upload-content": HTMLUploadContentElement;
         "upload-sidebar": HTMLUploadSidebarElement;
     }
@@ -298,6 +307,9 @@ declare namespace LocalJSX {
         "onClose"?: (event: CustomEvent<boolean>) => void;
         "onConfirm"?: (event: CustomEvent<boolean>) => void;
     }
+    interface CompSearchbar {
+        "onSearch"?: (event: CustomEvent<string>) => void;
+    }
     interface UploadContent {
         "forceRender"?: boolean;
         "onCancelMedia"?: (event: CustomEvent<any>) => void;
@@ -336,6 +348,7 @@ declare namespace LocalJSX {
         "app-sidenav": AppSidenav;
         "app-support": AppSupport;
         "comp-alert": CompAlert;
+        "comp-searchbar": CompSearchbar;
         "upload-content": UploadContent;
         "upload-sidebar": UploadSidebar;
     }
@@ -366,6 +379,7 @@ declare module "@stencil/core" {
             "app-sidenav": LocalJSX.AppSidenav & JSXBase.HTMLAttributes<HTMLAppSidenavElement>;
             "app-support": LocalJSX.AppSupport & JSXBase.HTMLAttributes<HTMLAppSupportElement>;
             "comp-alert": LocalJSX.CompAlert & JSXBase.HTMLAttributes<HTMLCompAlertElement>;
+            "comp-searchbar": LocalJSX.CompSearchbar & JSXBase.HTMLAttributes<HTMLCompSearchbarElement>;
             "upload-content": LocalJSX.UploadContent & JSXBase.HTMLAttributes<HTMLUploadContentElement>;
             "upload-sidebar": LocalJSX.UploadSidebar & JSXBase.HTMLAttributes<HTMLUploadSidebarElement>;
         }

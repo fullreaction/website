@@ -66,6 +66,13 @@ export namespace Components {
     }
     interface DropdownShell {
     }
+    interface ItemboxContent {
+        "itemIcon": string;
+        "itemName": string;
+        "showDots": boolean;
+    }
+    interface ItemboxShell {
+    }
     interface UploadContent {
         "forceRender": boolean;
     }
@@ -218,6 +225,18 @@ declare global {
         prototype: HTMLDropdownShellElement;
         new (): HTMLDropdownShellElement;
     };
+    interface HTMLItemboxContentElement extends Components.ItemboxContent, HTMLStencilElement {
+    }
+    var HTMLItemboxContentElement: {
+        prototype: HTMLItemboxContentElement;
+        new (): HTMLItemboxContentElement;
+    };
+    interface HTMLItemboxShellElement extends Components.ItemboxShell, HTMLStencilElement {
+    }
+    var HTMLItemboxShellElement: {
+        prototype: HTMLItemboxShellElement;
+        new (): HTMLItemboxShellElement;
+    };
     interface HTMLUploadContentElement extends Components.UploadContent, HTMLStencilElement {
     }
     var HTMLUploadContentElement: {
@@ -255,6 +274,8 @@ declare global {
         "comp-alert": HTMLCompAlertElement;
         "dropdown-btn": HTMLDropdownBtnElement;
         "dropdown-shell": HTMLDropdownShellElement;
+        "itembox-content": HTMLItemboxContentElement;
+        "itembox-shell": HTMLItemboxShellElement;
         "upload-content": HTMLUploadContentElement;
         "upload-sidebar": HTMLUploadSidebarElement;
     }
@@ -320,6 +341,14 @@ declare namespace LocalJSX {
     }
     interface DropdownShell {
     }
+    interface ItemboxContent {
+        "itemIcon"?: string;
+        "itemName"?: string;
+        "onItemClick"?: (event: CustomEvent<any>) => void;
+        "showDots"?: boolean;
+    }
+    interface ItemboxShell {
+    }
     interface UploadContent {
         "forceRender"?: boolean;
         "onCancelMedia"?: (event: CustomEvent<any>) => void;
@@ -360,6 +389,8 @@ declare namespace LocalJSX {
         "comp-alert": CompAlert;
         "dropdown-btn": DropdownBtn;
         "dropdown-shell": DropdownShell;
+        "itembox-content": ItemboxContent;
+        "itembox-shell": ItemboxShell;
         "upload-content": UploadContent;
         "upload-sidebar": UploadSidebar;
     }
@@ -392,6 +423,8 @@ declare module "@stencil/core" {
             "comp-alert": LocalJSX.CompAlert & JSXBase.HTMLAttributes<HTMLCompAlertElement>;
             "dropdown-btn": LocalJSX.DropdownBtn & JSXBase.HTMLAttributes<HTMLDropdownBtnElement>;
             "dropdown-shell": LocalJSX.DropdownShell & JSXBase.HTMLAttributes<HTMLDropdownShellElement>;
+            "itembox-content": LocalJSX.ItemboxContent & JSXBase.HTMLAttributes<HTMLItemboxContentElement>;
+            "itembox-shell": LocalJSX.ItemboxShell & JSXBase.HTMLAttributes<HTMLItemboxShellElement>;
             "upload-content": LocalJSX.UploadContent & JSXBase.HTMLAttributes<HTMLUploadContentElement>;
             "upload-sidebar": LocalJSX.UploadSidebar & JSXBase.HTMLAttributes<HTMLUploadSidebarElement>;
         }

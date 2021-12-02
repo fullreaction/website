@@ -1,10 +1,10 @@
-import { Component, h, Host } from '@stencil/core';
+import { Component, h } from '@stencil/core';
 
 @Component({
   tag: 'dropdown-btn',
   styleUrl: 'dropdownbtn.css',
 })
-export class dropdownbtn {
+export class DropDownButton {
   render = () => (
     <button class="Content-Item">
       <slot />

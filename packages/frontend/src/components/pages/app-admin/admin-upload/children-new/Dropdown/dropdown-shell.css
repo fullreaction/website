@@ -43,8 +43,6 @@
     display: flex;
     flex-direction: column;
     margin-left: -8px;
-    -moz-user-select: none;
-    -webkit-user-select: none;
   }
 .Upload-Icon .Upload-Dots-Wrapper {
     top: 10px;

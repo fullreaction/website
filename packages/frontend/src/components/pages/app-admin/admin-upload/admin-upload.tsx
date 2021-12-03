@@ -2,6 +2,7 @@ import { Component, h, Host, State } from '@stencil/core';
 import { FileEntry } from '../../../../models/upload.models';
 
 import { FileSystemService, RecursiveSkeleton } from '../../../../services/file-system-services';
+import { Searchbar } from './children-new/upload-searchbar-new/searchbar';
 
 /*
    moving files and folders
@@ -126,22 +127,9 @@ export class AdminUpload {
             this.fsData = e.detail;
           }}
         ></upload-sidebar>
-        <upload-content
-          forceRender={this.forceRender}
-          onRefreshRequest={() => this.refresh()}
-          onUpdateRequest={e => {
-            this.updateData(e.detail);
-          }}
-          onOverlayRequest={e => {
-            this.overlayVis = true;
-            this.fsData = e.detail;
-          }}
-          onPreviewRequest={e => {
-            e.stopPropagation();
-
-            this.getImageBlob(e.detail);
-          }}
-        ></upload-content>
+        <div class="Upload-Content">
+          <comp-searchbar></comp-searchbar>
+        </div>
       </div>
 
       <comp-alert

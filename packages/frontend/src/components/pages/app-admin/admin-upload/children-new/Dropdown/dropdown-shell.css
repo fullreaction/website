@@ -1,0 +1,68 @@
+/* stylelint-disable prettier/prettier */
+.Upload-Dots-Wrapper {
+    position: relative;
+    z-index: 1;
+    width: 0px;
+    height: 0px;
+  
+    background: none;
+  }
+
+.Upload-Dots-Content {
+    z-index: inherit;
+    display: flex;
+    flex-direction: column;
+    width: 160px;
+    height: fit-content;
+    padding: 4px 0 4px 0;
+    overflow: hidden;
+    cursor: default;
+    background-color: var(--background-color);
+    border-radius: 3px;
+    box-shadow: 2px 2px 4px 5px darkgrey;
+  }
+
+.Upload-Dots:not(:hover) .Upload-Dots-Content {
+   display: none !important;
+  }
+
+.Upload-Inner-Image {
+    display: flex;
+    margin-left: auto;
+    cursor: default;
+    background-color: transparent;
+    border: none;
+  }
+.Upload-Inner-Image:not(:hover) .Upload-Dots-Content {
+    display: none !important;
+  }
+.Upload-Icon {
+    position: absolute;
+    top: 4px;
+    right: 14px;
+    display: flex;
+    flex-direction: column;
+    margin-left: -8px;
+  }
+.Upload-Icon .Upload-Dots-Wrapper {
+    top: 10px;
+  }
+.Upload-Icon-Dots {
+    padding: 4px;
+    padding-right: 0px;
+    cursor: default;
+  }
+.Upload-Inner-Image:hover {
+    cursor: pointer;
+  }
+
+.Dropdown-Slot > button {
+    align-items: center;
+    justify-content: center;
+    height: 30px;
+    font-weight: 500;
+    font-weight: bold;
+    cursor: pointer;
+    background-color: inherit;
+    border: none;
+}

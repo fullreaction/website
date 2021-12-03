@@ -6,6 +6,7 @@
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { ValidationErrors } from "./utils/form";
+import { TreeNode } from "./utils/treeNode";
 import { FileEntry } from "./models/upload.models";
 import { RecursiveSkeleton } from "./services/file-system-services";
 import { FSparams } from "./components/pages/app-admin/admin-upload/admin-upload";
@@ -62,8 +63,13 @@ export namespace Components {
     }
     interface CompAlert {
     }
+    interface CompSearchbar {
+    }
     interface CompTree {
-        "tree": Node;
+        "tree": TreeNode;
+    }
+    interface CompTreeNode {
+        "tree": TreeNode;
     }
     interface ImageView {
         "hideArrows": boolean;
@@ -210,11 +216,23 @@ declare global {
         prototype: HTMLCompAlertElement;
         new (): HTMLCompAlertElement;
     };
+    interface HTMLCompSearchbarElement extends Components.CompSearchbar, HTMLStencilElement {
+    }
+    var HTMLCompSearchbarElement: {
+        prototype: HTMLCompSearchbarElement;
+        new (): HTMLCompSearchbarElement;
+    };
     interface HTMLCompTreeElement extends Components.CompTree, HTMLStencilElement {
     }
     var HTMLCompTreeElement: {
         prototype: HTMLCompTreeElement;
         new (): HTMLCompTreeElement;
+    };
+    interface HTMLCompTreeNodeElement extends Components.CompTreeNode, HTMLStencilElement {
+    }
+    var HTMLCompTreeNodeElement: {
+        prototype: HTMLCompTreeNodeElement;
+        new (): HTMLCompTreeNodeElement;
     };
     interface HTMLImageViewElement extends Components.ImageView, HTMLStencilElement {
     }
@@ -257,7 +275,9 @@ declare global {
         "app-sidenav": HTMLAppSidenavElement;
         "app-support": HTMLAppSupportElement;
         "comp-alert": HTMLCompAlertElement;
+        "comp-searchbar": HTMLCompSearchbarElement;
         "comp-tree": HTMLCompTreeElement;
+        "comp-tree-node": HTMLCompTreeNodeElement;
         "image-view": HTMLImageViewElement;
         "upload-content": HTMLUploadContentElement;
         "upload-sidebar": HTMLUploadSidebarElement;
@@ -320,8 +340,14 @@ declare namespace LocalJSX {
         "onClose"?: (event: CustomEvent<boolean>) => void;
         "onConfirm"?: (event: CustomEvent<boolean>) => void;
     }
+    interface CompSearchbar {
+        "onSearch"?: (event: CustomEvent<string>) => void;
+    }
     interface CompTree {
-        "tree"?: Node;
+        "tree"?: TreeNode;
+    }
+    interface CompTreeNode {
+        "tree"?: TreeNode;
     }
     interface ImageView {
         "hideArrows"?: boolean;
@@ -369,7 +395,9 @@ declare namespace LocalJSX {
         "app-sidenav": AppSidenav;
         "app-support": AppSupport;
         "comp-alert": CompAlert;
+        "comp-searchbar": CompSearchbar;
         "comp-tree": CompTree;
+        "comp-tree-node": CompTreeNode;
         "image-view": ImageView;
         "upload-content": UploadContent;
         "upload-sidebar": UploadSidebar;
@@ -401,7 +429,9 @@ declare module "@stencil/core" {
             "app-sidenav": LocalJSX.AppSidenav & JSXBase.HTMLAttributes<HTMLAppSidenavElement>;
             "app-support": LocalJSX.AppSupport & JSXBase.HTMLAttributes<HTMLAppSupportElement>;
             "comp-alert": LocalJSX.CompAlert & JSXBase.HTMLAttributes<HTMLCompAlertElement>;
+            "comp-searchbar": LocalJSX.CompSearchbar & JSXBase.HTMLAttributes<HTMLCompSearchbarElement>;
             "comp-tree": LocalJSX.CompTree & JSXBase.HTMLAttributes<HTMLCompTreeElement>;
+            "comp-tree-node": LocalJSX.CompTreeNode & JSXBase.HTMLAttributes<HTMLCompTreeNodeElement>;
             "image-view": LocalJSX.ImageView & JSXBase.HTMLAttributes<HTMLImageViewElement>;
             "upload-content": LocalJSX.UploadContent & JSXBase.HTMLAttributes<HTMLUploadContentElement>;
             "upload-sidebar": LocalJSX.UploadSidebar & JSXBase.HTMLAttributes<HTMLUploadSidebarElement>;

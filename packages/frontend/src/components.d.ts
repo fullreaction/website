@@ -62,6 +62,14 @@ export namespace Components {
     }
     interface CompAlert {
     }
+    interface CompTree {
+        "tree": Node;
+    }
+    interface ImageView {
+        "hideArrows": boolean;
+        "hideExit": boolean;
+        "imageBlob": Blob;
+    }
     interface UploadContent {
         "forceRender": boolean;
     }
@@ -202,6 +210,18 @@ declare global {
         prototype: HTMLCompAlertElement;
         new (): HTMLCompAlertElement;
     };
+    interface HTMLCompTreeElement extends Components.CompTree, HTMLStencilElement {
+    }
+    var HTMLCompTreeElement: {
+        prototype: HTMLCompTreeElement;
+        new (): HTMLCompTreeElement;
+    };
+    interface HTMLImageViewElement extends Components.ImageView, HTMLStencilElement {
+    }
+    var HTMLImageViewElement: {
+        prototype: HTMLImageViewElement;
+        new (): HTMLImageViewElement;
+    };
     interface HTMLUploadContentElement extends Components.UploadContent, HTMLStencilElement {
     }
     var HTMLUploadContentElement: {
@@ -237,6 +257,8 @@ declare global {
         "app-sidenav": HTMLAppSidenavElement;
         "app-support": HTMLAppSupportElement;
         "comp-alert": HTMLCompAlertElement;
+        "comp-tree": HTMLCompTreeElement;
+        "image-view": HTMLImageViewElement;
         "upload-content": HTMLUploadContentElement;
         "upload-sidebar": HTMLUploadSidebarElement;
     }
@@ -298,6 +320,17 @@ declare namespace LocalJSX {
         "onClose"?: (event: CustomEvent<boolean>) => void;
         "onConfirm"?: (event: CustomEvent<boolean>) => void;
     }
+    interface CompTree {
+        "tree"?: Node;
+    }
+    interface ImageView {
+        "hideArrows"?: boolean;
+        "hideExit"?: boolean;
+        "imageBlob"?: Blob;
+        "onExitClick"?: (event: CustomEvent<any>) => void;
+        "onLeftArrowClick"?: (event: CustomEvent<any>) => void;
+        "onRightArrowClick"?: (event: CustomEvent<any>) => void;
+    }
     interface UploadContent {
         "forceRender"?: boolean;
         "onCancelMedia"?: (event: CustomEvent<any>) => void;
@@ -336,6 +369,8 @@ declare namespace LocalJSX {
         "app-sidenav": AppSidenav;
         "app-support": AppSupport;
         "comp-alert": CompAlert;
+        "comp-tree": CompTree;
+        "image-view": ImageView;
         "upload-content": UploadContent;
         "upload-sidebar": UploadSidebar;
     }
@@ -366,6 +401,8 @@ declare module "@stencil/core" {
             "app-sidenav": LocalJSX.AppSidenav & JSXBase.HTMLAttributes<HTMLAppSidenavElement>;
             "app-support": LocalJSX.AppSupport & JSXBase.HTMLAttributes<HTMLAppSupportElement>;
             "comp-alert": LocalJSX.CompAlert & JSXBase.HTMLAttributes<HTMLCompAlertElement>;
+            "comp-tree": LocalJSX.CompTree & JSXBase.HTMLAttributes<HTMLCompTreeElement>;
+            "image-view": LocalJSX.ImageView & JSXBase.HTMLAttributes<HTMLImageViewElement>;
             "upload-content": LocalJSX.UploadContent & JSXBase.HTMLAttributes<HTMLUploadContentElement>;
             "upload-sidebar": LocalJSX.UploadSidebar & JSXBase.HTMLAttributes<HTMLUploadSidebarElement>;
         }

@@ -197,8 +197,7 @@ export class AdminUpload {
               <div class="Upload-ItemWrap">
                 <div
                   class={{ 'Upload-Item': true, 'Highlight-File': this.fileArray.includes(child) }}
-                  onDragStart={e => {
-                    //e.preventDefault();
+                  onDragStart={() => {
                     FileSystemService.draggedFileId = child.file_id;
                     if (!this.fileArray.includes(child)) {
                       this.fileArray.push(child);

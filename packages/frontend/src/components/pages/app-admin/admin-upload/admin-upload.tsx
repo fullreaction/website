@@ -34,7 +34,7 @@ export class AdminUpload {
 
   @State() forceRender = false;
 
-  @State() previewFile: FileEntry;
+  @State() previewFile: { blob: Blob; entry: FileEntry } = { blob: null, entry: null };
   @State() previewSrc: string;
 
   private fsData: FSparams;
@@ -88,68 +88,32 @@ export class AdminUpload {
         });
     }
   }
-  async getImageBlobSrc(file: FileEntry) {
+  async getImageBlob(file: FileEntry) {
     const allowedTypes = ['png', 'jpg', 'jpeg', 'svg'];
     if (allowedTypes.indexOf(file.file_type) != -1) {
-      const blob = await FileSystemService.getFile(file);
-
-      const reader = new FileReader();
-      reader.readAsDataURL(blob);
-      reader.onloadend = () => {
-        this.previewFile = file;
-        this.previewSrc = reader.result as string;
-      };
+      this.previewFile = { blob: await FileSystemService.getFile(file), entry: file };
       return true;
     } else return false;
   }
 
   render = () => (
     <Host>
-      <div class="Preview-Wrapper">
-        <div
-          class="Preview-Background"
-          hidden={this.previewFile == null}
-          onClick={() => {
-            this.previewFile = null;
-            this.previewSrc = null;
-          }}
-        >
-          <button class="Preview-Button Preview-ButtonClose">X</button>
-          <button
-            class="Preview-Button Preview-ButtonLeft"
-            onClick={async e => {
-              e.stopPropagation();
-              const fileIndex = FileSystemService.dirInfo.files.indexOf(this.previewFile);
-              for (let index = fileIndex - 1; index >= 0; index--) {
-                if (await this.getImageBlobSrc(FileSystemService.dirInfo.files[index])) break;
-              }
-            }}
-          >
-            {'<'}
-          </button>
-          <button
-            class="Preview-Button Preview-ButtonRight"
-            onClick={async e => {
-              e.stopPropagation();
-              const fileIndex = FileSystemService.dirInfo.files.indexOf(this.previewFile);
-              for (let index = fileIndex + 1; index < FileSystemService.dirInfo.files.length; index++) {
-                if (await this.getImageBlobSrc(FileSystemService.dirInfo.files[index])) break;
-              }
-            }}
-          >
-            {'>'}
-          </button>
-          <div class="Preview-ImageWrapper">
-            <img
-              class="Preview-Image"
-              onClick={e => {
-                e.stopPropagation();
-              }}
-              src={this.previewSrc}
-            />
-          </div>
-        </div>
-      </div>
+      <image-view
+        imageBlob={this.previewFile.blob}
+        hideArrows={false}
+        onLeftArrowClick={async () => {
+          const fileIndex = FileSystemService.dirInfo.files.indexOf(this.previewFile.entry);
+          for (let index = fileIndex - 1; index >= 0; index--) {
+            if (await this.getImageBlob(FileSystemService.dirInfo.files[index])) break;
+          }
+        }}
+        onRightArrowClick={async () => {
+          const fileIndex = FileSystemService.dirInfo.files.indexOf(this.previewFile.entry);
+          for (let index = fileIndex + 1; index < FileSystemService.dirInfo.files.length; index++) {
+            if (await this.getImageBlob(FileSystemService.dirInfo.files[index])) break;
+          }
+        }}
+      ></image-view>
       <div class="Upload">
         <upload-sidebar
           forceRender={this.forceRender}
@@ -175,7 +139,7 @@ export class AdminUpload {
           onPreviewRequest={e => {
             e.stopPropagation();
 
-            this.getImageBlobSrc(e.detail);
+            this.getImageBlob(e.detail);
           }}
         ></upload-content>
       </div>

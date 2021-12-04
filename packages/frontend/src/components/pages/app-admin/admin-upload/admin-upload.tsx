@@ -126,6 +126,7 @@ export class AdminUpload {
           onOverlayRequest={e => {
             this.overlayVis = true;
             this.fsData = e.detail;
+            this.refresh();
           }}
         ></upload-sidebar>
         <div class="Upload-Content">
@@ -153,6 +154,7 @@ export class AdminUpload {
                         ];
                       });
                       FileSystemService.draggedFileId = null;
+                      this.refresh();
                     }}
                     onDragOver={e => e.preventDefault()}
                     itemName={count === 0 ? child.dir_name : child.dir_name + ' (' + count + ')'}

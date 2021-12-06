@@ -259,8 +259,11 @@ export class AdminUpload {
         </button>
       </div>
 
-      {this.drawSkeleton(FileSystemService.skeleton)}
       {this.drawChildren(FileSystemService.skeleton)}
+
+      <comp-tree tree={FileSystemService.skeleton}>
+        <span slot="Detail">ligma</span>
+      </comp-tree>
     </Host>
   );
 }

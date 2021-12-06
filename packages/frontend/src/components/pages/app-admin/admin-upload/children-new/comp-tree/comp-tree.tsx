@@ -1,4 +1,5 @@
 import { Component, h, Host, Prop } from '@stencil/core';
+import { RecursiveSkeleton } from '../../../../../../services/file-system-services';
 import { TreeNode } from '../../../../../../utils/treeNode';
 
 // user needs to inherit Node
@@ -8,11 +9,14 @@ import { TreeNode } from '../../../../../../utils/treeNode';
   styleUrl: 'comp-tree.css',
 })
 export class TreeComponent {
-  @Prop() tree: TreeNode;
+  @Prop() tree: RecursiveSkeleton;
 
   render = () => (
-    <Host class="Upload-Side">
-      <div></div>
+    <Host>
+      <comp-tree-node subTree={this.tree} isOpen={true}>
+        <slot></slot>
+        <slot slot="Detail" />
+      </comp-tree-node>
     </Host>
   );
 }

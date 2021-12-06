@@ -6,9 +6,8 @@
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { ValidationErrors } from "./utils/form";
-import { TreeNode } from "./utils/treeNode";
-import { FileEntry } from "./models/upload.models";
 import { RecursiveSkeleton } from "./services/file-system-services";
+import { FileEntry } from "./models/upload.models";
 import { FSparams } from "./components/pages/app-admin/admin-upload/admin-upload";
 export namespace Components {
     interface AdminTable {
@@ -66,10 +65,11 @@ export namespace Components {
     interface CompSearchbar {
     }
     interface CompTree {
-        "tree": TreeNode;
+        "tree": RecursiveSkeleton;
     }
     interface CompTreeNode {
-        "tree": TreeNode;
+        "isOpen": boolean;
+        "subTree": RecursiveSkeleton;
     }
     interface ImageView {
         "hideArrows": boolean;
@@ -344,10 +344,11 @@ declare namespace LocalJSX {
         "onSearch"?: (event: CustomEvent<string>) => void;
     }
     interface CompTree {
-        "tree"?: TreeNode;
+        "tree"?: RecursiveSkeleton;
     }
     interface CompTreeNode {
-        "tree"?: TreeNode;
+        "isOpen"?: boolean;
+        "subTree"?: RecursiveSkeleton;
     }
     interface ImageView {
         "hideArrows"?: boolean;

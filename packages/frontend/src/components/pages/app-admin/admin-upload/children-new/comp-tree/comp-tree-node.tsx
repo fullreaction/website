@@ -1,4 +1,5 @@
-import { Component, h, Host, Prop } from '@stencil/core';
+import { Component, h, Host, JSX, Prop } from '@stencil/core';
+import { FileSystemService, RecursiveSkeleton } from '../../../../../../services/file-system-services';
 import { TreeNode } from '../../../../../../utils/treeNode';
 
 // user needs to inherit Node
@@ -7,11 +8,57 @@ import { TreeNode } from '../../../../../../utils/treeNode';
   tag: 'comp-tree-node',
   styleUrl: 'comp-tree.css',
 })
-export class TreeComponent {
-  @Prop() tree: TreeNode;
-  render = () => (
-    <Host class="Upload-SubCollection">
-      <div></div>
-    </Host>
-  );
+export class SubTreeComponent {
+  @Prop() subTree: RecursiveSkeleton;
+  @Prop() isOpen = false;
+
+  @Prop() detailFactory: (child: RecursiveSkeleton) => JSX.Element;
+  ArrowWrapperOnClick(e, child) {
+    e.stopPropagation();
+
+    if (child.children == null)
+      FileSystemService.getSkeleton(child, false).then(() => {
+        child.showSubfolders = true;
+        this.subTree = { ...this.subTree };
+      });
+    else {
+      child.showSubfolders = !child.showSubfolders;
+    }
+    this.subTree = { ...this.subTree };
+  }
+
+  render = () =>
+    this.isOpen && this.subTree.children != null ? (
+      <Host class="Tree-SubTree">
+        {this.subTree.children.map((child, index) => {
+          let count = 0;
+          for (let i = 0; i < index; i++) {
+            if (this.subTree.children[i].dir_name === child.dir_name) count++;
+          }
+          return (
+            <div class="Tree-NodeWrapper">
+              <button class="Tree-Node">
+                <div
+                  class="Tree-ArrowWrapper"
+                  onClick={e => {
+                    this.ArrowWrapperOnClick(e, child);
+                  }}
+                >
+                  <div class={{ 'Tree-Arrow': true, 'Tree-ArrowDown': child.showSubfolders }}></div>
+                </div>
+                <span class="Tree-NodenName">{count === 0 ? child.dir_name : child.dir_name + ' (' + count + ')'}</span>
+              </button>
+              {this.detailFactory(child)}
+              <comp-tree-node
+                subTree={child}
+                isOpen={child.showSubfolders}
+                detailFactory={this.detailFactory}
+              ></comp-tree-node>
+            </div>
+          );
+        })}
+      </Host>
+    ) : (
+      ''
+    );
 }

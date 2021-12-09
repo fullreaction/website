@@ -1,0 +1,68 @@
+.Tree-Node {
+  display: flex;
+  flex: 1 1 1;
+  flex-direction: row;
+  align-items: center;
+  min-height: 25px;
+  max-height: 60px;
+  padding: 3px;
+
+  font-size: 14;
+  cursor: pointer;
+  background-color: var(--background-color);
+  border: none;
+  transition-duration: 0.2s;
+}
+
+.Tree-SubTree {
+  padding-left: 25px;
+}
+
+.Tree-NodeName {
+  overflow: hidden;
+  text-align: left;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.Tree-NodeWrapper {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+}
+
+.Tree-Node:hover {
+  background-color: #eef5fb;
+}
+.Tree-Node:hover .Upload-Dots {
+  visibility: visible;
+}
+
+.Tree-Node:focus {
+  background-color: #eef5fb;
+}
+.Tree-ArrowWrapper {
+  height: fit-content;
+  padding: 2px;
+  margin-left: 2px;
+  cursor: default;
+}
+.Tree-Arrow {
+  display: inline-block;
+  align-self: center;
+  margin-right: 2px;
+  margin-bottom: 2px;
+  border-top: var(--side-size) solid transparent;
+  border-right: var(--side-size) solid transparent;
+  border-bottom: var(--side-size) solid transparent;
+  border-left: calc(2 * var(--side-size) * 0.866) solid var(--primary-dark-color);
+  --side-size: 5px;
+}
+.Tree-ArrowDown {
+  margin-top: 3px;
+  margin-right: 6px;
+  border-top: calc(2 * var(--side-size) * 0.866) solid var(--primary-dark-color);
+  border-right: var(--side-size) solid transparent;
+  border-bottom: var(--side-size) solid transparent;
+  border-left: var(--side-size) solid transparent;
+  --side-size: 5px;
+}

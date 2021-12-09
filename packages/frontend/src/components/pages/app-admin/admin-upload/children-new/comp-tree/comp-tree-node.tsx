@@ -1,4 +1,4 @@
-import { Component, h, Host, Prop } from '@stencil/core';
+import { Component, h, Host, JSX, Prop } from '@stencil/core';
 import { FileSystemService, RecursiveSkeleton } from '../../../../../../services/file-system-services';
 import { TreeNode } from '../../../../../../utils/treeNode';
 
@@ -12,6 +12,7 @@ export class SubTreeComponent {
   @Prop() subTree: RecursiveSkeleton;
   @Prop() isOpen = false;
 
+  @Prop() detailFactory: (child: RecursiveSkeleton) => JSX.Element;
   ArrowWrapperOnClick(e, child) {
     e.stopPropagation();
 
@@ -46,12 +47,13 @@ export class SubTreeComponent {
                   <div class={{ 'Tree-Arrow': true, 'Tree-ArrowDown': child.showSubfolders }}></div>
                 </div>
                 <span class="Tree-NodenName">{count === 0 ? child.dir_name : child.dir_name + ' (' + count + ')'}</span>
-                <slot></slot>
               </button>
-
-              <comp-tree-node subTree={child} isOpen={child.showSubfolders}>
-                <slot name="Detail"></slot>
-              </comp-tree-node>
+              {this.detailFactory(child)}
+              <comp-tree-node
+                subTree={child}
+                isOpen={child.showSubfolders}
+                detailFactory={this.detailFactory}
+              ></comp-tree-node>
             </div>
           );
         })}

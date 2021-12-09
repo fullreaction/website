@@ -63,6 +63,8 @@ export namespace Components {
     }
     interface CompAlert {
     }
+    interface CompSearchbar {
+    }
     interface CompTree {
         "detailFactory": (child: RecursiveSkeleton) => JSX.Element;
         "tree": RecursiveSkeleton;
@@ -228,6 +230,12 @@ declare global {
         prototype: HTMLCompAlertElement;
         new (): HTMLCompAlertElement;
     };
+    interface HTMLCompSearchbarElement extends Components.CompSearchbar, HTMLStencilElement {
+    }
+    var HTMLCompSearchbarElement: {
+        prototype: HTMLCompSearchbarElement;
+        new (): HTMLCompSearchbarElement;
+    };
     interface HTMLCompTreeElement extends Components.CompTree, HTMLStencilElement {
     }
     var HTMLCompTreeElement: {
@@ -305,6 +313,7 @@ declare global {
         "app-sidenav": HTMLAppSidenavElement;
         "app-support": HTMLAppSupportElement;
         "comp-alert": HTMLCompAlertElement;
+        "comp-searchbar": HTMLCompSearchbarElement;
         "comp-tree": HTMLCompTreeElement;
         "comp-tree-node": HTMLCompTreeNodeElement;
         "dropdown-btn": HTMLDropdownBtnElement;
@@ -373,6 +382,9 @@ declare namespace LocalJSX {
         "onClose"?: (event: CustomEvent<boolean>) => void;
         "onConfirm"?: (event: CustomEvent<boolean>) => void;
     }
+    interface CompSearchbar {
+        "onSearch"?: (event: CustomEvent<string>) => void;
+    }
     interface CompTree {
         "detailFactory"?: (child: RecursiveSkeleton) => JSX.Element;
         "tree"?: RecursiveSkeleton;
@@ -440,6 +452,7 @@ declare namespace LocalJSX {
         "app-sidenav": AppSidenav;
         "app-support": AppSupport;
         "comp-alert": CompAlert;
+        "comp-searchbar": CompSearchbar;
         "comp-tree": CompTree;
         "comp-tree-node": CompTreeNode;
         "dropdown-btn": DropdownBtn;
@@ -477,6 +490,7 @@ declare module "@stencil/core" {
             "app-sidenav": LocalJSX.AppSidenav & JSXBase.HTMLAttributes<HTMLAppSidenavElement>;
             "app-support": LocalJSX.AppSupport & JSXBase.HTMLAttributes<HTMLAppSupportElement>;
             "comp-alert": LocalJSX.CompAlert & JSXBase.HTMLAttributes<HTMLCompAlertElement>;
+            "comp-searchbar": LocalJSX.CompSearchbar & JSXBase.HTMLAttributes<HTMLCompSearchbarElement>;
             "comp-tree": LocalJSX.CompTree & JSXBase.HTMLAttributes<HTMLCompTreeElement>;
             "comp-tree-node": LocalJSX.CompTreeNode & JSXBase.HTMLAttributes<HTMLCompTreeNodeElement>;
             "dropdown-btn": LocalJSX.DropdownBtn & JSXBase.HTMLAttributes<HTMLDropdownBtnElement>;

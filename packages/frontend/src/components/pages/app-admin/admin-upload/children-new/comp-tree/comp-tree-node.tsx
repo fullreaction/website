@@ -46,9 +46,10 @@ export class SubTreeComponent {
                 >
                   <div class={{ 'Tree-Arrow': true, 'Tree-ArrowDown': child.showSubfolders }}></div>
                 </div>
-                <span class="Tree-NodenName">{count === 0 ? child.dir_name : child.dir_name + ' (' + count + ')'}</span>
+                <span class="Tree-NodeName">{count === 0 ? child.dir_name : child.dir_name + ' (' + count + ')'}</span>
+                {this.detailFactory(child)}
               </button>
-              {this.detailFactory(child)}
+
               <comp-tree-node
                 subTree={child}
                 isOpen={child.showSubfolders}

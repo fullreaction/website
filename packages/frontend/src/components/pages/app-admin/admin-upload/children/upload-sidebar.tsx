@@ -258,9 +258,6 @@ export class AdminUpload {
           </div>
         </button>
       </div>
-      {this.drawSkeleton(FileSystemService.skeleton)}
-      {this.drawChildren(FileSystemService.skeleton)}
-
       <comp-tree
         tree={FileSystemService.skeleton}
         detailFactory={(child: RecursiveSkeleton) => {
@@ -315,6 +312,7 @@ export class AdminUpload {
           );
         }}
       ></comp-tree>
+      {this.drawChildren(FileSystemService.skeleton)}
     </Host>
   );
 }

@@ -74,10 +74,21 @@ export namespace Components {
         "isOpen": boolean;
         "subTree": RecursiveSkeleton;
     }
+    interface DropdownBtn {
+    }
+    interface DropdownShell {
+    }
     interface ImageView {
         "hideArrows": boolean;
         "hideExit": boolean;
         "imageBlob": Blob;
+    }
+    interface ItemboxContent {
+        "itemIcon": string;
+        "itemName": string;
+        "showDots": boolean;
+    }
+    interface ItemboxShell {
     }
     interface UploadContent {
         "forceRender": boolean;
@@ -237,11 +248,35 @@ declare global {
         prototype: HTMLCompTreeNodeElement;
         new (): HTMLCompTreeNodeElement;
     };
+    interface HTMLDropdownBtnElement extends Components.DropdownBtn, HTMLStencilElement {
+    }
+    var HTMLDropdownBtnElement: {
+        prototype: HTMLDropdownBtnElement;
+        new (): HTMLDropdownBtnElement;
+    };
+    interface HTMLDropdownShellElement extends Components.DropdownShell, HTMLStencilElement {
+    }
+    var HTMLDropdownShellElement: {
+        prototype: HTMLDropdownShellElement;
+        new (): HTMLDropdownShellElement;
+    };
     interface HTMLImageViewElement extends Components.ImageView, HTMLStencilElement {
     }
     var HTMLImageViewElement: {
         prototype: HTMLImageViewElement;
         new (): HTMLImageViewElement;
+    };
+    interface HTMLItemboxContentElement extends Components.ItemboxContent, HTMLStencilElement {
+    }
+    var HTMLItemboxContentElement: {
+        prototype: HTMLItemboxContentElement;
+        new (): HTMLItemboxContentElement;
+    };
+    interface HTMLItemboxShellElement extends Components.ItemboxShell, HTMLStencilElement {
+    }
+    var HTMLItemboxShellElement: {
+        prototype: HTMLItemboxShellElement;
+        new (): HTMLItemboxShellElement;
     };
     interface HTMLUploadContentElement extends Components.UploadContent, HTMLStencilElement {
     }
@@ -281,7 +316,11 @@ declare global {
         "comp-searchbar": HTMLCompSearchbarElement;
         "comp-tree": HTMLCompTreeElement;
         "comp-tree-node": HTMLCompTreeNodeElement;
+        "dropdown-btn": HTMLDropdownBtnElement;
+        "dropdown-shell": HTMLDropdownShellElement;
         "image-view": HTMLImageViewElement;
+        "itembox-content": HTMLItemboxContentElement;
+        "itembox-shell": HTMLItemboxShellElement;
         "upload-content": HTMLUploadContentElement;
         "upload-sidebar": HTMLUploadSidebarElement;
     }
@@ -355,6 +394,10 @@ declare namespace LocalJSX {
         "isOpen"?: boolean;
         "subTree"?: RecursiveSkeleton;
     }
+    interface DropdownBtn {
+    }
+    interface DropdownShell {
+    }
     interface ImageView {
         "hideArrows"?: boolean;
         "hideExit"?: boolean;
@@ -362,6 +405,14 @@ declare namespace LocalJSX {
         "onExitClick"?: (event: CustomEvent<any>) => void;
         "onLeftArrowClick"?: (event: CustomEvent<any>) => void;
         "onRightArrowClick"?: (event: CustomEvent<any>) => void;
+    }
+    interface ItemboxContent {
+        "itemIcon"?: string;
+        "itemName"?: string;
+        "onItemClick"?: (event: CustomEvent<any>) => void;
+        "showDots"?: boolean;
+    }
+    interface ItemboxShell {
     }
     interface UploadContent {
         "forceRender"?: boolean;
@@ -404,7 +455,11 @@ declare namespace LocalJSX {
         "comp-searchbar": CompSearchbar;
         "comp-tree": CompTree;
         "comp-tree-node": CompTreeNode;
+        "dropdown-btn": DropdownBtn;
+        "dropdown-shell": DropdownShell;
         "image-view": ImageView;
+        "itembox-content": ItemboxContent;
+        "itembox-shell": ItemboxShell;
         "upload-content": UploadContent;
         "upload-sidebar": UploadSidebar;
     }
@@ -438,7 +493,11 @@ declare module "@stencil/core" {
             "comp-searchbar": LocalJSX.CompSearchbar & JSXBase.HTMLAttributes<HTMLCompSearchbarElement>;
             "comp-tree": LocalJSX.CompTree & JSXBase.HTMLAttributes<HTMLCompTreeElement>;
             "comp-tree-node": LocalJSX.CompTreeNode & JSXBase.HTMLAttributes<HTMLCompTreeNodeElement>;
+            "dropdown-btn": LocalJSX.DropdownBtn & JSXBase.HTMLAttributes<HTMLDropdownBtnElement>;
+            "dropdown-shell": LocalJSX.DropdownShell & JSXBase.HTMLAttributes<HTMLDropdownShellElement>;
             "image-view": LocalJSX.ImageView & JSXBase.HTMLAttributes<HTMLImageViewElement>;
+            "itembox-content": LocalJSX.ItemboxContent & JSXBase.HTMLAttributes<HTMLItemboxContentElement>;
+            "itembox-shell": LocalJSX.ItemboxShell & JSXBase.HTMLAttributes<HTMLItemboxShellElement>;
             "upload-content": LocalJSX.UploadContent & JSXBase.HTMLAttributes<HTMLUploadContentElement>;
             "upload-sidebar": LocalJSX.UploadSidebar & JSXBase.HTMLAttributes<HTMLUploadSidebarElement>;
         }

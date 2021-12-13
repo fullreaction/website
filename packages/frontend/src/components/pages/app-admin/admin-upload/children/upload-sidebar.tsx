@@ -1,7 +1,6 @@
 import { Component, h, Host, Event, EventEmitter, Prop } from '@stencil/core';
 
 import { FileSystemService, RecursiveSkeleton } from '../../../../../services/file-system-services';
-import { TreeNode } from '../../../../../utils/treeNode';
 import { FSparams } from '../admin-upload';
 
 /*
@@ -261,7 +260,7 @@ export class AdminUpload {
       </div>
       <comp-tree
         tree={FileSystemService.skeleton}
-        detailFactory={(child: RecursiveSkeleton) => {
+        folderDetailFactory={(child: RecursiveSkeleton) => {
           return (
             <button class="Upload-Dots">
               <img src="\assets\icon\3Dots-icon.svg" onClick={e => e.stopPropagation()} />
@@ -313,7 +312,6 @@ export class AdminUpload {
           );
         }}
       ></comp-tree>
-      {this.drawChildren(FileSystemService.skeleton)}
     </Host>
   );
 }

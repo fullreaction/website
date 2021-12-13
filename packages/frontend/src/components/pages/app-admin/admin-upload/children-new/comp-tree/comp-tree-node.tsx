@@ -1,6 +1,6 @@
 import { Component, h, Host, JSX, Prop } from '@stencil/core';
+import { FileEntry } from '../../../../../../models/upload.models';
 import { FileSystemService, RecursiveSkeleton } from '../../../../../../services/file-system-services';
-import { TreeNode } from '../../../../../../utils/treeNode';
 
 // user needs to inherit Node
 
@@ -12,7 +12,9 @@ export class SubTreeComponent {
   @Prop() subTree: RecursiveSkeleton;
   @Prop() isOpen = false;
 
-  @Prop() detailFactory: (child: RecursiveSkeleton) => JSX.Element;
+  @Prop() folderDetailFactory: (child: RecursiveSkeleton) => JSX.Element;
+  @Prop() fileDetailFactory: (child: FileEntry) => JSX.Element;
+
   ArrowWrapperOnClick(e, child) {
     e.stopPropagation();
 
@@ -26,7 +28,32 @@ export class SubTreeComponent {
     }
     this.subTree = { ...this.subTree };
   }
+  drawChildren(skel: RecursiveSkeleton) {
+    if (skel.files != null) {
+      return skel.files.map((child, index) => {
+        let count = 0;
+        for (let i = 0; i < index; i++) {
+          if (skel.files[i].file_name === child.file_name) count++;
+        }
+        return (
+          <div class="Tree-NodeWrapper">
+            <button
+              class="Tree-Node"
+              draggable
+              onDragStart={e => {
+                e.dataTransfer.setData('text', JSON.stringify({ dragId: child.file_id }));
+              }}
+            >
+              <img class="Tree-NodeIcon" src={FileSystemService.getIcon(child.file_type)}></img>
 
+              <span class="Tree-NodeName">{count === 0 ? child.file_name : child.file_name + ' (' + count + ')'}</span>
+              {this.fileDetailFactory(child)}
+            </button>
+          </div>
+        );
+      });
+    }
+  }
   render = () =>
     this.isOpen && this.subTree.children != null ? (
       <Host class="Tree-SubTree">
@@ -36,7 +63,16 @@ export class SubTreeComponent {
             if (this.subTree.children[i].dir_name === child.dir_name) count++;
           }
           return (
-            <div class="Tree-NodeWrapper">
+            <div
+              class="Tree-NodeWrapper"
+              onDrop={e => {
+                const dragId = JSON.parse(e.dataTransfer.getData('text')).dragId;
+                FileSystemService.changeFileParent(dragId, child.dir_id);
+              }}
+              onDragOver={e => {
+                e.preventDefault();
+              }}
+            >
               <button class="Tree-Node">
                 <div
                   class="Tree-ArrowWrapper"
@@ -47,17 +83,18 @@ export class SubTreeComponent {
                   <div class={{ 'Tree-Arrow': true, 'Tree-ArrowDown': child.showSubfolders }}></div>
                 </div>
                 <span class="Tree-NodeName">{count === 0 ? child.dir_name : child.dir_name + ' (' + count + ')'}</span>
-                {this.detailFactory(child)}
+                {this.folderDetailFactory(child)}
               </button>
 
               <comp-tree-node
                 subTree={child}
                 isOpen={child.showSubfolders}
-                detailFactory={this.detailFactory}
+                folderDetailFactory={this.folderDetailFactory}
               ></comp-tree-node>
             </div>
           );
         })}
+        {this.drawChildren(this.subTree)}
       </Host>
     ) : (
       ''

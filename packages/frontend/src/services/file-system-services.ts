@@ -11,7 +11,7 @@ export class RecursiveSkeleton {
   children: RecursiveSkeleton[] = [];
   files: FileEntry[] = [];
 }
-
+// Turn all Directory objects into recursiveskeleton
 class FileSystemServiceController {
   dirInfo: { currentDir?: Directory; directories?: Directory[]; files?: FileEntry[] } = {};
   skeleton = new RecursiveSkeleton();
@@ -145,8 +145,10 @@ class FileSystemServiceController {
 
     skel.dir_name = res.parent.dir_name;
     skel.dir_id = res.parent.dir_id;
-    skel.children = res.directories.map(val => {
-      return { dir_id: val.dir_id, dir_name: val.dir_name };
+    skel.children = res.directories.map((val, index) => {
+      if (skel.children != null && skel.children[index] != null)
+        return { ...skel.children[index], dir_id: val.dir_id, dir_name: val.dir_name };
+      else return { dir_id: val.dir_id, dir_name: val.dir_name };
     });
     skel.files = res.files;
 

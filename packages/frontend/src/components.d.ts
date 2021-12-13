@@ -66,11 +66,13 @@ export namespace Components {
     interface CompSearchbar {
     }
     interface CompTree {
-        "detailFactory": (child: RecursiveSkeleton) => JSX.Element;
+        "fileDetailFactory": (child: FileEntry) => JSX.Element;
+        "folderDetailFactory": (child: RecursiveSkeleton) => JSX.Element;
         "tree": RecursiveSkeleton;
     }
     interface CompTreeNode {
-        "detailFactory": (child: RecursiveSkeleton) => JSX.Element;
+        "fileDetailFactory": (child: FileEntry) => JSX.Element;
+        "folderDetailFactory": (child: RecursiveSkeleton) => JSX.Element;
         "isOpen": boolean;
         "subTree": RecursiveSkeleton;
     }
@@ -386,11 +388,13 @@ declare namespace LocalJSX {
         "onSearch"?: (event: CustomEvent<string>) => void;
     }
     interface CompTree {
-        "detailFactory"?: (child: RecursiveSkeleton) => JSX.Element;
+        "fileDetailFactory"?: (child: FileEntry) => JSX.Element;
+        "folderDetailFactory"?: (child: RecursiveSkeleton) => JSX.Element;
         "tree"?: RecursiveSkeleton;
     }
     interface CompTreeNode {
-        "detailFactory"?: (child: RecursiveSkeleton) => JSX.Element;
+        "fileDetailFactory"?: (child: FileEntry) => JSX.Element;
+        "folderDetailFactory"?: (child: RecursiveSkeleton) => JSX.Element;
         "isOpen"?: boolean;
         "subTree"?: RecursiveSkeleton;
     }

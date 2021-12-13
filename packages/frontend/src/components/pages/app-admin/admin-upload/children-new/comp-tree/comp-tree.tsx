@@ -1,6 +1,6 @@
-import { Component, h, Host, JSX, Prop, State } from '@stencil/core';
+import { Component, h, Host, JSX, Prop } from '@stencil/core';
+import { FileEntry } from '../../../../../../models/upload.models';
 import { RecursiveSkeleton } from '../../../../../../services/file-system-services';
-import { TreeNode } from '../../../../../../utils/treeNode';
 
 // user needs to inherit Node
 // Factory function woop woop
@@ -11,11 +11,17 @@ import { TreeNode } from '../../../../../../utils/treeNode';
 })
 export class TreeComponent {
   @Prop() tree: RecursiveSkeleton;
-  @Prop() detailFactory: (child: RecursiveSkeleton) => JSX.Element;
+  @Prop() folderDetailFactory: (child: RecursiveSkeleton) => JSX.Element;
+  @Prop() fileDetailFactory: (child: FileEntry) => JSX.Element;
 
   render = () => (
     <Host>
-      <comp-tree-node subTree={this.tree} isOpen={true} detailFactory={this.detailFactory}></comp-tree-node>
+      <comp-tree-node
+        subTree={this.tree}
+        isOpen={true}
+        folderDetailFactory={this.folderDetailFactory}
+        fileDetailFactory={this.fileDetailFactory}
+      ></comp-tree-node>
     </Host>
   );
 }

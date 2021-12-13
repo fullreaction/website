@@ -177,61 +177,6 @@ export class AdminUpload {
             </div>
           </button>
         </div>
-        <comp-tree
-          tree={FileSystemService.skeleton}
-          detailFactory={(child: RecursiveSkeleton) => {
-            return (
-              <button class="Upload-Dots">
-                <img src="\assets\icon\3Dots-icon.svg" onClick={e => e.stopPropagation()} />
-                <div class="Upload-Dots-Wrapper">
-                  <div class="Upload-Dots-Content">
-                    <button
-                      class="Content-Item"
-                      onClick={e => {
-                        e.stopPropagation();
-                        this.fsData = { id: child.dir_id, func: 'makeDir' };
-                        this.overlayRequestHandler();
-                      }}
-                    >
-                      <span>Add Collection</span>
-                    </button>
-                    <button
-                      class="Content-Item"
-                      onClick={e => {
-                        e.stopPropagation();
-                        FileSystemService.downloadDir(child.dir_id, child.dir_name);
-                      }}
-                    >
-                      <span>Download Collection</span>
-                    </button>
-                    <button
-                      class="Content-Item"
-                      onClick={e => {
-                        e.stopPropagation();
-                        this.fsData = { id: child.dir_id, func: 'changeDirName' };
-                        this.overlayRequestHandler();
-                      }}
-                    >
-                      <span>Rename Collection</span>
-                    </button>
-                    <button
-                      class="Content-Item"
-                      onClick={e => {
-                        e.stopPropagation();
-                        FileSystemService.removeDirectory(child.dir_id).then(() => {
-                          this.globalRefresh(child.dir_id);
-                        });
-                      }}
-                    >
-                      <span>Delete Collection</span>
-                    </button>
-                  </div>
-                </div>
-              </button>
-            );
-          }}
-        ></comp-tree>
-        {this.drawChildren(FileSystemService.skeleton)}
       </div>
       <div class="Upload-Path">
         {' '}

@@ -66,3 +66,7 @@
   border-left: var(--side-size) solid transparent;
   --side-size: 5px;
 }
+.Tree-NodeIcon {
+  width: 20px;
+  margin-right: 2px;
+}

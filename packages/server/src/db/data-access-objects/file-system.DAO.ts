@@ -334,7 +334,17 @@ export class FileSystemDAO {
 
     return res;
   }
-
+  async checkHeritage(dirOne: number, dirTwo: number) {
+    let res;
+    res = await this.db.database('relationships').where({ parent_id: dirOne }).andWhere({ child_id: dirTwo });
+    console.log(res);
+    if (res == []) {
+      res = await this.db.database('relationships').where({ parent_id: dirTwo }).andWhere({ child_id: dirOne });
+      console.log(res);
+      if (res != []) return -1;
+      else return 0;
+    } else return 1;
+  }
   async changeFileParent(file_id: number, parent_id: number) {
     return await this.db
       .database<FileEntry>('files')

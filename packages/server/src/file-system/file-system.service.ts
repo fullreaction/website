@@ -61,7 +61,11 @@ export class FileSystemService {
       throw e;
     });
   }
-
+  async checkHeritage(dirOne: number, dirTwo: number) {
+    return await this.fileSystemDAO.checkHeritage(dirOne, dirTwo).catch((e) => {
+      throw e;
+    });
+  }
   async changeFileParent(file_id: number, parent_id: number) {
     return await this.fileSystemDAO.changeFileParent(file_id, parent_id).catch((e) => {
       throw e;

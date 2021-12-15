@@ -15,10 +15,10 @@ export class SubTreeComponent {
   @Prop() folderDetailFactory: (child: RecursiveSkeleton) => JSX.Element;
   @Prop() fileDetailFactory: (child: FileEntry) => JSX.Element;
 
-  ArrowWrapperOnClick(e, child) {
+  ArrowWrapperOnClick(e, child: RecursiveSkeleton) {
     e.stopPropagation();
 
-    if (child.children == null)
+    if (child.directories == null)
       FileSystemService.getSkeleton(child, false).then(() => {
         child.showSubfolders = true;
         this.subTree = { ...this.subTree };
@@ -55,22 +55,25 @@ export class SubTreeComponent {
     }
   }
   render = () =>
-    this.isOpen && this.subTree.children != null ? (
+    this.isOpen && this.subTree.directories != null ? (
       <Host class="Tree-SubTree">
-        {this.subTree.children.map((child, index) => {
+        {this.subTree.directories.map((child, index) => {
           let count = 0;
           for (let i = 0; i < index; i++) {
-            if (this.subTree.children[i].dir_name === child.dir_name) count++;
+            if (this.subTree.directories[i].dir_name === child.dir_name) count++;
           }
           return (
             <div
               class="Tree-NodeWrapper"
               onDrop={e => {
                 const dragId = JSON.parse(e.dataTransfer.getData('text')).dragId;
-                FileSystemService.changeFileParent(dragId, child.dir_id);
+                FileSystemService.changeFileParent(dragId, child.dir_id, child.parent_id);
               }}
               onDragOver={e => {
                 e.preventDefault();
+              }}
+              onClick={() => {
+                FileSystemService.getChildren(child.dir_id, true);
               }}
             >
               <button class="Tree-Node">

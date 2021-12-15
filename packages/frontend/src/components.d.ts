@@ -9,7 +9,6 @@ import { ValidationErrors } from "./utils/form";
 import { RecursiveSkeleton } from "./services/file-system-services";
 import { JSX } from "@stencil/core";
 import { FileEntry } from "./models/upload.models";
-import { FSparams } from "./components/pages/app-admin/admin-upload/admin-upload";
 export namespace Components {
     interface AdminTable {
     }
@@ -91,12 +90,6 @@ export namespace Components {
         "showDots": boolean;
     }
     interface ItemboxShell {
-    }
-    interface UploadContent {
-        "forceRender": boolean;
-    }
-    interface UploadSidebar {
-        "forceRender": boolean;
     }
 }
 declare global {
@@ -280,18 +273,6 @@ declare global {
         prototype: HTMLItemboxShellElement;
         new (): HTMLItemboxShellElement;
     };
-    interface HTMLUploadContentElement extends Components.UploadContent, HTMLStencilElement {
-    }
-    var HTMLUploadContentElement: {
-        prototype: HTMLUploadContentElement;
-        new (): HTMLUploadContentElement;
-    };
-    interface HTMLUploadSidebarElement extends Components.UploadSidebar, HTMLStencilElement {
-    }
-    var HTMLUploadSidebarElement: {
-        prototype: HTMLUploadSidebarElement;
-        new (): HTMLUploadSidebarElement;
-    };
     interface HTMLElementTagNameMap {
         "admin-table": HTMLAdminTableElement;
         "admin-upload": HTMLAdminUploadElement;
@@ -323,8 +304,6 @@ declare global {
         "image-view": HTMLImageViewElement;
         "itembox-content": HTMLItemboxContentElement;
         "itembox-shell": HTMLItemboxShellElement;
-        "upload-content": HTMLUploadContentElement;
-        "upload-sidebar": HTMLUploadSidebarElement;
     }
 }
 declare namespace LocalJSX {
@@ -418,21 +397,6 @@ declare namespace LocalJSX {
     }
     interface ItemboxShell {
     }
-    interface UploadContent {
-        "forceRender"?: boolean;
-        "onCancelMedia"?: (event: CustomEvent<any>) => void;
-        "onOverlayRequest"?: (event: CustomEvent<any>) => void;
-        "onPreviewRequest"?: (event: CustomEvent<FileEntry>) => void;
-        "onRefreshRequest"?: (event: CustomEvent<any>) => void;
-        "onSelectMedia"?: (event: CustomEvent<FileEntry[]>) => void;
-        "onUpdateRequest"?: (event: CustomEvent<RecursiveSkeleton | number>) => void;
-    }
-    interface UploadSidebar {
-        "forceRender"?: boolean;
-        "onOverlayRequest"?: (event: CustomEvent<FSparams>) => void;
-        "onRefreshRequest"?: (event: CustomEvent<any>) => void;
-        "onUpdateRequest"?: (event: CustomEvent<RecursiveSkeleton | number>) => void;
-    }
     interface IntrinsicElements {
         "admin-table": AdminTable;
         "admin-upload": AdminUpload;
@@ -464,8 +428,6 @@ declare namespace LocalJSX {
         "image-view": ImageView;
         "itembox-content": ItemboxContent;
         "itembox-shell": ItemboxShell;
-        "upload-content": UploadContent;
-        "upload-sidebar": UploadSidebar;
     }
 }
 export { LocalJSX as JSX };
@@ -502,8 +464,6 @@ declare module "@stencil/core" {
             "image-view": LocalJSX.ImageView & JSXBase.HTMLAttributes<HTMLImageViewElement>;
             "itembox-content": LocalJSX.ItemboxContent & JSXBase.HTMLAttributes<HTMLItemboxContentElement>;
             "itembox-shell": LocalJSX.ItemboxShell & JSXBase.HTMLAttributes<HTMLItemboxShellElement>;
-            "upload-content": LocalJSX.UploadContent & JSXBase.HTMLAttributes<HTMLUploadContentElement>;
-            "upload-sidebar": LocalJSX.UploadSidebar & JSXBase.HTMLAttributes<HTMLUploadSidebarElement>;
         }
     }
 }

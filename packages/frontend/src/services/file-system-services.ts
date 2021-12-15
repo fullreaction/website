@@ -4,16 +4,19 @@ import { Directory, FileEntry } from '../models/upload.models';
 import FileSaver from 'file-saver';
 import JSZip from 'jszip';
 
-export class RecursiveSkeleton {
+export class RecursiveSkeleton implements Directory {
   dir_name: string;
   dir_id: number;
+  parent_id?: number;
+
   showSubfolders = false;
-  children: RecursiveSkeleton[] = [];
+  directories: RecursiveSkeleton[] = [];
   files: FileEntry[] = [];
 }
 // Turn all Directory objects into recursiveskeleton
 class FileSystemServiceController {
-  dirInfo: { currentDir?: Directory; directories?: Directory[]; files?: FileEntry[] } = {};
+  owner: string | Buffer; // use this instead of calling authservice
+  currentDir: RecursiveSkeleton = new RecursiveSkeleton();
   skeleton = new RecursiveSkeleton();
   path: { dir_name: string; dir_id: number }[] = [];
 
@@ -34,6 +37,15 @@ class FileSystemServiceController {
 
   async init() {
     await this.getSkeleton(this.skeleton, true);
+  }
+
+  async updateData(skel: RecursiveSkeleton | number) {
+    if (typeof skel == 'number') {
+      const res = await FileSystemService.findSkeleton(skel);
+      await FileSystemService.getSkeleton(res, false);
+    } else {
+      await FileSystemService.getSkeleton(skel, false);
+    }
   }
   async downloadFile(file: FileEntry) {
     FileSaver.saveAs(
@@ -59,12 +71,15 @@ class FileSystemServiceController {
     formData.append('owner', user.user_id as string);
 
     await AxiosService.post('filesystem/uploadFile', formData);
+    await this.updateData(dir_id);
   }
-  async changeFileName(file_id: number, name: string) {
+  async changeFileName(file_id: number, parent_id: number, name: string) {
     await AxiosService.patch('filesystem/changefilename', JSON.stringify({ file_id: file_id, name: name }));
+    await this.updateData(parent_id);
   }
-  async deleteFile(file_id: number) {
+  async deleteFile(file_id: number, parent_id) {
     await AxiosService.delete('filesystem/deletefile/' + file_id);
+    await this.updateData(parent_id);
   }
 
   async downloadDir(dir_id: number, dir_name: string) {
@@ -104,13 +119,16 @@ class FileSystemServiceController {
       'filesystem/makedir',
       JSON.stringify({ dir_name: dir_name, owner: user.user_id, parent_id: parent_id }),
     );
+    await this.updateData(parent_id);
   }
-  async changeDirName(dir_id: number, name: string) {
+  async changeDirName(dir_id: number, parent_id: number, name: string) {
     await AxiosService.patch('filesystem/changedirname', JSON.stringify({ dir_id: dir_id, name: name }));
+    await this.updateData(parent_id);
   }
 
-  async removeDirectory(dir_id: number) {
+  async removeDirectory(dir_id: number, parent_id: number) {
     await AxiosService.delete('filesystem/removedir', { data: JSON.stringify({ dir_id: dir_id }) });
+    await this.updateData(parent_id);
   }
   async getChildren(dir_id: number, moveTo: boolean) {
     let wasError = false;
@@ -124,12 +142,10 @@ class FileSystemServiceController {
         wasError = true;
       });
     if (wasError) return [];
-    if (moveTo) {
-      this.dirInfo.files = res.files;
-
-      this.dirInfo.directories = res.directories;
-      this.dirInfo.currentDir = res.parent;
-      console.log(this.dirInfo);
+    else if (moveTo) {
+      this.currentDir = res.parent; // -
+      this.currentDir.directories = res.directories; // -
+      this.currentDir.files = res.files;
       this.path = await this.getPath(dir_id);
     }
 
@@ -141,17 +157,19 @@ class FileSystemServiceController {
   async getSkeleton(skel: RecursiveSkeleton, moveTo: boolean) {
     if (skel == null) skel = this.skeleton;
 
-    const res = await this.getChildren(skel.dir_id, moveTo);
+    let res;
+    if (moveTo || skel.dir_id == this.currentDir.dir_id) res = await this.getChildren(skel.dir_id, true);
+    else res = await this.getChildren(skel.dir_id, false);
 
     skel.dir_name = res.parent.dir_name;
     skel.dir_id = res.parent.dir_id;
-    skel.children = res.directories.map((val, index) => {
-      if (skel.children != null && skel.children[index] != null)
-        return { ...skel.children[index], dir_id: val.dir_id, dir_name: val.dir_name };
+    skel.directories = res.directories.map((val, index) => {
+      if (skel.directories != null && skel.directories[index] != null)
+        return { ...skel.directories[index], dir_id: val.dir_id, dir_name: val.dir_name };
       else return { dir_id: val.dir_id, dir_name: val.dir_name };
     });
     skel.files = res.files;
-
+    this.skeleton = { ...this.skeleton };
     return res;
   }
 
@@ -161,17 +179,25 @@ class FileSystemServiceController {
       const path = await this.getPath(dir_id);
       let skel: RecursiveSkeleton = this.skeleton;
       for (const elem of path) {
-        skel = skel.children.find(child => (child.dir_id = elem.dir_id));
+        skel = skel.directories.find(child => (child.dir_id = elem.dir_id));
       }
 
       return skel;
     }
   }
-  async changeFileParent(file_id: number, parent_id: number) {
-    return await AxiosService.patch(
+
+  async getHeritage(dirOne: number, dirTwo: number) {
+    const res = await AxiosService.get(`filesystem/checkheritage/${dirOne}/${dirTwo}`).then(AxiosService.handleFetch);
+    console.log(res);
+  }
+  async changeFileParent(file_id: number, parent_new: number, parent_old: number) {
+    const res = await AxiosService.patch(
       'filesystem/changefileparent',
-      JSON.stringify({ file_id: file_id, parent_id: parent_id }),
+      JSON.stringify({ file_id: file_id, parent_id: parent_new }),
     ).then(AxiosService.handleFetch);
+
+    await this.updateData(parent_new);
+    await this.updateData(parent_old); //optimize
   }
 }
 export const FileSystemService = new FileSystemServiceController();

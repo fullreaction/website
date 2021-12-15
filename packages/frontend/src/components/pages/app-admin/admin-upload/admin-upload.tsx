@@ -1,4 +1,4 @@
-import { Component, h, Host, State } from '@stencil/core';
+import { Component, h, Host, Prop, State } from '@stencil/core';
 import { FileEntry } from '../../../../models/upload.models';
 
 import { FileSystemService, RecursiveSkeleton } from '../../../../services/file-system-services';
@@ -14,6 +14,7 @@ import { FileSystemService, RecursiveSkeleton } from '../../../../services/file-
 export interface FSparams {
   name?: string;
   id: number;
+  parent_id?: number;
   func: 'makeDir' | 'changeDirName' | 'changeFileName' | 'none';
 }
 
@@ -22,12 +23,13 @@ export interface FSparams {
   styleUrl: 'admin-upload.css',
 })
 export class AdminUpload {
+  @State() skeleton: RecursiveSkeleton;
+  @State() currentDir: RecursiveSkeleton;
+
   @State() searchWord = '';
   @State() overlayVis = false;
 
   @State() fileArray: FileEntry[] = [];
-
-  @State() forceRender = false;
 
   @State() previewFile: { blob: Blob; entry: FileEntry } = { blob: null, entry: null };
   @State() previewSrc: string;
@@ -44,44 +46,29 @@ export class AdminUpload {
 
   componentWillLoad() {
     return FileSystemService.init().then(() => {
-      this.fsData = { name: '', id: FileSystemService.skeleton.dir_id, func: 'none' };
+      this.refresh();
+      this.fsData = { name: '', parent_id: null, id: this.skeleton.dir_id, func: 'none' };
     });
   }
   async runFS(e) {
     e.preventDefault();
-    if (this.fsData.func != 'none') {
+    if (this.fsData.func == 'makeDir') {
       await FileSystemService[this.fsData.func](this.fsData.id, this.fsData.name);
+    } else if (this.fsData.func != 'none') {
+      await FileSystemService[this.fsData.func](this.fsData.id, this.fsData.parent_id, this.fsData.name);
     }
-  }
-
-  refresh() {
-    this.forceRender = !this.forceRender;
+    this.refresh();
   }
   updateData(skel: RecursiveSkeleton | number) {
-    if (typeof skel == 'number') {
-      FileSystemService.findSkeleton(skel)
-        .then(res => {
-          return FileSystemService.getSkeleton(res, true);
-        })
-        .then(() => {
-          this.refresh();
-        });
-    } else {
-      FileSystemService.getSkeleton(skel, true).then(() => {
-        this.refresh();
-      });
-    }
+    //
   }
   compAlertConfirm(e: CustomEvent) {
     if (this.overlayVis) {
       this.overlayVis = false;
-      this.runFS(e)
-        .then(() => {
-          this.updateData(this.fsData.id);
-        })
-        .then(() => {
-          this.fsData = { id: null, name: '', func: 'none' };
-        });
+      this.runFS(e).then(() => {
+        this.skeleton = { ...FileSystemService.skeleton };
+        this.fsData = { id: null, name: '', func: 'none' };
+      });
     }
   }
   async getImageBlob(file: FileEntry) {
@@ -94,11 +81,15 @@ export class AdminUpload {
   onFileChange(e) {
     if (e.target.files.length != null) {
       this.file = e.target.files[0];
-      FileSystemService.uploadFile(this.file, FileSystemService.dirInfo.currentDir.dir_id).then(() => {
-        this.updateData(FileSystemService.dirInfo.currentDir.dir_id);
+      FileSystemService.uploadFile(this.file, this.currentDir.dir_id).then(() => {
+        this.refresh();
         e.target.value = null;
       });
     }
+  }
+  refresh() {
+    this.skeleton = FileSystemService.skeleton;
+    this.currentDir = FileSystemService.currentDir;
   }
 
   render = () => (
@@ -107,15 +98,15 @@ export class AdminUpload {
         imageBlob={this.previewFile.blob}
         hideArrows={false}
         onLeftArrowClick={async () => {
-          const fileIndex = FileSystemService.dirInfo.files.indexOf(this.previewFile.entry);
+          const fileIndex = this.currentDir.files.indexOf(this.previewFile.entry);
           for (let index = fileIndex - 1; index >= 0; index--) {
-            if (await this.getImageBlob(FileSystemService.dirInfo.files[index])) break;
+            if (await this.getImageBlob(this.currentDir.files[index])) break;
           }
         }}
         onRightArrowClick={async () => {
-          const fileIndex = FileSystemService.dirInfo.files.indexOf(this.previewFile.entry);
-          for (let index = fileIndex + 1; index < FileSystemService.dirInfo.files.length; index++) {
-            if (await this.getImageBlob(FileSystemService.dirInfo.files[index])) break;
+          const fileIndex = this.currentDir.files.indexOf(this.previewFile.entry);
+          for (let index = fileIndex + 1; index < this.currentDir.files.length; index++) {
+            if (await this.getImageBlob(this.currentDir.files[index])) break;
           }
         }}
       ></image-view>
@@ -128,40 +119,46 @@ export class AdminUpload {
           <div
             class="Upload-Collection Upload-CollectionHeader"
             onClick={() => {
-              this.updateData(FileSystemService.skeleton);
+              FileSystemService.getChildren(null, true).then(() => {
+                this.currentDir = FileSystemService.currentDir;
+              });
             }}
           >
             <span>COLLECTIONS</span>
             <button class="Upload-Dots">
               <img src="\assets\icon\3Dots-icon.svg" onClick={e => e.stopPropagation()} />
-              <div class="Upload-Dots-Wrapper">
-                <div class="Upload-Dots-Content">
-                  <button
-                    class="Content-Item"
-                    onClick={e => {
-                      e.stopPropagation();
-                      this.fsData = { id: FileSystemService.skeleton.dir_id, func: 'makeDir' };
+              <dropdown-shell>
+                <dropdown-btn
+                  onClick={e => {
+                    e.stopPropagation();
+                    this.fsData = { id: this.skeleton.dir_id, func: 'makeDir' };
 
-                      this.overlayVis = true;
-                    }}
-                  >
-                    <span>Add Collection</span>
-                  </button>
-                </div>
-              </div>
+                    this.overlayVis = true;
+                  }}
+                >
+                  Add Collection
+                </dropdown-btn>
+              </dropdown-shell>
             </button>
           </div>
           <comp-tree
-            tree={FileSystemService.skeleton}
+            tree={this.skeleton}
             folderDetailFactory={(child: RecursiveSkeleton) => {
               return (
                 <button class="Upload-Dots">
                   <img src="\assets\icon\3Dots-icon.svg" onClick={e => e.stopPropagation()} />
                   <dropdown-shell>
                     <dropdown-btn
+                      onClick={() => {
+                        FileSystemService.getHeritage(child.parent_id, child.dir_id);
+                      }}
+                    >
+                      LIGMA NOOTS
+                    </dropdown-btn>
+                    <dropdown-btn
                       onClick={e => {
                         e.stopPropagation();
-                        this.fsData = { id: child.dir_id, func: 'makeDir' };
+                        this.fsData = { id: child.dir_id, parent_id: child.parent_id, func: 'makeDir' };
                         this.overlayVis = true;
                       }}
                     >
@@ -178,7 +175,7 @@ export class AdminUpload {
                     <dropdown-btn
                       onClick={e => {
                         e.stopPropagation();
-                        this.fsData = { id: child.dir_id, func: 'changeDirName' };
+                        this.fsData = { id: child.dir_id, parent_id: child.parent_id, func: 'changeDirName' };
                         this.overlayVis = true;
                       }}
                     >
@@ -187,8 +184,8 @@ export class AdminUpload {
                     <dropdown-btn
                       onClick={e => {
                         e.stopPropagation();
-                        FileSystemService.removeDirectory(child.dir_id).then(() => {
-                          this.updateData(FileSystemService.dirInfo.currentDir.dir_id);
+                        FileSystemService.removeDirectory(child.dir_id, child.parent_id).then(() => {
+                          this.refresh();
                         });
                       }}
                     >
@@ -215,7 +212,7 @@ export class AdminUpload {
                     <dropdown-btn
                       onClick={e => {
                         e.stopPropagation();
-                        this.fsData = { id: child.file_id, func: 'changeFileName' };
+                        this.fsData = { id: child.file_id, parent_id: child.parent_id, func: 'changeFileName' };
                         this.overlayVis = true;
                       }}
                     >
@@ -224,8 +221,8 @@ export class AdminUpload {
                     <dropdown-btn
                       onClick={e => {
                         e.stopPropagation();
-                        FileSystemService.deleteFile(child.file_id).then(() => {
-                          this.updateData(FileSystemService.dirInfo.currentDir.dir_id);
+                        FileSystemService.deleteFile(child.file_id, child.parent_id).then(() => {
+                          this.refresh();
                         });
                       }}
                     >
@@ -237,32 +234,34 @@ export class AdminUpload {
             }}
           ></comp-tree>
         </div>
+
         <div class="Upload-Content">
           <comp-searchbar></comp-searchbar>
           <itembox-shell>
-            {FileSystemService.dirInfo.directories.map((child, index) => {
+            {this.currentDir.directories.map((child, index) => {
               if (
                 this.searchWord == '' ||
                 child.dir_name.toLocaleLowerCase().includes(this.searchWord.toLocaleLowerCase())
               ) {
                 let count = 0;
                 for (let i = 0; i < index; i++) {
-                  if (FileSystemService.dirInfo.directories[i].dir_name === child.dir_name) count++;
+                  if (this.currentDir.directories[i].dir_name === child.dir_name) count++;
                 }
                 return (
                   <itembox-content
                     onItemClick={() => {
-                      this.updateData(child.dir_id);
+                      FileSystemService.getChildren(child.dir_id, true).then(() => {
+                        this.currentDir = { ...FileSystemService.currentDir };
+                        console.log(this.currentDir);
+                      }); // moveTo dir
                     }}
                     onDrop={e => {
                       const dragId = JSON.parse(e.dataTransfer.getData('text')).dragId;
 
-                      FileSystemService.changeFileParent(dragId, child.dir_id).then(() => {
-                        this.updateData(FileSystemService.dirInfo.currentDir.dir_id);
+                      FileSystemService.changeFileParent(dragId, child.dir_id, child.parent_id).then(() => {
+                        this.refresh();
                         this.fileArray = [...this.fileArray.filter(value => value.file_id != dragId)];
                       });
-
-                      this.refresh();
                     }}
                     onDragOver={e => e.preventDefault()}
                     itemName={count === 0 ? child.dir_name : child.dir_name + ' (' + count + ')'}
@@ -281,7 +280,7 @@ export class AdminUpload {
                       <dropdown-btn
                         onClick={e => {
                           e.stopPropagation();
-                          this.fsData = { id: child.dir_id, func: 'changeDirName' };
+                          this.fsData = { id: child.dir_id, parent_id: child.parent_id, func: 'changeDirName' };
                           this.overlayVis = true;
                         }}
                       >
@@ -290,8 +289,8 @@ export class AdminUpload {
                       <dropdown-btn
                         onClick={e => {
                           e.stopPropagation();
-                          FileSystemService.removeDirectory(child.dir_id).then(() => {
-                            this.updateData(FileSystemService.dirInfo.currentDir.dir_id);
+                          FileSystemService.removeDirectory(child.dir_id, child.parent_id).then(() => {
+                            this.refresh();
                           });
                         }}
                       >
@@ -302,24 +301,22 @@ export class AdminUpload {
                 );
               }
             })}
-            {FileSystemService.dirInfo.files.map((child, index) => {
+            {this.currentDir.files.map((child, index) => {
               if (
                 this.searchWord == '' ||
                 child.file_name.toLocaleLowerCase().includes(this.searchWord.toLocaleLowerCase())
               ) {
                 let count = 0;
                 for (let i = 0; i < index; i++) {
-                  if (FileSystemService.dirInfo.files[i].file_name === child.file_name) count++;
+                  if (this.currentDir.files[i].file_name === child.file_name) count++;
                 }
                 return (
                   <itembox-content
                     class={{ 'Highlight-File': this.fileArray.includes(child) }}
                     onItemClick={() => {
                       if (!this.fileArray.includes(child)) {
-                        this.fileArray.push(child);
+                        this.fileArray = [...this.fileArray, child];
                       } else this.fileArray = [...this.fileArray.filter(value => value.file_id != child.file_id)];
-
-                      this.refresh();
                     }}
                     onDblClick={() => {
                       this.getImageBlob(child);
@@ -327,18 +324,6 @@ export class AdminUpload {
                     onDragStart={e => {
                       //e.preventDefault();
                       e.dataTransfer.setData('text', JSON.stringify({ dragId: child.file_id }));
-
-                      if (!this.fileArray.includes(child)) {
-                        this.fileArray.push(child);
-                      } else this.fileArray = [...this.fileArray.filter(value => value.file_id != child.file_id)];
-
-                      this.refresh();
-                    }}
-                    onDrag={() => {
-                      if (!this.fileArray.includes(child)) {
-                        this.fileArray.push(child);
-                      }
-                      this.refresh();
                     }}
                     draggable
                     itemName={count === 0 ? child.file_name : child.file_name + ' (' + count + ')'}
@@ -357,7 +342,7 @@ export class AdminUpload {
                       <dropdown-btn
                         onClick={e => {
                           e.stopPropagation();
-                          this.fsData = { id: child.file_id, func: 'changeFileName' };
+                          this.fsData = { id: child.file_id, parent_id: child.parent_id, func: 'changeFileName' };
                           this.overlayVis = true;
                         }}
                       >
@@ -366,8 +351,8 @@ export class AdminUpload {
                       <dropdown-btn
                         onClick={e => {
                           e.stopPropagation();
-                          FileSystemService.deleteFile(child.file_id).then(() => {
-                            this.updateData(FileSystemService.dirInfo.currentDir.dir_id);
+                          FileSystemService.deleteFile(child.file_id, child.parent_id).then(() => {
+                            this.refresh();
                           });
                         }}
                       >

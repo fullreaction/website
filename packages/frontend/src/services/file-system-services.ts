@@ -191,7 +191,7 @@ class FileSystemServiceController {
     console.log(res);
   }
   async changeFileParent(file_id: number, parent_new: number, parent_old: number) {
-    const res = await AxiosService.patch(
+    await AxiosService.patch(
       'filesystem/changefileparent',
       JSON.stringify({ file_id: file_id, parent_id: parent_new }),
     ).then(AxiosService.handleFetch);

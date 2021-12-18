@@ -153,7 +153,7 @@ export class AdminUpload {
                         FileSystemService.getHeritage(child.parent_id, child.dir_id);
                       }}
                     >
-                      LIGMA NOOTS
+                      Heritage
                     </dropdown-btn>
                     <dropdown-btn
                       onClick={e => {

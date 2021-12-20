@@ -148,7 +148,7 @@ class FileSystemServiceController {
       this.currentDir.files = res.files;
       this.path = await this.getPath(dir_id);
     }
-
+    if (moveTo) await this.updateData(dir_id);
     return res;
   }
   private async getPath(dir_id: number): Promise<{ dir_name: string; dir_id: number }[]> {
@@ -179,7 +179,7 @@ class FileSystemServiceController {
       const path = await this.getPath(dir_id);
       let skel: RecursiveSkeleton = this.skeleton;
       for (const elem of path) {
-        skel = skel.directories.find(child => (child.dir_id = elem.dir_id));
+        skel = skel.directories.find(child => child.dir_id == elem.dir_id);
       }
 
       return skel;

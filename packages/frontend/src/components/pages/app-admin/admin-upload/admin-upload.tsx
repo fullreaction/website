@@ -63,9 +63,7 @@ export class AdminUpload {
       });
     }
   }
-  updateData(skel: RecursiveSkeleton | number) {
-    //
-  }
+
   compAlertConfirm(e: CustomEvent) {
     if (this.overlayVis) {
       this.overlayVis = false;

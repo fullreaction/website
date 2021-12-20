@@ -52,12 +52,16 @@ export class AdminUpload {
   }
   async runFS(e) {
     e.preventDefault();
+    console.log('amount');
     if (this.fsData.func == 'makeDir') {
-      await FileSystemService[this.fsData.func](this.fsData.id, this.fsData.name);
+      await FileSystemService[this.fsData.func](this.fsData.id, this.fsData.name).then(() => {
+        this.refresh();
+      });
     } else if (this.fsData.func != 'none') {
-      await FileSystemService[this.fsData.func](this.fsData.id, this.fsData.parent_id, this.fsData.name);
+      await FileSystemService[this.fsData.func](this.fsData.id, this.fsData.parent_id, this.fsData.name).then(() => {
+        this.refresh();
+      });
     }
-    this.refresh();
   }
   updateData(skel: RecursiveSkeleton | number) {
     //
@@ -90,6 +94,14 @@ export class AdminUpload {
   refresh() {
     this.skeleton = FileSystemService.skeleton;
     this.currentDir = FileSystemService.currentDir;
+    console.log('new');
+    console.log(this.skeleton);
+  }
+  async leftArrowClick() {
+    const fileIndex = this.currentDir.files.indexOf(this.previewFile.entry);
+    for (let index = fileIndex - 1; index >= 0; index--) {
+      if (await this.getImageBlob(this.currentDir.files[index])) break;
+    }
   }
 
   render = () => (
@@ -98,10 +110,7 @@ export class AdminUpload {
         imageBlob={this.previewFile.blob}
         hideArrows={false}
         onLeftArrowClick={async () => {
-          const fileIndex = this.currentDir.files.indexOf(this.previewFile.entry);
-          for (let index = fileIndex - 1; index >= 0; index--) {
-            if (await this.getImageBlob(this.currentDir.files[index])) break;
-          }
+          await this.leftArrowClick();
         }}
         onRightArrowClick={async () => {
           const fileIndex = this.currentDir.files.indexOf(this.previewFile.entry);
@@ -153,7 +162,7 @@ export class AdminUpload {
                         FileSystemService.getHeritage(child.parent_id, child.dir_id);
                       }}
                     >
-                      Heritage
+                      getHeritage
                     </dropdown-btn>
                     <dropdown-btn
                       onClick={e => {
@@ -252,7 +261,6 @@ export class AdminUpload {
                     onItemClick={() => {
                       FileSystemService.getChildren(child.dir_id, true).then(() => {
                         this.currentDir = { ...FileSystemService.currentDir };
-                        console.log(this.currentDir);
                       }); // moveTo dir
                     }}
                     onDrop={e => {

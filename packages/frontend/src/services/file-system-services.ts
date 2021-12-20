@@ -41,6 +41,7 @@ class FileSystemServiceController {
 
   async updateData(skel: RecursiveSkeleton | number) {
     if (typeof skel == 'number') {
+      console.log(skel);
       const res = await FileSystemService.findSkeleton(skel);
       await FileSystemService.getSkeleton(res, false);
     } else {
@@ -138,7 +139,7 @@ class FileSystemServiceController {
       .then(AxiosService.handleFetch)
       .catch(() => {
         this.getChildren(null, true);
-
+        console.log('getchildren error');
         wasError = true;
       });
     if (wasError) return [];
@@ -148,7 +149,7 @@ class FileSystemServiceController {
       this.currentDir.files = res.files;
       this.path = await this.getPath(dir_id);
     }
-    if (moveTo) await this.updateData(dir_id);
+    console.log(res);
     return res;
   }
   private async getPath(dir_id: number): Promise<{ dir_name: string; dir_id: number }[]> {

@@ -335,11 +335,26 @@ export class FileSystemDAO {
     return res;
   }
   async checkHeritage(dirOne: number, dirTwo: number) {
+    // -1 - two is parent
+    // 0 - aren't related
+    // 1 - one is parent
+    console.log(dirOne);
+    console.log(dirTwo);
     let res;
-    res = await this.db.database('relationships').where({ parent_id: dirOne }).andWhere({ child_id: dirTwo });
+    res = await this.db
+      .database('relationships')
+      .select('parent_id')
+      .where('parent_id', '=', dirOne)
+      .andWhere('child_id', '=', dirTwo);
+    console.log('res1');
     console.log(res);
-    if (res == []) {
-      res = await this.db.database('relationships').where({ parent_id: dirTwo }).andWhere({ child_id: dirOne });
+    if (res.length == 0) {
+      console.log('res2');
+      res = await this.db
+        .database('relationships')
+        .select('parent_id')
+        .where('parent_id', '=', dirTwo)
+        .andWhere('child_id', '=', dirOne);
       console.log(res);
       if (res != []) return -1;
       else return 0;

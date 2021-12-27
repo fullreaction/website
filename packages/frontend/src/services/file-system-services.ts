@@ -40,8 +40,9 @@ class FileSystemServiceController {
   }
 
   async updateData(skel: RecursiveSkeleton | number) {
+    console.log('Updated');
+    console.log(skel);
     if (typeof skel == 'number') {
-      console.log(skel);
       const res = await FileSystemService.findSkeleton(skel);
       await FileSystemService.getSkeleton(res, false);
     } else {
@@ -149,7 +150,6 @@ class FileSystemServiceController {
       this.currentDir.files = res.files;
       this.path = await this.getPath(dir_id);
     }
-    console.log(res);
     return res;
   }
   private async getPath(dir_id: number): Promise<{ dir_name: string; dir_id: number }[]> {
@@ -162,15 +162,19 @@ class FileSystemServiceController {
     if (moveTo || skel.dir_id == this.currentDir.dir_id) res = await this.getChildren(skel.dir_id, true);
     else res = await this.getChildren(skel.dir_id, false);
 
+    skel.parent_id = res.parent.parent_id;
     skel.dir_name = res.parent.dir_name;
     skel.dir_id = res.parent.dir_id;
+
     skel.directories = res.directories.map((val, index) => {
       if (skel.directories != null && skel.directories[index] != null)
-        return { ...skel.directories[index], dir_id: val.dir_id, dir_name: val.dir_name };
-      else return { dir_id: val.dir_id, dir_name: val.dir_name };
+        return { ...skel.directories[index], dir_id: val.dir_id, dir_name: val.dir_name, parent_id: skel.dir_id };
+      else return { dir_id: val.dir_id, dir_name: val.dir_name, parent_id: skel.dir_id };
     });
+
     skel.files = res.files;
     this.skeleton = { ...this.skeleton };
+
     return res;
   }
 
@@ -189,16 +193,20 @@ class FileSystemServiceController {
 
   async getHeritage(dirOne: number, dirTwo: number) {
     const res = await AxiosService.get(`filesystem/checkheritage/${dirOne}/${dirTwo}`).then(AxiosService.handleFetch);
-    console.log(res);
+    return res;
   }
   async changeFileParent(file_id: number, parent_new: number, parent_old: number) {
-    const res = await AxiosService.patch(
+    await AxiosService.patch(
       'filesystem/changefileparent',
       JSON.stringify({ file_id: file_id, parent_id: parent_new }),
-    ).then(AxiosService.handleFetch);
-
-    await this.updateData(parent_new);
-    await this.updateData(parent_old); //optimize
+    );
+    const res = await this.getHeritage(parent_new, parent_old);
+    if (res != 0) {
+      await this.updateData(res);
+    } else {
+      await this.updateData(parent_new);
+      await this.updateData(parent_old);
+    }
   }
 }
 export const FileSystemService = new FileSystemServiceController();

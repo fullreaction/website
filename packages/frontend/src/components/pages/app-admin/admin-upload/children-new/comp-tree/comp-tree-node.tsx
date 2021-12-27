@@ -28,10 +28,11 @@ export class SubTreeComponent {
     }
     this.subTree = { ...this.subTree };
   }
-  drawChildren(skel: RecursiveSkeleton) {
+  drawChildren(skel: RecursiveSkeleton): JSX.Element {
     if (skel.files != null) {
       return skel.files.map((child, index) => {
         let count = 0;
+
         for (let i = 0; i < index; i++) {
           if (skel.files[i].file_name === child.file_name) count++;
         }
@@ -54,8 +55,9 @@ export class SubTreeComponent {
       });
     }
   }
-  render = () =>
-    this.isOpen && this.subTree.directories != null ? (
+  render = () => {
+    console.log(this.fileDetailFactory);
+    return this.isOpen && this.subTree.directories != null ? (
       <Host class="Tree-SubTree">
         {this.subTree.directories.map((child, index) => {
           let count = 0;
@@ -102,4 +104,5 @@ export class SubTreeComponent {
     ) : (
       ''
     );
+  };
 }

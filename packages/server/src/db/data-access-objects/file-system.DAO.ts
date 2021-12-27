@@ -178,6 +178,7 @@ export class FileSystemDAO {
       .update({ dir_name: name })
       .where({ dir_id: dir_id })
       .catch((e) => {
+        console.log(e);
         throw new HttpException(
           {
             code: 'FieldEmpty',
@@ -233,7 +234,10 @@ export class FileSystemDAO {
   }
 
   async getChildren(dir_id: number, owner: string) {
-    const parent: { dir_name: string; dir_id: number } = { dir_id: dir_id, dir_name: '' };
+    const parent: { dir_name: string; dir_id: number } = {
+      dir_id: dir_id,
+      dir_name: '',
+    };
 
     let rootDir;
     if (dir_id != null)
@@ -267,7 +271,6 @@ export class FileSystemDAO {
             500,
           );
         });
-
     parent.dir_id = rootDir[0].dir_id;
     parent.dir_name = rootDir[0].dir_name;
 
@@ -287,6 +290,7 @@ export class FileSystemDAO {
           500,
         );
       });
+
     const files: FileEntry[] = await this.db
       .database<FileEntry>('files')
       .select('file_id', 'file_name', 'file_type', 'owner', 'parent_id')
@@ -335,30 +339,25 @@ export class FileSystemDAO {
     return res;
   }
   async checkHeritage(dirOne: number, dirTwo: number) {
-    // -1 - two is parent
-    // 0 - aren't related
-    // 1 - one is parent
-    console.log(dirOne);
-    console.log(dirTwo);
+    // res=0 - aren't related
+
     let res;
     res = await this.db
       .database('relationships')
       .select('parent_id')
       .where('parent_id', '=', dirOne)
       .andWhere('child_id', '=', dirTwo);
-    console.log('res1');
-    console.log(res);
+
     if (res.length == 0) {
-      console.log('res2');
       res = await this.db
         .database('relationships')
         .select('parent_id')
         .where('parent_id', '=', dirTwo)
         .andWhere('child_id', '=', dirOne);
-      console.log(res);
-      if (res != []) return -1;
+
+      if (res != []) return dirTwo;
       else return 0;
-    } else return 1;
+    } else return dirOne;
   }
   async changeFileParent(file_id: number, parent_id: number) {
     return await this.db

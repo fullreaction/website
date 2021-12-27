@@ -92,8 +92,6 @@ export class AdminUpload {
   refresh() {
     this.skeleton = FileSystemService.skeleton;
     this.currentDir = FileSystemService.currentDir;
-    console.log('new');
-    console.log(this.skeleton);
   }
   async leftArrowClick() {
     const fileIndex = this.currentDir.files.indexOf(this.previewFile.entry);
@@ -150,18 +148,48 @@ export class AdminUpload {
           </div>
           <comp-tree
             tree={this.skeleton}
+            fileDetailFactory={(child: FileEntry) => {
+              return (
+                <button class="Upload-Dots">
+                  <img src="\assets\icon\3Dots-icon.svg" onClick={e => e.stopPropagation()} />
+
+                  <dropdown-shell>
+                    <dropdown-btn
+                      onClick={e => {
+                        e.stopPropagation();
+                        FileSystemService.downloadFile(child);
+                      }}
+                    >
+                      Download File
+                    </dropdown-btn>
+                    <dropdown-btn
+                      onClick={e => {
+                        e.stopPropagation();
+                        this.fsData = { id: child.file_id, parent_id: child.parent_id, func: 'changeFileName' };
+                        this.overlayVis = true;
+                      }}
+                    >
+                      Rename File
+                    </dropdown-btn>
+                    <dropdown-btn
+                      onClick={e => {
+                        e.stopPropagation();
+                        FileSystemService.deleteFile(child.file_id, child.parent_id).then(() => {
+                          this.refresh();
+                        });
+                      }}
+                    >
+                      Delete File
+                    </dropdown-btn>
+                  </dropdown-shell>
+                </button>
+              );
+            }}
             folderDetailFactory={(child: RecursiveSkeleton) => {
               return (
                 <button class="Upload-Dots">
                   <img src="\assets\icon\3Dots-icon.svg" onClick={e => e.stopPropagation()} />
                   <dropdown-shell>
-                    <dropdown-btn
-                      onClick={() => {
-                        FileSystemService.getHeritage(child.parent_id, child.dir_id);
-                      }}
-                    >
-                      getHeritage
-                    </dropdown-btn>
                     <dropdown-btn
                       onClick={e => {
                         e.stopPropagation();
@@ -197,43 +225,6 @@ export class AdminUpload {
                       }}
                     >
                       Delete Folder
-                    </dropdown-btn>
-                  </dropdown-shell>
-                </button>
-              );
-            }}
-            fileDetailFactory={(child: FileEntry) => {
-              return (
-                <button class="Upload-Dots">
-                  <img src="\assets\icon\3Dots-icon.svg" onClick={e => e.stopPropagation()} />
-
-                  <dropdown-shell>
-                    <dropdown-btn
-                      onClick={e => {
-                        e.stopPropagation();
-                        FileSystemService.downloadFile(child);
-                      }}
-                    >
-                      Download File
-                    </dropdown-btn>
-                    <dropdown-btn
-                      onClick={e => {
-                        e.stopPropagation();
-                        this.fsData = { id: child.file_id, parent_id: child.parent_id, func: 'changeFileName' };
-                        this.overlayVis = true;
-                      }}
-                    >
-                      Rename File
-                    </dropdown-btn>
-                    <dropdown-btn
-                      onClick={e => {
-                        e.stopPropagation();
-                        FileSystemService.deleteFile(child.file_id, child.parent_id).then(() => {
-                          this.refresh();
-                        });
-                      }}
-                    >
-                      Delete File
                     </dropdown-btn>
                   </dropdown-shell>
                 </button>

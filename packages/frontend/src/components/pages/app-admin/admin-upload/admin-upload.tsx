@@ -1,4 +1,4 @@
-import { Component, h, Host, Prop, State } from '@stencil/core';
+import { Component, h, Host, State } from '@stencil/core';
 import { FileEntry } from '../../../../models/upload.models';
 
 import { FileSystemService, RecursiveSkeleton } from '../../../../services/file-system-services';
@@ -10,6 +10,12 @@ import { FileSystemService, RecursiveSkeleton } from '../../../../services/file-
   Making enter work on comp-alert
 
   Uploading folders (scrapped)
+*/
+
+/*
+
+  dragging folders doesn't work
+  dragging files into sidebar folders doesn't work
 */
 export interface FSparams {
   name?: string;
@@ -23,9 +29,6 @@ export interface FSparams {
   styleUrl: 'admin-upload.css',
 })
 export class AdminUpload {
-  @State() skeleton: RecursiveSkeleton;
-  @State() currentDir: RecursiveSkeleton;
-
   @State() searchWord = '';
   @State() overlayVis = false;
 
@@ -46,21 +49,16 @@ export class AdminUpload {
 
   componentWillLoad() {
     return FileSystemService.init().then(() => {
-      this.refresh();
-      this.fsData = { name: '', parent_id: null, id: this.skeleton.dir_id, func: 'none' };
+      this.fsData = { name: '', parent_id: null, id: FileSystemService.store.state.skeleton.dir_id, func: 'none' };
     });
   }
   async runFS(e) {
     e.preventDefault();
     console.log('amount');
     if (this.fsData.func == 'makeDir') {
-      await FileSystemService[this.fsData.func](this.fsData.id, this.fsData.name).then(() => {
-        this.refresh();
-      });
+      await FileSystemService[this.fsData.func](this.fsData.id, this.fsData.name);
     } else if (this.fsData.func != 'none') {
-      await FileSystemService[this.fsData.func](this.fsData.id, this.fsData.parent_id, this.fsData.name).then(() => {
-        this.refresh();
-      });
+      await FileSystemService[this.fsData.func](this.fsData.id, this.fsData.parent_id, this.fsData.name);
     }
   }
 
@@ -68,7 +66,6 @@ export class AdminUpload {
     if (this.overlayVis) {
       this.overlayVis = false;
       this.runFS(e).then(() => {
-        this.skeleton = { ...FileSystemService.skeleton };
         this.fsData = { id: null, name: '', func: 'none' };
       });
     }
@@ -83,20 +80,206 @@ export class AdminUpload {
   onFileChange(e) {
     if (e.target.files.length != null) {
       this.file = e.target.files[0];
-      FileSystemService.uploadFile(this.file, this.currentDir.dir_id).then(() => {
-        this.refresh();
+      FileSystemService.uploadFile(this.file, FileSystemService.store.state.currentDir.dir_id).then(() => {
         e.target.value = null;
       });
     }
   }
-  refresh() {
-    this.skeleton = FileSystemService.skeleton;
-    this.currentDir = FileSystemService.currentDir;
-  }
+
   async leftArrowClick() {
-    const fileIndex = this.currentDir.files.indexOf(this.previewFile.entry);
+    const fileIndex = FileSystemService.store.state.currentDir.files.indexOf(this.previewFile.entry);
     for (let index = fileIndex - 1; index >= 0; index--) {
-      if (await this.getImageBlob(this.currentDir.files[index])) break;
+      if (await this.getImageBlob(FileSystemService.store.state.currentDir.files[index])) break;
+    }
+  }
+
+  folderDetailFactory(child: RecursiveSkeleton) {
+    return (
+      <button class="Upload-Dots">
+        <img src="\assets\icon\3Dots-icon.svg" onClick={e => e.stopPropagation()} />
+        <dropdown-shell>
+          <dropdown-btn
+            onClick={e => {
+              e.stopPropagation();
+              this.fsData = { id: child.dir_id, parent_id: child.parent_id, func: 'makeDir' };
+              this.overlayVis = true;
+            }}
+          >
+            Add Collection
+          </dropdown-btn>
+          <dropdown-btn
+            onClick={e => {
+              e.stopPropagation();
+              FileSystemService.downloadDir(child.dir_id, child.dir_name);
+            }}
+          >
+            Download Folder
+          </dropdown-btn>
+          <dropdown-btn
+            onClick={e => {
+              e.stopPropagation();
+              this.fsData = { id: child.dir_id, parent_id: child.parent_id, func: 'changeDirName' };
+              this.overlayVis = true;
+            }}
+          >
+            Rename Folder
+          </dropdown-btn>
+          <dropdown-btn
+            onClick={e => {
+              e.stopPropagation();
+              FileSystemService.removeDirectory(child.dir_id, child.parent_id);
+            }}
+          >
+            Delete Folder
+          </dropdown-btn>
+        </dropdown-shell>
+      </button>
+    );
+  }
+  fileDetailFactory(child: FileEntry) {
+    return (
+      <button class="Upload-Dots">
+        <img src="\assets\icon\3Dots-icon.svg" onClick={e => e.stopPropagation()} />
+
+        <dropdown-shell>
+          <dropdown-btn
+            onClick={e => {
+              e.stopPropagation();
+              FileSystemService.downloadFile(child);
+            }}
+          >
+            Download File
+          </dropdown-btn>
+          <dropdown-btn
+            onClick={e => {
+              e.stopPropagation();
+              this.fsData = { id: child.file_id, parent_id: child.parent_id, func: 'changeFileName' };
+              this.overlayVis = true;
+            }}
+          >
+            Rename File
+          </dropdown-btn>
+          <dropdown-btn
+            onClick={e => {
+              e.stopPropagation();
+              FileSystemService.deleteFile(child.file_id, child.parent_id);
+            }}
+          >
+            Delete File
+          </dropdown-btn>
+        </dropdown-shell>
+      </button>
+    );
+  }
+  folderMapFunc(child, index) {
+    if (this?.searchWord == '' || child.dir_name.toLocaleLowerCase().includes(this?.searchWord.toLocaleLowerCase())) {
+      let count = 0;
+      for (let i = 0; i < index; i++) {
+        if (FileSystemService.store.state.currentDir.directories[i].dir_name === child.dir_name) count++;
+      }
+      return (
+        <itembox-content
+          onItemClick={() => {
+            FileSystemService.getChildren(child.dir_id, true);
+          }}
+          onDrop={e => {
+            const dragId = JSON.parse(e.dataTransfer.getData('text')).dragId;
+
+            FileSystemService.changeFileParent(dragId, child.dir_id, child.parent_id).then(() => {
+              this.fileArray = [...this.fileArray.filter(value => value.file_id != dragId)];
+            });
+          }}
+          onDragOver={e => e.preventDefault()}
+          itemName={count === 0 ? child.dir_name : child.dir_name + ' (' + count + ')'}
+          itemIcon="\assets\icon\Folder-Image.svg"
+          showDots
+        >
+          <dropdown-shell>
+            <dropdown-btn
+              onClick={e => {
+                e.stopPropagation();
+                FileSystemService.downloadDir(child.dir_id, child.dir_name);
+              }}
+            >
+              Download Folder
+            </dropdown-btn>
+            <dropdown-btn
+              onClick={e => {
+                e.stopPropagation();
+                this.fsData = { id: child.dir_id, parent_id: child.parent_id, func: 'changeDirName' };
+                this.overlayVis = true;
+              }}
+            >
+              Rename Folder
+            </dropdown-btn>
+            <dropdown-btn
+              onClick={e => {
+                e.stopPropagation();
+                FileSystemService.removeDirectory(child.dir_id, child.parent_id);
+              }}
+            >
+              Delete Folder
+            </dropdown-btn>
+          </dropdown-shell>
+        </itembox-content>
+      );
+    }
+  }
+  fileMapFunc(child, index) {
+    if (this?.searchWord == '' || child.file_name.toLocaleLowerCase().includes(this?.searchWord.toLocaleLowerCase())) {
+      let count = 0;
+      for (let i = 0; i < index; i++) {
+        if (FileSystemService.store.state.currentDir.files[i].file_name === child.file_name) count++;
+      }
+      return (
+        <itembox-content
+          class={{ 'Highlight-File': this.fileArray.includes(child) }}
+          onItemClick={() => {
+            if (!this.fileArray.includes(child)) {
+              this.fileArray = [...this.fileArray, child];
+            } else this.fileArray = [...this.fileArray.filter(value => value.file_id != child.file_id)];
+          }}
+          onDblClick={() => {
+            this.getImageBlob(child);
+          }}
+          onDragStart={e => {
+            //e.preventDefault();
+            e.dataTransfer.setData('text', JSON.stringify({ dragId: child.file_id }));
+          }}
+          draggable
+          itemName={count === 0 ? child.file_name : child.file_name + ' (' + count + ')'}
+          itemIcon={FileSystemService.getIcon(child.file_type)}
+          showDots
+        >
+          <dropdown-shell>
+            <dropdown-btn
+              onClick={e => {
+                e.stopPropagation();
+                FileSystemService.downloadFile(child);
+              }}
+            >
+              Download File
+            </dropdown-btn>
+            <dropdown-btn
+              onClick={e => {
+                e.stopPropagation();
+                this.fsData = { id: child.file_id, parent_id: child.parent_id, func: 'changeFileName' };
+                this.overlayVis = true;
+              }}
+            >
+              Rename File
+            </dropdown-btn>
+            <dropdown-btn
+              onClick={e => {
+                e.stopPropagation();
+                FileSystemService.deleteFile(child.file_id, child.parent_id);
+              }}
+            >
+              Delete File
+            </dropdown-btn>
+          </dropdown-shell>
+        </itembox-content>
+      );
     }
   }
 
@@ -109,9 +292,9 @@ export class AdminUpload {
           await this.leftArrowClick();
         }}
         onRightArrowClick={async () => {
-          const fileIndex = this.currentDir.files.indexOf(this.previewFile.entry);
-          for (let index = fileIndex + 1; index < this.currentDir.files.length; index++) {
-            if (await this.getImageBlob(this.currentDir.files[index])) break;
+          const fileIndex = FileSystemService.store.state.currentDir.files.indexOf(this.previewFile.entry);
+          for (let index = fileIndex + 1; index < FileSystemService.store.state.currentDir.files.length; index++) {
+            if (await this.getImageBlob(FileSystemService.store.state.currentDir.files[index])) break;
           }
         }}
       ></image-view>
@@ -124,9 +307,7 @@ export class AdminUpload {
           <div
             class="Upload-Collection Upload-CollectionHeader"
             onClick={() => {
-              FileSystemService.getChildren(null, true).then(() => {
-                this.currentDir = FileSystemService.currentDir;
-              });
+              FileSystemService.getChildren(null, true);
             }}
           >
             <span>COLLECTIONS</span>
@@ -136,7 +317,7 @@ export class AdminUpload {
                 <dropdown-btn
                   onClick={e => {
                     e.stopPropagation();
-                    this.fsData = { id: this.skeleton.dir_id, func: 'makeDir' };
+                    this.fsData = { id: FileSystemService.store.state.skeleton.dir_id, func: 'makeDir' };
 
                     this.overlayVis = true;
                   }}
@@ -147,219 +328,19 @@ export class AdminUpload {
             </button>
           </div>
           <comp-tree
-            tree={this.skeleton}
-            fileDetailFactory={(child: FileEntry) => {
-              return (
-                <button class="Upload-Dots">
-                  <img src="\assets\icon\3Dots-icon.svg" onClick={e => e.stopPropagation()} />
-
-                  <dropdown-shell>
-                    <dropdown-btn
-                      onClick={e => {
-                        e.stopPropagation();
-                        FileSystemService.downloadFile(child);
-                      }}
-                    >
-                      Download File
-                    </dropdown-btn>
-                    <dropdown-btn
-                      onClick={e => {
-                        e.stopPropagation();
-                        this.fsData = { id: child.file_id, parent_id: child.parent_id, func: 'changeFileName' };
-                        this.overlayVis = true;
-                      }}
-                    >
-                      Rename File
-                    </dropdown-btn>
-                    <dropdown-btn
-                      onClick={e => {
-                        e.stopPropagation();
-                        FileSystemService.deleteFile(child.file_id, child.parent_id).then(() => {
-                          this.refresh();
-                        });
-                      }}
-                    >
-                      Delete File
-                    </dropdown-btn>
-                  </dropdown-shell>
-                </button>
-              );
-            }}
-            folderDetailFactory={(child: RecursiveSkeleton) => {
-              return (
-                <button class="Upload-Dots">
-                  <img src="\assets\icon\3Dots-icon.svg" onClick={e => e.stopPropagation()} />
-                  <dropdown-shell>
-                    <dropdown-btn
-                      onClick={e => {
-                        e.stopPropagation();
-                        this.fsData = { id: child.dir_id, parent_id: child.parent_id, func: 'makeDir' };
-                        this.overlayVis = true;
-                      }}
-                    >
-                      Add Collection
-                    </dropdown-btn>
-                    <dropdown-btn
-                      onClick={e => {
-                        e.stopPropagation();
-                        FileSystemService.downloadDir(child.dir_id, child.dir_name);
-                      }}
-                    >
-                      Download Folder
-                    </dropdown-btn>
-                    <dropdown-btn
-                      onClick={e => {
-                        e.stopPropagation();
-                        this.fsData = { id: child.dir_id, parent_id: child.parent_id, func: 'changeDirName' };
-                        this.overlayVis = true;
-                      }}
-                    >
-                      Rename Folder
-                    </dropdown-btn>
-                    <dropdown-btn
-                      onClick={e => {
-                        e.stopPropagation();
-                        FileSystemService.removeDirectory(child.dir_id, child.parent_id).then(() => {
-                          this.refresh();
-                        });
-                      }}
-                    >
-                      Delete Folder
-                    </dropdown-btn>
-                  </dropdown-shell>
-                </button>
-              );
-            }}
+            tree={FileSystemService.store.state.skeleton}
+            folderDetailFactory={this.folderDetailFactory}
+            fileDetailFactory={this.fileDetailFactory}
           ></comp-tree>
         </div>
 
         <div class="Upload-Content">
           <comp-searchbar></comp-searchbar>
           <itembox-shell>
-            {this.currentDir.directories.map((child, index) => {
-              if (
-                this.searchWord == '' ||
-                child.dir_name.toLocaleLowerCase().includes(this.searchWord.toLocaleLowerCase())
-              ) {
-                let count = 0;
-                for (let i = 0; i < index; i++) {
-                  if (this.currentDir.directories[i].dir_name === child.dir_name) count++;
-                }
-                return (
-                  <itembox-content
-                    onItemClick={() => {
-                      FileSystemService.getChildren(child.dir_id, true).then(() => {
-                        this.currentDir = { ...FileSystemService.currentDir };
-                      }); // moveTo dir
-                    }}
-                    onDrop={e => {
-                      const dragId = JSON.parse(e.dataTransfer.getData('text')).dragId;
-
-                      FileSystemService.changeFileParent(dragId, child.dir_id, child.parent_id).then(() => {
-                        this.refresh();
-                        this.fileArray = [...this.fileArray.filter(value => value.file_id != dragId)];
-                      });
-                    }}
-                    onDragOver={e => e.preventDefault()}
-                    itemName={count === 0 ? child.dir_name : child.dir_name + ' (' + count + ')'}
-                    itemIcon="\assets\icon\Folder-Image.svg"
-                    showDots
-                  >
-                    <dropdown-shell>
-                      <dropdown-btn
-                        onClick={e => {
-                          e.stopPropagation();
-                          FileSystemService.downloadDir(child.dir_id, child.dir_name);
-                        }}
-                      >
-                        Download Folder
-                      </dropdown-btn>
-                      <dropdown-btn
-                        onClick={e => {
-                          e.stopPropagation();
-                          this.fsData = { id: child.dir_id, parent_id: child.parent_id, func: 'changeDirName' };
-                          this.overlayVis = true;
-                        }}
-                      >
-                        Rename Folder
-                      </dropdown-btn>
-                      <dropdown-btn
-                        onClick={e => {
-                          e.stopPropagation();
-                          FileSystemService.removeDirectory(child.dir_id, child.parent_id).then(() => {
-                            this.refresh();
-                          });
-                        }}
-                      >
-                        Delete Folder
-                      </dropdown-btn>
-                    </dropdown-shell>
-                  </itembox-content>
-                );
-              }
-            })}
-            {this.currentDir.files.map((child, index) => {
-              if (
-                this.searchWord == '' ||
-                child.file_name.toLocaleLowerCase().includes(this.searchWord.toLocaleLowerCase())
-              ) {
-                let count = 0;
-                for (let i = 0; i < index; i++) {
-                  if (this.currentDir.files[i].file_name === child.file_name) count++;
-                }
-                return (
-                  <itembox-content
-                    class={{ 'Highlight-File': this.fileArray.includes(child) }}
-                    onItemClick={() => {
-                      if (!this.fileArray.includes(child)) {
-                        this.fileArray = [...this.fileArray, child];
-                      } else this.fileArray = [...this.fileArray.filter(value => value.file_id != child.file_id)];
-                    }}
-                    onDblClick={() => {
-                      this.getImageBlob(child);
-                    }}
-                    onDragStart={e => {
-                      //e.preventDefault();
-                      e.dataTransfer.setData('text', JSON.stringify({ dragId: child.file_id }));
-                    }}
-                    draggable
-                    itemName={count === 0 ? child.file_name : child.file_name + ' (' + count + ')'}
-                    itemIcon={FileSystemService.getIcon(child.file_type)}
-                    showDots
-                  >
-                    <dropdown-shell>
-                      <dropdown-btn
-                        onClick={e => {
-                          e.stopPropagation();
-                          FileSystemService.downloadFile(child);
-                        }}
-                      >
-                        Download File
-                      </dropdown-btn>
-                      <dropdown-btn
-                        onClick={e => {
-                          e.stopPropagation();
-                          this.fsData = { id: child.file_id, parent_id: child.parent_id, func: 'changeFileName' };
-                          this.overlayVis = true;
-                        }}
-                      >
-                        Rename File
-                      </dropdown-btn>
-                      <dropdown-btn
-                        onClick={e => {
-                          e.stopPropagation();
-                          FileSystemService.deleteFile(child.file_id, child.parent_id).then(() => {
-                            this.refresh();
-                          });
-                        }}
-                      >
-                        Delete File
-                      </dropdown-btn>
-                    </dropdown-shell>
-                  </itembox-content>
-                );
-              }
-            })}
+            {FileSystemService.store.state.currentDir.directories.map((child, index) =>
+              this.folderMapFunc(child, index),
+            )}
+            {FileSystemService.store.state.currentDir.files.map((child, index) => this.fileMapFunc(child, index))}
           </itembox-shell>
         </div>
       </div>

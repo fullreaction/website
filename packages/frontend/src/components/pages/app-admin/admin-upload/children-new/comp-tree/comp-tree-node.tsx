@@ -56,7 +56,6 @@ export class SubTreeComponent {
     }
   }
   render = () => {
-    console.log(this.fileDetailFactory);
     return this.isOpen && this.subTree.directories != null ? (
       <Host class="Tree-SubTree">
         {this.subTree.directories.map((child, index) => {
@@ -95,6 +94,7 @@ export class SubTreeComponent {
                 subTree={child}
                 isOpen={child.showSubfolders}
                 folderDetailFactory={this.folderDetailFactory}
+                fileDetailFactory={this.fileDetailFactory}
               ></comp-tree-node>
             </div>
           );

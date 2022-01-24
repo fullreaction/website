@@ -3,6 +3,7 @@ import { AxiosService } from '../utils/httpUtils';
 import { Directory, FileEntry } from '../models/upload.models';
 import FileSaver from 'file-saver';
 import JSZip from 'jszip';
+import { createStore } from '@stencil/store';
 
 export class RecursiveSkeleton implements Directory {
   dir_name: string;
@@ -16,10 +17,13 @@ export class RecursiveSkeleton implements Directory {
 // Turn all Directory objects into recursiveskeleton
 class FileSystemServiceController {
   owner: string | Buffer; // use this instead of calling authservice
-  currentDir: RecursiveSkeleton = new RecursiveSkeleton();
-  skeleton = new RecursiveSkeleton();
+
   path: { dir_name: string; dir_id: number }[] = [];
 
+  store = createStore({
+    skeleton: new RecursiveSkeleton(),
+    currentDir: new RecursiveSkeleton(),
+  });
   private fileIcons = new Map<string, string>([
     ['mp4', '../assets/icon/Video-Image.svg'],
     ['mpeg', '../assets/icon/Video-Image.svg'],
@@ -36,12 +40,10 @@ class FileSystemServiceController {
   public draggedFileId: number;
 
   async init() {
-    await this.getSkeleton(this.skeleton, true);
+    await this.getSkeleton(this.store.state.skeleton, true);
   }
 
   async updateData(skel: RecursiveSkeleton | number) {
-    console.log('Updated');
-    console.log(skel);
     if (typeof skel == 'number') {
       const res = await FileSystemService.findSkeleton(skel);
       await FileSystemService.getSkeleton(res, false);
@@ -145,9 +147,9 @@ class FileSystemServiceController {
       });
     if (wasError) return [];
     else if (moveTo) {
-      this.currentDir = res.parent; // -
-      this.currentDir.directories = res.directories; // -
-      this.currentDir.files = res.files;
+      this.store.state.currentDir = res.parent; // -
+      this.store.state.currentDir.directories = res.directories; // -
+      this.store.state.currentDir.files = res.files;
       this.path = await this.getPath(dir_id);
     }
     return res;
@@ -156,10 +158,10 @@ class FileSystemServiceController {
     return await AxiosService.get('filesystem/getpath/' + dir_id).then(AxiosService.handleFetch);
   }
   async getSkeleton(skel: RecursiveSkeleton, moveTo: boolean) {
-    if (skel == null) skel = this.skeleton;
+    if (skel == null) skel = this.store.state.skeleton;
 
     let res;
-    if (moveTo || skel.dir_id == this.currentDir.dir_id) res = await this.getChildren(skel.dir_id, true);
+    if (moveTo || skel.dir_id == this.store.state.currentDir.dir_id) res = await this.getChildren(skel.dir_id, true);
     else res = await this.getChildren(skel.dir_id, false);
 
     skel.parent_id = res.parent.parent_id;
@@ -173,16 +175,16 @@ class FileSystemServiceController {
     });
 
     skel.files = res.files;
-    this.skeleton = { ...this.skeleton };
+    this.store.state.skeleton = { ...this.store.state.skeleton };
 
     return res;
   }
 
   async findSkeleton(dir_id: number) {
-    if (dir_id == null) return this.skeleton;
+    if (dir_id == null) return this.store.state.skeleton;
     else {
       const path = await this.getPath(dir_id);
-      let skel: RecursiveSkeleton = this.skeleton;
+      let skel: RecursiveSkeleton = this.store.state.skeleton;
       for (const elem of path) {
         skel = skel.directories.find(child => child.dir_id == elem.dir_id);
       }

@@ -17,6 +17,7 @@ export class TreeComponent {
   render = () => (
     <Host>
       <comp-tree-node
+        class="Tree-NodeWrapper"
         subTree={this.tree}
         isOpen={true}
         folderDetailFactory={this.folderDetailFactory}

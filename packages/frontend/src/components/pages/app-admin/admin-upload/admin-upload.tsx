@@ -336,6 +336,34 @@ export class AdminUpload {
 
         <div class="Upload-Content">
           <comp-searchbar></comp-searchbar>
+          <div class="Upload-Path">
+            <span
+              class="Upload-PathElement"
+              onClick={() => {
+                FileSystemService.getChildren(null, true).then(() => {
+                  this.currentDir = FileSystemService.currentDir;
+                });
+              }}
+            >
+              COLLECTIONS
+            </span>
+            {' > '}
+            {FileSystemService.path.map(folder => {
+              return [
+                <span
+                  class="Upload-PathElement"
+                  onClick={() => {
+                    FileSystemService.getChildren(folder.dir_id, true).then(() => {
+                      this.currentDir = FileSystemService.currentDir;
+                    });
+                  }}
+                >
+                  {folder.dir_name}
+                </span>,
+                ' > ',
+              ];
+            })}
+          </div>
           <itembox-shell>
             {FileSystemService.store.state.currentDir.directories.map((child, index) =>
               this.folderMapFunc(child, index),

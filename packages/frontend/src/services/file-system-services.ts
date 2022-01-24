@@ -14,6 +14,7 @@ export class RecursiveSkeleton implements Directory {
   directories: RecursiveSkeleton[] = [];
   files: FileEntry[] = [];
 }
+
 // Turn all Directory objects into recursiveskeleton
 class FileSystemServiceController {
   owner: string | Buffer; // use this instead of calling authservice
@@ -23,6 +24,7 @@ class FileSystemServiceController {
   store = createStore({
     skeleton: new RecursiveSkeleton(),
     currentDir: new RecursiveSkeleton(),
+    path: [],
   });
   private fileIcons = new Map<string, string>([
     ['mp4', '../assets/icon/Video-Image.svg'],
@@ -147,10 +149,9 @@ class FileSystemServiceController {
       });
     if (wasError) return [];
     else if (moveTo) {
-      this.store.state.currentDir = res.parent; // -
-      this.store.state.currentDir.directories = res.directories; // -
-      this.store.state.currentDir.files = res.files;
-      this.path = await this.getPath(dir_id);
+      this.store.state.currentDir = { ...res.parent, directories: res.directories, files: res.files }; // -
+
+      this.store.state.path = await this.getPath(dir_id);
     }
     return res;
   }

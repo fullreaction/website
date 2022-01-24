@@ -54,7 +54,7 @@ export class AdminUpload {
   }
   async runFS(e) {
     e.preventDefault();
-    console.log('amount');
+
     if (this.fsData.func == 'makeDir') {
       await FileSystemService[this.fsData.func](this.fsData.id, this.fsData.name);
     } else if (this.fsData.func != 'none') {
@@ -329,38 +329,38 @@ export class AdminUpload {
           </div>
           <comp-tree
             tree={FileSystemService.store.state.skeleton}
-            folderDetailFactory={this.folderDetailFactory}
-            fileDetailFactory={this.fileDetailFactory}
+            folderDetailFactory={child => this.folderDetailFactory(child)}
+            fileDetailFactory={child => this.fileDetailFactory(child)}
           ></comp-tree>
         </div>
 
         <div class="Upload-Content">
-          <comp-searchbar></comp-searchbar>
+          <comp-searchbar
+            onSearch={e => {
+              this.searchWord = e.detail;
+            }}
+          ></comp-searchbar>
           <div class="Upload-Path">
             <span
               class="Upload-PathElement"
               onClick={() => {
-                FileSystemService.getChildren(null, true).then(() => {
-                  this.currentDir = FileSystemService.currentDir;
-                });
+                FileSystemService.getChildren(null, true);
               }}
             >
               COLLECTIONS
             </span>
-            {' > '}
-            {FileSystemService.path.map(folder => {
+
+            {FileSystemService.store.state.path.map(folder => {
               return [
+                ' > ',
                 <span
                   class="Upload-PathElement"
                   onClick={() => {
-                    FileSystemService.getChildren(folder.dir_id, true).then(() => {
-                      this.currentDir = FileSystemService.currentDir;
-                    });
+                    FileSystemService.getChildren(folder.dir_id, true);
                   }}
                 >
                   {folder.dir_name}
                 </span>,
-                ' > ',
               ];
             })}
           </div>
